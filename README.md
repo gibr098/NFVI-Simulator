@@ -1,3 +1,8 @@
+Mancano da implementare: 
+1. I vincoli di molteplicità
+2. Alcuni vincoli legati alle risorse degli elementi
+3. La parte funzionale
+
 # NFVI Simulator
 Network Function Virtualization Infrastructure
 
