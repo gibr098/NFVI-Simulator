@@ -106,7 +106,10 @@ public class NFVI{
         int n=this.getPopNum();
         info+="NFVI is composed of "+n+" PoPs: ";
         for (LinkCompose l : linkset) {
-            info+=l.getNFVIPoP().getName()+"\n"+l.getNFVIPoP().getTotalInfo();
+            info+=l.getNFVIPoP().getName()+" ";
+        }
+        for (LinkCompose l : linkset) {
+            info+="\n"+l.getNFVIPoP().getTotalInfo();
         }
         n = this.getServicesNumber();
         info+="\nNFVI provide "+n+" services: ";

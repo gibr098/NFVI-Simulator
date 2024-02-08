@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 import Classes.*;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkCompose;
@@ -11,13 +13,37 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
+        if(args[0]!=null && args[1]!=null){
+            NFVI nfv = new NFVI("NFVI");
+
+            //int npop = Integer.valueOf(args[1]);
+            int npop = Integer.parseInt(args[0]);
+            int nserver = Integer.parseInt(args[1]);
+
+            for (int i = 0; i< npop; i++){
+                NFVIPoP pop = new NFVIPoP("PoP-"+i);
+                DataCenter dc = new DataCenter("DC-"+i,3);
+
+                LinkCompose lc = new LinkCompose(nfv, pop);
+                LinkOwn lo = new LinkOwn(pop, dc);
+
+                nfv.insertLinkCompose(lc);
+                pop.insertLinkOwn(lo);
+                for (int j=0; j< nserver; j++){
+                    COTServer s = new COTServer("Server-"+i+j,16, 8, 256, 2);
+                    LinkContain l = new LinkContain(dc, s);
+                    dc.insertLinkContain(l);
+
+                }
+            }
+            System.out.println(nfv.getTotalInfo());
+        }
+
+
 
         NFVI nfv1 = new NFVI("NFVI");
         NFVIPoP pop1 = new NFVIPoP("PoP-1");
-
         DataCenter dc1 = new DataCenter("DC-1",3);
-        //System.out.println("number of servers on DC1: ");
-        //System.out.println(dc1.ServerContainNumber());
 
         COTServer s1 = new COTServer("Server-1",16, 8, 256, 2);
         COTServer s2 = new COTServer("Server-2",16, 8, 256, 2);
@@ -86,7 +112,7 @@ public class App {
         c3.insertLinkInstance(li3);
 
 
-        System.out.println(nfv1.getTotalInfo());
+        //System.out.println(nfv1.getTotalInfo());
 
 
         /*
