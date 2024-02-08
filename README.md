@@ -1,4 +1,6 @@
-### Running the App with 2 arguments i j it will create an NFVI with I PoPs each one owning a DataCenter-i of of which contains j COTServers-ij
+### Running the App with 2 arguments i j it will create an NFVI with :
+### - i PoPs each one owning a DataCenter-i 
+### - Each Data Center-i contains j COTServers-ij
 
 ##### Mancano da implementare: 
 1. I vincoli di molteplicità
