@@ -1,3 +1,6 @@
+# Run the app:
+## Running the App with 2 arguments i j it will create an NFVI with I PoPs each one owning a DataCenter-i of of which contains j COTServers-ij
+
 Mancano da implementare: 
 1. I vincoli di molteplicità
 2. Alcuni vincoli legati alle risorse degli elementi
