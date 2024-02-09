@@ -1,3 +1,4 @@
+# NFVI Simulator
 ### Running App.java with 2 arguments i j it will create an NFVI with :
 ### - i PoPs each one owning a DataCenter-i 
 ### - Each Data Center-i contains j COTServers-ij
@@ -7,22 +8,22 @@
 2. Resources allocation/deallocation constraints
 3. Functional part: Time slotteds service requests 
 
-# NFVI Simulator
+## NFVI
 Network Function Virtualization Infrastructure
 
-# NFVIPoP
+## NFVIPoP
 NFVI Point of Presence
 
-# Data Center
+## Data Center
 
-# COTS
+## COTS
 (Commercial) Off-the-Shelf Server
 
-# Containers
+## Containers
 
-# SFC
+## SFC
 Service Function Chaining
 
-# VNF
+## VNF
 Virtual Network Function
 
