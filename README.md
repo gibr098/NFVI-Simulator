@@ -3,7 +3,7 @@
 ### - i PoPs each one owning a DataCenter-i 
 ### - Each Data Center-i contains j COTServers-ij
 
-##### Working on: 
+### Working on: 
 1. Multiplicity constraints
 2. Resources allocation/deallocation constraints
 3. Functional part: Time slotteds service requests 
