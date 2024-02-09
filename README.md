@@ -1,11 +1,11 @@
-### Running the App with 2 arguments i j it will create an NFVI with :
+### Running App.java with 2 arguments i j it will create an NFVI with :
 ### - i PoPs each one owning a DataCenter-i 
 ### - Each Data Center-i contains j COTServers-ij
 
-##### Mancano da implementare: 
-1. I vincoli di molteplicità
-2. Alcuni vincoli legati alle risorse degli elementi
-3. La parte funzionale
+##### Working on: 
+1. Multiplicity constraints
+2. Resources allocation/deallocation constraints
+3. Functional part: Time slotteds service requests 
 
 # NFVI Simulator
 Network Function Virtualization Infrastructure
