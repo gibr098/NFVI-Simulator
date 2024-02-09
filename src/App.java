@@ -37,11 +37,11 @@ public class App {
                 }
             }
             System.out.println(nfv.getTotalInfo());
+
         }
 
 
-
-        NFVI nfv1 = new NFVI("NFVI");
+        NFVI nfv1 = new NFVI("NFVI-1");
         NFVIPoP pop1 = new NFVIPoP("PoP-1");
         DataCenter dc1 = new DataCenter("DC-1",3);
 
@@ -112,7 +112,10 @@ public class App {
         c3.insertLinkInstance(li3);
 
 
-        //System.out.println(nfv1.getTotalInfo());
+        System.out.println("\n\n\n");
+        System.out.println(nfv1.getTotalInfo());
+
+
 
 
         /*
