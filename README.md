@@ -8,22 +8,23 @@
 2. Resources allocation/deallocation constraints
 3. Functional part: Time slotteds service requests 
 
-## NFVI
+# Elements 
+### NFVI
 Network Function Virtualization Infrastructure
 
-## NFVIPoP
+### NFVIPoP
 NFVI Point of Presence
 
-## Data Center
+### Data Center
 
-## COTS
+### COTS
 (Commercial) Off-the-Shelf Server
 
-## Containers
+### Containers
 
-## SFC
+### SFC
 Service Function Chaining
 
-## VNF
+### VNF
 Virtual Network Function
 
