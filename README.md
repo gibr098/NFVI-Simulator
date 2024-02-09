@@ -8,7 +8,8 @@
 2. Resources allocation/deallocation constraints
 3. Functional part: Time slotteds service requests 
 
-# Elements 
+# Model
+![Alt text](./res/NFVI%20Model.png)
 ### NFVI
 Network Function Virtualization Infrastructure
 
