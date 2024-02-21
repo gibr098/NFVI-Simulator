@@ -1,3 +1,4 @@
+import java.util.Properties;
 import java.util.Scanner;
 
 import Classes.*;
@@ -8,11 +9,65 @@ import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
 import Classes.Links.LinkProvide;
 import Classes.Links.LinkRun;
+import java.io.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
+
+        Properties prop = new Properties();
+        String fileName = "NFVI.config";
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            prop.load(fis);
+        } catch (FileNotFoundException ex) {
+            // FileNotFoundException catch is optional and can be collapsed
+        } catch (IOException ex) {
+
+        }
+
+        //System.out.println(prop.getProperty("number_of_servers"));
+        //System.out.println(prop.getProperty("RAM(GB)"));
+        //System.out.println(prop.getProperty("policy"));
+
+        int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
+        int ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
+        int cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
+        int storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
+        int network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
+        String policy = prop.getProperty("policy");
+
+
+        NFVI nfvi = new NFVI("NFVI");
+        NFVIPoP pop = new NFVIPoP("PoP-1");
+        DataCenter dc = new DataCenter("DC-1");
+
+        LinkCompose lc = new LinkCompose(nfvi, pop);
+        LinkOwn lo = new LinkOwn(pop, dc);
+
+        nfvi.insertLinkCompose(lc);
+        pop.insertLinkOwn(lo);
+
+        for(int i =0; i < number_of_servers; i++){
+            COTServer si = new COTServer("Server-"+i,ram, cpu, storage, network);
+            LinkContain lci = new LinkContain(dc, si);
+            dc.insertLinkContain(lci);
+        }
+
+        System.out.println(nfvi.getTotalInfo());
+
+
+        System.out.println("Servers' state:");
+        for (LinkContain l : dc.getLinkContain()) {
+            System.out.println(l.getCOTServer().getTotalResourcesInfo());
+        }
+
+
+
+
+
+
+        /*
         if(args[0]!=null && args[1]!=null){
             NFVI nfv = new NFVI("NFVI");
 
@@ -115,6 +170,7 @@ public class App {
         System.out.println("\n\n\n");
         System.out.println(nfv1.getTotalInfo());
 
+        */
 
 
 

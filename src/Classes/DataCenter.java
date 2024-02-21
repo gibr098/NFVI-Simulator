@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class DataCenter {
     private final String name;
-    private final int number_of_server;
+    //private final int number_of_server;
 
     private HashSet<COTServer> servers;
 
@@ -33,9 +33,9 @@ public class DataCenter {
         else return 1;
     }
 
-    public DataCenter(String name, int n){
+    public DataCenter(String name){
         this.name = name;
-        number_of_server = n;
+        //number_of_server = n;
 
         linkset = new HashSet<LinkContain>();
 

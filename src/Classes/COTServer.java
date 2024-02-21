@@ -156,4 +156,15 @@ public class COTServer {
 
         return info;
     }
+
+    public String getTotalResourcesInfo(){
+        String info = this.name+" (";
+        info+="ram: "+this.ram+"GB";
+        info+=", cpu: "+this.cpu+" cores";
+        info+=", storage: "+this.storage+"GB";
+        info+=", network: "+this.network;
+        info+=")";
+
+        return info;
+    }
 }
