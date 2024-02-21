@@ -1,7 +1,6 @@
 # NFVI Simulator
-### Running App.java with 2 arguments i j it will create an NFVI with :
-### - i PoPs each one owning a DataCenter-i 
-### - Each Data Center-i contains j COTServers-ij
+### Parameters for running a NFVI with a Point of Presence can be set in the NFVI.config file
+### The app will build an NFVI with the desidered configuration
 
 ### Working on: 
 1. Multiplicity constraints
