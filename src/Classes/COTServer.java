@@ -57,6 +57,10 @@ public class COTServer {
         ram-=r;
     }
 
+    public void deallocateRam(int r){
+        ram+=r;
+    }
+
     public int getCpu(){
         return cpu;
     }
@@ -65,12 +69,20 @@ public class COTServer {
         cpu-=c;
     }
 
+    public void deallocateCpu(int c){
+        cpu+=c;
+    }
+
     public int getStorage(){
         return storage;
     }
 
     public void allocateStorage(int st){
         storage-=st;
+    }
+
+    public void deallocateStorage(int st){
+        storage+=st;
     }
 
     public void addStorage(int additionalStorage){
@@ -83,6 +95,10 @@ public class COTServer {
 
     public void allocateCPUusage(int cu){
         cpu_capacity-=cu;
+    }
+
+    public void deallocateCPUusage(int cu){
+        cpu_capacity+=cu;
     }
 
     public Set<Container> getContainers(){

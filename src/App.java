@@ -30,10 +30,10 @@ public class App {
         //System.out.println(prop.getProperty("policy"));
 
         int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
-        int ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
-        int cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
-        int storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
-        int network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
+        int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
+        int server_cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
+        int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
+        int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
 
         int number_of_containers = Integer.parseInt(prop.getProperty("containers"));
         int container_cpu_usage = Integer.parseInt(prop.getProperty("container_cpu(%)"));
@@ -56,7 +56,7 @@ public class App {
         pop.insertLinkOwn(lo);
 
         for(int i =0; i < number_of_servers; i++){
-            COTServer si = new COTServer("Server-"+i,ram, cpu, storage, network);
+            COTServer si = new COTServer("Server-"+i,server_ram, server_cpu, server_storage, server_network);
             LinkContain lci = new LinkContain(dc, si);
             dc.insertLinkContain(lci);
             for(int j = 0; j < number_of_containers; j++){
@@ -66,6 +66,16 @@ public class App {
                 System.out.println(cij.getTotalResourcesInfo());
             }
         }
+
+        /* 
+        COTServer s5 = new COTServer("Server-5", 100, server_cpu, server_storage, server_network);
+        LinkContain lc5 = new LinkContain(dc, s5);
+        dc.insertLinkContain(lc5);
+        Container c51 = new Container("Container-51", 100, container_cpu, container_storage, container_network, container_cpu_usage);
+        LinkInstance l51 = new LinkInstance(s5, c51);
+        s5.insertLinkInstance(l51);
+        System.out.println(c51.getTotalResourcesInfo());
+        */
 
         //System.out.println(nfvi.getTotalInfo());
 
@@ -90,6 +100,7 @@ public class App {
         VNF vnf31 = new VNF("VNF-31","firewall");
         VNF vnf32 = new VNF("VNF-32","routing");
         VNF vnf33 = new VNF("VNF-33","encryption");
+        //VNF vnf34 = new VNF("VNF-34","SUPERVNF");
 
         LinkChain lch1 = new LinkChain(sv1, vnf11);
         LinkChain lch2 = new LinkChain(sv1, vnf12);
@@ -102,6 +113,7 @@ public class App {
         LinkChain lch7 = new LinkChain(sv3, vnf31);
         LinkChain lch8 = new LinkChain(sv3, vnf32);
         LinkChain lch9 = new LinkChain(sv3, vnf33);
+        //LinkChain lch10 = new LinkChain(sv3, vnf34);
 
         sv1.insertLinkChain(lch1);
         sv1.insertLinkChain(lch2);
@@ -114,6 +126,7 @@ public class App {
         sv3.insertLinkChain(lch7);
         sv3.insertLinkChain(lch8);
         sv3.insertLinkChain(lch9);
+        //sv3.insertLinkChain(lch10);
 
 
         System.out.println(sv1.getTotalResourceRequired());
@@ -126,17 +139,17 @@ public class App {
         Allocation.AllocateService(sv2,pop);
         Allocation.AllocateService(sv3,pop);
 
-        System.out.println("vnf11 runs on"+vnf11.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf12 runs on"+vnf12.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf13 runs on"+vnf13.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf11 runs on "+vnf11.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf12 runs on "+vnf12.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf13 runs on "+vnf13.getLinkRun().iterator().next().getContainer().getName());
 
-        System.out.println("vnf21 runs on"+vnf21.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf22 runs on"+vnf22.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf23 runs on"+vnf23.getLinkRun().iterator().next().getContainer().getName());
-        
-        System.out.println("vnf31 runs on"+vnf31.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf32 runs on"+vnf32.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf33 runs on"+vnf33.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf21 runs on "+vnf21.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf22 runs on "+vnf22.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf23 runs on "+vnf23.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf31 runs on "+vnf31.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf32 runs on "+vnf32.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf33 runs on "+vnf33.getLinkRun().iterator().next().getContainer().getName());
+        //System.out.println("vnf34 runs on "+vnf34.getLinkRun().iterator().next().getContainer().getName());
 
         
         System.out.println("\nServers' state after services allocation:");
@@ -145,10 +158,6 @@ public class App {
         }
 
         //System.out.println("\n" + pop.getTotalInfo());
-
-
-
-
 
 
         /*

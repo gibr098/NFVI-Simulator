@@ -81,6 +81,14 @@ public class VNF {
                 vnf_network = 0;
                 break;
 
+            case "SUPERVNF":
+                vnf_ram = 20;
+                vnf_cpu = 2;
+                vnf_storage = 0;
+                vnf_cpu_usage = 20;
+                vnf_network = 0;
+                break;
+
         }
 
     }
