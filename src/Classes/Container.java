@@ -66,6 +66,10 @@ public class Container{
         return cpu;
     }
 
+    public int getCPUusage(){
+        return cpu_usage;
+    }
+
     public int getStorage(){
         return storage;
     }

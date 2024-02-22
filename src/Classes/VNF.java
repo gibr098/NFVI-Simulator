@@ -65,7 +65,7 @@ public class VNF {
                 vnf_network = 1;
                 break;
 
-            case "Encryption":
+            case "encryption":
                 vnf_ram = 4;
                 vnf_cpu = 2;
                 vnf_storage = 0;
@@ -73,7 +73,7 @@ public class VNF {
                 vnf_network = 0;
                 break;
 
-            case "Decryption":
+            case "decryption":
                 vnf_ram = 4;
                 vnf_cpu = 2;
                 vnf_storage = 0;

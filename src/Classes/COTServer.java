@@ -10,8 +10,8 @@ import java.util.Set;
 
 public class COTServer {
     private final String name;
-    private final int ram;
-    private final int cpu;
+    private int ram;
+    private int cpu;
     private int storage;
     private int network;
 
@@ -53,12 +53,24 @@ public class COTServer {
         return ram;
     }
 
+    public void allocateRam(int r){
+        ram-=r;
+    }
+
     public int getCpu(){
         return cpu;
     }
 
+    public void allocateCpu(int c){
+        cpu-=c;
+    }
+
     public int getStorage(){
         return storage;
+    }
+
+    public void allocateStorage(int st){
+        storage-=st;
     }
 
     public void addStorage(int additionalStorage){
@@ -67,6 +79,10 @@ public class COTServer {
 
     public int getNetwork(){
         return network;
+    }
+
+    public void allocateCPUusage(int cu){
+        cpu_capacity-=cu;
     }
 
     public Set<Container> getContainers(){
@@ -165,6 +181,7 @@ public class COTServer {
         info+=", cpu: "+this.cpu+" cores";
         info+=", storage: "+this.storage+"GB";
         info+=", network: "+this.network;
+        info+=", cpu usage: "+this.cpu_capacity;
         info+=")";
 
         return info;

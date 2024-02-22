@@ -63,13 +63,14 @@ public class App {
                 Container cij = new Container("Container-"+i +j, container_ram, container_cpu, container_storage, container_network, container_cpu_usage);
                 LinkInstance lij = new LinkInstance(si, cij);
                 si.insertLinkInstance(lij);
+                System.out.println(cij.getTotalResourcesInfo());
             }
         }
 
-        System.out.println(nfvi.getTotalInfo());
+        //System.out.println(nfvi.getTotalInfo());
 
 
-        System.out.println("\nServers' state:");
+        System.out.println("\nServers' state before services allocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
@@ -78,25 +79,29 @@ public class App {
         Service sv2 = new Service("Service2",0);
         Service sv3 = new Service("Service3",0);
 
-        VNF vnf1 = new VNF("VNF-1","firewall");
-        VNF vnf2 = new VNF("VNF-2","NAT");
-        VNF vnf3 = new VNF("VNF-3","DHCP");
-        VNF vnf4 = new VNF("VNF-4","routing");
-        VNF vnf5 = new VNF("VNF-5","Encryption");
-        VNF vnf6 = new VNF("VNF-6","Decryption");
+        VNF vnf11 = new VNF("VNF-11","firewall");
+        VNF vnf12 = new VNF("VNF-12","NAT");
+        VNF vnf13 = new VNF("VNF-13","DHCP");
 
-        LinkChain lch1 = new LinkChain(sv1, vnf1);
-        LinkChain lch2 = new LinkChain(sv1, vnf2);
-        LinkChain lch3 = new LinkChain(sv1, vnf3);
+        VNF vnf21 = new VNF("VNF-21","routing");
+        VNF vnf22 = new VNF("VNF-22","encryption");
+        VNF vnf23 = new VNF("VNF-23","decryption");
 
-        LinkChain lch4 = new LinkChain(sv2, vnf1);
-        LinkChain lch5 = new LinkChain(sv2, vnf4);
+        VNF vnf31 = new VNF("VNF-31","firewall");
+        VNF vnf32 = new VNF("VNF-32","routing");
+        VNF vnf33 = new VNF("VNF-33","encryption");
 
-        LinkChain lch6 = new LinkChain(sv3, vnf1);
-        LinkChain lch7 = new LinkChain(sv3, vnf4);
-        LinkChain lch8 = new LinkChain(sv3, vnf5);
-        LinkChain lch9 = new LinkChain(sv3, vnf6);
+        LinkChain lch1 = new LinkChain(sv1, vnf11);
+        LinkChain lch2 = new LinkChain(sv1, vnf12);
+        LinkChain lch3 = new LinkChain(sv1, vnf13);
 
+        LinkChain lch4 = new LinkChain(sv2, vnf21);
+        LinkChain lch5 = new LinkChain(sv2, vnf22);
+        LinkChain lch6 = new LinkChain(sv2, vnf23);
+
+        LinkChain lch7 = new LinkChain(sv3, vnf31);
+        LinkChain lch8 = new LinkChain(sv3, vnf32);
+        LinkChain lch9 = new LinkChain(sv3, vnf33);
 
         sv1.insertLinkChain(lch1);
         sv1.insertLinkChain(lch2);
@@ -104,18 +109,42 @@ public class App {
 
         sv2.insertLinkChain(lch4);
         sv2.insertLinkChain(lch5);
+        sv2.insertLinkChain(lch6);
 
-        sv3.insertLinkChain(lch6);
         sv3.insertLinkChain(lch7);
         sv3.insertLinkChain(lch8);
         sv3.insertLinkChain(lch9);
 
+
         System.out.println(sv1.getTotalResourceRequired());
         System.out.println(sv2.getTotalResourceRequired());
+        System.out.println(sv3.getTotalResourceRequired());
+
+        
 
         Allocation.AllocateService(sv1,pop);
         Allocation.AllocateService(sv2,pop);
         Allocation.AllocateService(sv3,pop);
+
+        System.out.println("vnf11 runs on"+vnf11.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf12 runs on"+vnf12.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf13 runs on"+vnf13.getLinkRun().iterator().next().getContainer().getName());
+
+        System.out.println("vnf21 runs on"+vnf21.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf22 runs on"+vnf22.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf23 runs on"+vnf23.getLinkRun().iterator().next().getContainer().getName());
+        
+        System.out.println("vnf31 runs on"+vnf31.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf32 runs on"+vnf32.getLinkRun().iterator().next().getContainer().getName());
+        System.out.println("vnf33 runs on"+vnf33.getLinkRun().iterator().next().getContainer().getName());
+
+        
+        System.out.println("\nServers' state after services allocation:");
+        for (LinkContain l : dc.getLinkContain()) {
+            System.out.println(l.getCOTServer().getTotalResourcesInfo());
+        }
+
+        //System.out.println("\n" + pop.getTotalInfo());
 
 
 

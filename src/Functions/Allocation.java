@@ -19,16 +19,10 @@ public class Allocation {
                 }
 
         );
-        System.out.println("\n" + pop.getTotalInfo());
-
-        /*
-         * for (LinkChain l : s.getLinkChain()) {
-         * AllocateVNF(l.getVNF(), pop);
-         * }
-         */
+        //System.out.println("\n" + pop.getTotalInfo());
     }
 
-    public static void AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
+    private static void AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
         DataCenter dc = pop.getLinkOwn().getDataCenter();
         for (LinkContain l : dc.getLinkContain()) {
             COTServer server = l.getCOTServer();
@@ -40,6 +34,7 @@ public class Allocation {
                         container.insertLinkRun(lr);
                         container.setBusyState(true);
                         vnf.setAllocated(true);
+                        AllocateServerResources(container);
                         break;
                     }
                 }
@@ -49,7 +44,21 @@ public class Allocation {
         }
     }
 
-    public boolean checkContainerAvailability(Container container) {
+    private static void AllocateServerResources(Container container) throws Exception{
+        int ram = container.getRam();
+        int cpu = container.getCpu();
+        int cpu_usage = container.getCPUusage();
+        int storage = container.getStorage();
+        int network = container.getNetwork();
+        COTServer server = container.getLinkInstance().getCOTServer();
+        server.allocateCPUusage(cpu_usage);
+        server.allocateCpu(cpu);
+        server.allocateRam(ram);
+        server.allocateStorage(storage);
+
+    }
+
+    private boolean checkContainerAvailability(Container container) {
         return container.isBusy();
     }
 }

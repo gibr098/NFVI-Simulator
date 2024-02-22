@@ -7,7 +7,7 @@ import Classes.Links.*;
 
 public class Service {
     private final String name;
-    private int cost;
+    private int time;
 
     private LinkedList<VNF> functions;
 
@@ -20,9 +20,9 @@ public class Service {
     private LinkedList<LinkChain> linkset;
     private int MIN_LINK_CHAIN = 1;
 
-    public Service(String name, int cost){
+    public Service(String name, int time){
         this.name = name;
-        this.cost = cost;
+        this.time = time;
         this.functions = new LinkedList<VNF>();
 
         //linkset = new HashSet<LinkProvide>();
@@ -34,8 +34,8 @@ public class Service {
         return name;
     }
 
-    public int getCost(){
-        return cost;
+    public int getTime(){
+        return time;
     }
 
     public int getVNFNumber(){
