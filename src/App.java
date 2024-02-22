@@ -7,8 +7,7 @@ import Classes.Links.LinkCompose;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
-import Classes.Links.LinkProvide;
-import Classes.Links.LinkRun;
+import Functions.*;
 import java.io.*;
 
 public class App {
@@ -35,6 +34,14 @@ public class App {
         int cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
         int storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
         int network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
+
+        int number_of_containers = Integer.parseInt(prop.getProperty("containers"));
+        int container_cpu_usage = Integer.parseInt(prop.getProperty("container_cpu(%)"));
+        int container_ram = Integer.parseInt(prop.getProperty("C-RAM(GB)"));
+        int container_cpu = Integer.parseInt(prop.getProperty("C-CPU(Cores)"));
+        int container_storage = Integer.parseInt(prop.getProperty("C-Storage(GB)"));
+        int container_network = Integer.parseInt(prop.getProperty("C-Network(interfaces)"));
+
         String policy = prop.getProperty("policy");
 
 
@@ -52,15 +59,63 @@ public class App {
             COTServer si = new COTServer("Server-"+i,ram, cpu, storage, network);
             LinkContain lci = new LinkContain(dc, si);
             dc.insertLinkContain(lci);
+            for(int j = 0; j < number_of_containers; j++){
+                Container cij = new Container("Container-"+i +j, container_ram, container_cpu, container_storage, container_network, container_cpu_usage);
+                LinkInstance lij = new LinkInstance(si, cij);
+                si.insertLinkInstance(lij);
+            }
         }
 
         System.out.println(nfvi.getTotalInfo());
 
 
-        System.out.println("Servers' state:");
+        System.out.println("\nServers' state:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
+
+        Service sv1 = new Service("Service1",0);
+        Service sv2 = new Service("Service2",0);
+        Service sv3 = new Service("Service3",0);
+
+        VNF vnf1 = new VNF("VNF-1","firewall");
+        VNF vnf2 = new VNF("VNF-2","NAT");
+        VNF vnf3 = new VNF("VNF-3","DHCP");
+        VNF vnf4 = new VNF("VNF-4","routing");
+        VNF vnf5 = new VNF("VNF-5","Encryption");
+        VNF vnf6 = new VNF("VNF-6","Decryption");
+
+        LinkChain lch1 = new LinkChain(sv1, vnf1);
+        LinkChain lch2 = new LinkChain(sv1, vnf2);
+        LinkChain lch3 = new LinkChain(sv1, vnf3);
+
+        LinkChain lch4 = new LinkChain(sv2, vnf1);
+        LinkChain lch5 = new LinkChain(sv2, vnf4);
+
+        LinkChain lch6 = new LinkChain(sv3, vnf1);
+        LinkChain lch7 = new LinkChain(sv3, vnf4);
+        LinkChain lch8 = new LinkChain(sv3, vnf5);
+        LinkChain lch9 = new LinkChain(sv3, vnf6);
+
+
+        sv1.insertLinkChain(lch1);
+        sv1.insertLinkChain(lch2);
+        sv1.insertLinkChain(lch3);
+
+        sv2.insertLinkChain(lch4);
+        sv2.insertLinkChain(lch5);
+
+        sv3.insertLinkChain(lch6);
+        sv3.insertLinkChain(lch7);
+        sv3.insertLinkChain(lch8);
+        sv3.insertLinkChain(lch9);
+
+        System.out.println(sv1.getTotalResourceRequired());
+        System.out.println(sv2.getTotalResourceRequired());
+
+        Allocation.AllocateService(sv1,pop);
+        Allocation.AllocateService(sv2,pop);
+        Allocation.AllocateService(sv3,pop);
 
 
 

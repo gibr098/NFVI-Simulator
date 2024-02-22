@@ -23,7 +23,7 @@ public class Service {
     public Service(String name, int cost){
         this.name = name;
         this.cost = cost;
-        functions = new LinkedList<VNF>();
+        this.functions = new LinkedList<VNF>();
 
         //linkset = new HashSet<LinkProvide>();
         linkset = new LinkedList<LinkChain>();
@@ -75,9 +75,15 @@ public class Service {
     }
 
     //Service -> VNF
+    
     public Set<LinkChain> getLinkChain() throws Exception{
         if(linkset.size() == 0) throw new Exception("cardinality violated on service");
         else return (HashSet<LinkChain>)linkset.clone();
+    }
+    
+    public LinkedList<LinkChain> getLinkChainList() throws Exception{
+        if(linkset.size() == 0) throw new Exception("cardinality violated on service");
+        else return linkset;
     }
 
     public void insertLinkChain(LinkChain t){
@@ -107,6 +113,25 @@ public class Service {
 
         return info;
 
+    }
+
+    public String getTotalResourceRequired(){
+        String info="\n"+this.name+" has a chain of "+ this.getVNFNumber()+" VNFs: ";
+        int ram=0; int cpu=0; int storage=0; int network = 0; int cpu_usage=0;
+        for (LinkChain l : linkset) {
+            info+="\n";
+            info+=l.getVNF().getName()+"["+l.getVNF().getType()+"] ";
+            info+=l.getVNF().getResourcesRequired();
+            ram+=l.getVNF().getRam();
+            cpu+=l.getVNF().getCPU();
+            storage+=l.getVNF().getStorage();
+            network+=l.getVNF().getNetwork();
+            cpu_usage+=l.getVNF().getCPUusage();
+        }
+        info+="\n";
+        info+= this.name+" requires in total (ram: "+ram+"GB, cpu: "+cpu+" cores, cpu usage: "+ cpu_usage +"%, storage: "+storage+" GB, network: "+network+" interfaces)";
+
+        return info;
     }
 
 }

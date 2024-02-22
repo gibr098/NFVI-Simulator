@@ -15,6 +15,8 @@ public class COTServer {
     private int storage;
     private int network;
 
+    private int cpu_capacity = 100;
+
     private HashSet<Container> containers;
 
     //COTS -> CONTAINER

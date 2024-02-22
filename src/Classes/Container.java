@@ -13,6 +13,10 @@ public class Container{
     private int storage;
     private int network;
 
+    private int cpu_usage;
+
+    private boolean busy;
+
     private HashSet<VNF> VNFs;
 
     //CONTAINER -> COTS
@@ -29,14 +33,25 @@ public class Container{
     //Container -> VNF
     public HashSet<LinkRun> linkset;
 
-    public Container(String name, int ram, int cpu, int storage, int network){
+    public Container(String name, int ram, int cpu, int storage, int network, int cpu_usage){
         this.name = name;
         this.ram = ram;
         this.cpu = cpu;
         this.storage = storage;
         this. network = network;
+        this.cpu_usage = cpu_usage;
+
+        this.busy = false;
 
         linkset = new HashSet<LinkRun>();
+    }
+
+    public boolean isBusy(){
+        return busy;
+    }
+
+    public void setBusyState(boolean state){
+        busy = state;
     }
 
     public String getName(){
@@ -131,6 +146,17 @@ public class Container{
         for (LinkRun l: linkset) {
             info+="\n"+l.getVNF().getTotalInfo();
         }
+
+        return info;
+    }
+
+    public String getTotalResourcesInfo(){
+        String info = this.name+" (";
+        info+="ram: "+this.ram+"GB";
+        info+=", cpu: "+this.cpu+" cores";
+        info+=", storage: "+this.storage+"GB";
+        info+=", network: "+this.network;
+        info+=")";
 
         return info;
     }
