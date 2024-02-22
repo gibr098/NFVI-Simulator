@@ -1,5 +1,5 @@
 # NFVI Simulator
-Parameters for running a NFVI with a Point of Presence can be set in the NFVI.config file
+Parameters for running a NFVI with a Point of Presence can be set in the NFVI.config file.
 Running App.java will build an NFVI with the desidered configuration
 
 ### Working on: 
