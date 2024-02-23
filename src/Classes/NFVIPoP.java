@@ -1,10 +1,14 @@
 package Classes;
 
+import java.util.LinkedList;
+
 import Classes.LinkManagers.*;
 import Classes.Links.*;
 
 public class NFVIPoP {
     private final String name;
+
+    private static LinkedList<Service> queue;
 
     //NFVIPoP -> DATACENTER
     private LinkOwn link;
@@ -24,7 +28,31 @@ public class NFVIPoP {
 
     public NFVIPoP(String name){
         this.name = name;
+
+        this.queue = new LinkedList<Service>();
+
+        
     }
+
+    public LinkedList getQueue(){
+        return queue;
+    }
+
+    public static void addElementToQueue(Service s){
+        if(!queue.contains(s)){
+            queue.add(s);
+        }
+    }
+
+    public String getQueuePrint(){
+        String print = "queue:( ";
+        for (Service service : queue) {
+            print+=service.getName()+" ";
+        }
+        return print+")";
+    }
+
+
 
     public String getName(){
         return name;
