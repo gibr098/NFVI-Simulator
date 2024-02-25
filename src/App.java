@@ -8,6 +8,8 @@ import Classes.Links.LinkContain;
 import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
 import Functions.*;
+import RequestServe.*;
+
 import java.io.*;
 
 public class App {
@@ -85,9 +87,9 @@ public class App {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
 
-        Service sv1 = new Service("Service1",0);
-        Service sv2 = new Service("Service2",0);
-        Service sv3 = new Service("Service3",0);
+        Service sv1 = new Service("Service1",0,0);
+        Service sv2 = new Service("Service2",0,0);
+        Service sv3 = new Service("Service3",0,0);
 
         VNF vnf11 = new VNF("VNF-11","firewall");
         VNF vnf12 = new VNF("VNF-12","NAT");
@@ -95,12 +97,12 @@ public class App {
 
         VNF vnf21 = new VNF("VNF-21","routing");
         VNF vnf22 = new VNF("VNF-22","encryption");
-        VNF vnf23 = new VNF("VNF-23","decryption");
+        VNF vnf23 = new VNF("VNF-23","firewall");
 
         VNF vnf31 = new VNF("VNF-31","firewall");
         VNF vnf32 = new VNF("VNF-32","routing");
         VNF vnf33 = new VNF("VNF-33","encryption");
-        //VNF vnf34 = new VNF("VNF-34","SUPERVNF");
+        VNF vnf34 = new VNF("VNF-34","SUPERVNF");
 
         LinkChain lch1 = new LinkChain(sv1, vnf11);
         LinkChain lch2 = new LinkChain(sv1, vnf12);
@@ -113,7 +115,7 @@ public class App {
         LinkChain lch7 = new LinkChain(sv3, vnf31);
         LinkChain lch8 = new LinkChain(sv3, vnf32);
         LinkChain lch9 = new LinkChain(sv3, vnf33);
-        //LinkChain lch10 = new LinkChain(sv3, vnf34);
+        LinkChain lch10 = new LinkChain(sv3, vnf34);
 
         sv1.insertLinkChain(lch1);
         sv1.insertLinkChain(lch2);
@@ -126,7 +128,7 @@ public class App {
         sv3.insertLinkChain(lch7);
         sv3.insertLinkChain(lch8);
         sv3.insertLinkChain(lch9);
-        //sv3.insertLinkChain(lch10);
+        sv3.insertLinkChain(lch10);
 
 
         System.out.println(sv1.getTotalResourceRequired());
@@ -135,27 +137,36 @@ public class App {
 
         
 
-        Allocation.AllocateService(sv1,pop);
-        Allocation.AllocateService(sv2,pop);
-        Allocation.AllocateService(sv3,pop);
 
-        System.out.println("vnf11 runs on "+vnf11.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf12 runs on "+vnf12.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf13 runs on "+vnf13.getLinkRun().iterator().next().getContainer().getName());
 
-        System.out.println("vnf21 runs on "+vnf21.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf22 runs on "+vnf22.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf23 runs on "+vnf23.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf31 runs on "+vnf31.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf32 runs on "+vnf32.getLinkRun().iterator().next().getContainer().getName());
-        System.out.println("vnf33 runs on "+vnf33.getLinkRun().iterator().next().getContainer().getName());
-        //System.out.println("vnf34 runs on "+vnf34.getLinkRun().iterator().next().getContainer().getName());
+
+
+        //Allocation.AllocateService(sv1,pop);
+        //Allocation.AllocateService(sv2,pop);
+        //Allocation.AllocateService(sv3,pop);
+
+
+        System.out.println(pop.getQueuePrint());
 
         
         System.out.println("\nServers' state after services allocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
+
+
+        //Allocation.DeallocateService(sv1,pop);
+        //Allocation.DeallocateService(sv2,pop);
+        //Allocation.DeallocateService(sv3,pop);
+
+
+
+
+        System.out.println("\nServers' state after services Deallocation:");
+        for (LinkContain l : dc.getLinkContain()) {
+            System.out.println(l.getCOTServer().getTotalResourcesInfo());
+        }
+
 
         //System.out.println("\n" + pop.getTotalInfo());
 
