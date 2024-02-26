@@ -2,10 +2,12 @@ package Functions;
 
 import Classes.COTServer;
 import Classes.Container;
+import Classes.NFVI;
 import Classes.NFVIPoP;
 import Classes.Service;
 import Classes.VNF;
 import Classes.Links.LinkChain;
+import Classes.Links.LinkProvide;
 
 public class Deallocation {
 
@@ -20,21 +22,23 @@ public class Deallocation {
                         }
                     });
     }*/
-    public static boolean DeallocateService(Service s, NFVIPoP pop) throws Exception {
-        boolean res = true;
-        for(LinkChain lc : s.getLinkChainList()){
-            System.out.println("DEALLOCATINGGGG : "+lc.getVNF().getName());
-            res = res && DeallocateVNF(lc.getVNF(), pop);
+    public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
+        for(LinkChain lc : s.getLinkChain()){
+            //System.out.println("DEALLOCATING "+lc.getVNF().getName()+"...");
+            DeallocateVNF(lc.getVNF(), pop);
         }
-        return res;
+        NFVI nfvi = pop.getLinkCompose().getNFVI();
+        LinkProvide lp = s.getLinkLinkProvide();
+        nfvi.removeLinkProvide(lp);
+
     }
-    private static boolean DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
+    private static void DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
         //DeallocateServerResources(vnf.getLinkRun().iterator().next().getContainer());
+        System.out.println("DEALLOCATING "+vnf.getName()+".89..");
         vnf.getLinkRun().getContainer().setBusyState(false);
         vnf.removeLinkRun(vnf.getLinkRun());
         vnf.setAllocated(false);
         DeallocateServerResources(vnf.getLinkRun().getContainer());
-        return true;
     }
 
     

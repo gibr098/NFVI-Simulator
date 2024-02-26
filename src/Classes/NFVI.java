@@ -123,6 +123,14 @@ public class NFVI{
         return info;
     }
 
+    public String getServicesRunning(){
+        String info = "(";
+        for (LinkProvide s : linksetS) {
+            info+=s.getService().getName()+" ";
+        }
+        return info+" )";
+    }
+
 
 
 }

@@ -11,14 +11,14 @@ import Classes.Service;
 
 import java.io.*;
 
-public class Dispatcher implements Callable<Object>{
+public class Dispatcher1 implements Callable<Object>{
     double endTime;
     double clock;
     Queue queue;
     boolean busy;
     int served;
 
-    public Dispatcher(double endTime, Queue q) {
+    public Dispatcher1(double endTime, Queue q) {
         this.endTime = endTime;
         this.clock = 0;
         this.queue = q;

@@ -37,6 +37,11 @@ public class Allocation {
         for(LinkChain lc : s.getLinkChainList()){
             res = res && AllocateVNF(lc.getVNF(), pop);
         }
+        if(res){
+            NFVI nfvi = pop.getLinkCompose().getNFVI();
+            LinkProvide lp = new LinkProvide(nfvi, s);
+            nfvi.insertLinkProvide(lp);
+        }
         return res;
     }
 

@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import Classes.*;
 import RequestServeSample.*;
 
-public class Requester implements Callable<Object>{
+public class Requester1 implements Callable<Object>{
 
     NFVIPoP pop;
 
@@ -23,7 +23,7 @@ public class Requester implements Callable<Object>{
     int requests;
     boolean busy;
 
-    public Requester(double lambda, double endTime, Queue q) {
+    public Requester1(double lambda, double endTime, Queue q) {
         this.lambda = lambda;
         this.endTime = endTime;
         this.pop = pop;
