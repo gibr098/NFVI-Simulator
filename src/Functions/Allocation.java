@@ -13,7 +13,7 @@ import RequestServeSample.*;
 public class Allocation {
 
     // sort first the service chain by how much resources the vnf needs?
-    public static void AllocateService(Service s, NFVIPoP pop) throws Exception {
+   /*  public static void AllocateService(Service s, NFVIPoP pop) throws Exception {
         if (ServiceCanBeAllocated(s, pop)) {
             s.getLinkChainList().forEach(
                     (vnf) -> {
@@ -30,10 +30,18 @@ public class Allocation {
             System.out.println(pop.getQueuePrint());
         }
         // System.out.println("\n" + pop.getTotalInfo());
+    }*/
+
+    public static boolean AllocateService(Service s, NFVIPoP pop) throws Exception {
+        boolean res = true;
+        for(LinkChain lc : s.getLinkChainList()){
+            res = res && AllocateVNF(lc.getVNF(), pop);
+        }
+        return res;
     }
 
 
-    private static void AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
+    private static boolean AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
         DataCenter dc = pop.getLinkOwn().getDataCenter();
         for (LinkContain l : dc.getLinkContain()) {
             COTServer server = l.getCOTServer();
@@ -47,13 +55,15 @@ public class Allocation {
                             container.setBusyState(true);
                             vnf.setAllocated(true);
                             AllocateServerResources(container);
-                            System.out.println(vnf.getName()+" runs on "+ container.getName());
-                            break; // return true; //Allocation has succeded
+                            System.out.println(vnf.getName()+" runs on "+ vnf.getLinkRun().getContainer().getName());
+                            //break; // 
+                            return true; //Allocation has succeded
                         }
                     }
                 }
             }
         }
+        return false;
     }
     
 
@@ -95,7 +105,7 @@ public class Allocation {
 
     }
 
-    private static boolean ServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {
+    public static boolean ServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {
         int n = s.getLinkChainList().size();
         int count = 0;
         DataCenter dc = pop.getLinkOwn().getDataCenter();
@@ -113,4 +123,6 @@ public class Allocation {
         }
         return false;
     }
+
+    
 }

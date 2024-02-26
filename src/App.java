@@ -7,6 +7,8 @@ import Classes.Links.LinkCompose;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
+import Classes.Links.LinkProvide;
+import Classes.Links.LinkRun;
 import Functions.*;
 import RequestServeSample.*;
 
@@ -85,6 +87,7 @@ public class App {
         //System.out.println(nfvi.getTotalInfo());
 
 
+        
         System.out.println("\nServers' state before services allocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
@@ -181,11 +184,19 @@ public class App {
             }
         }
 
+        for (LinkContain lcc : dc.getLinkContain()){
+            for(LinkInstance lii: lcc.getCOTServer().getLinkInstance()){
+                System.out.println(lii.getContainer().getName() + ", busy: "+lii.getContainer().isBusy());
+            }
+
+        }
+
 
         //System.out.println("\n" + pop.getTotalInfo());
 
 
-        /*
+        
+        /* 
         if(args[0]!=null && args[1]!=null){
             NFVI nfv = new NFVI("NFVI");
 
@@ -195,7 +206,7 @@ public class App {
 
             for (int i = 0; i< npop; i++){
                 NFVIPoP pop = new NFVIPoP("PoP-"+i);
-                DataCenter dc = new DataCenter("DC-"+i,3);
+                DataCenter dc = new DataCenter("DC-"+i);
 
                 LinkCompose lc = new LinkCompose(nfv, pop);
                 LinkOwn lo = new LinkOwn(pop, dc);
@@ -216,17 +227,17 @@ public class App {
 
         NFVI nfv1 = new NFVI("NFVI-1");
         NFVIPoP pop1 = new NFVIPoP("PoP-1");
-        DataCenter dc1 = new DataCenter("DC-1",3);
+        DataCenter dc1 = new DataCenter("DC-1");
 
         COTServer s1 = new COTServer("Server-1",16, 8, 256, 2);
         COTServer s2 = new COTServer("Server-2",16, 8, 256, 2);
 
-        Container c1 = new Container("c1",4, 4, 64, 1);
-        Container c2 = new Container("c2",4, 4, 64, 1);
-        Container c3 = new Container("c3",4, 4, 64, 1);
+        Container c1 = new Container("c1",4, 4, 64, 1,2);
+        Container c2 = new Container("c2",4, 4, 64, 1,2);
+        Container c3 = new Container("c3",4, 4, 64, 1,2);
 
-        Service sv1 = new Service("Service1",0);
-        Service sv2 = new Service("Service2",0);
+        Service sv1 = new Service("Service1",10,0);
+        Service sv2 = new Service("Service2",10,0);
 
         VNF vnf1 = new VNF("VNF-1","firewall");
         VNF vnf2 = new VNF("VNF-2","NAT");

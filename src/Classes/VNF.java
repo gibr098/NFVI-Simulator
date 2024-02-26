@@ -21,7 +21,8 @@ public class VNF {
     private HashSet<LinkChain> linksetC;
 
     // VNF -> Container
-    private HashSet<LinkRun> linkset;
+    //private HashSet<LinkRun> linkset;
+    private LinkRun linkset;
 
     public VNF(String name, String type) {
         this.name = name;
@@ -30,7 +31,7 @@ public class VNF {
         this.allocated = false;
 
         linksetC = new HashSet<LinkChain>();
-        linkset = new HashSet<LinkRun>();
+        //linkset = new HashSet<LinkRun>();
 
         switch (type) {
             case "firewall":
@@ -129,7 +130,7 @@ public class VNF {
         allocated = state;
     }
 
-    public String getContainers() {
+    /*public String getContainers() {
         String s = " ";
         for (LinkRun linkRun : linkset) {
             s += linkRun.getContainer().getName();
@@ -139,7 +140,7 @@ public class VNF {
 
     public int getContainerNumber() {
         return linkset.size();
-    }
+    }*/
 
     // VNF -> Service
     public Set<LinkChain> getLinkChain() {
@@ -169,8 +170,13 @@ public class VNF {
     }
 
     // VNF -> Container
+    /* 
     public Set<LinkRun> getLinkRun() {
         return (HashSet<LinkRun>) linkset.clone();
+    }*/
+
+    public LinkRun getLinkRun() {
+        return linkset;
     }
 
     public void insertLinkRun(LinkRun t) {
@@ -187,7 +193,8 @@ public class VNF {
 
     public void insertforManagerRun(ManagerRun a) {
         if (a != null)
-            linkset.add(a.getLink());
+            //linkset.add(a.getLink());
+            if (a != null) linkset = a.getLink();
     }
 
     public void removeforManagerRun(ManagerRun a) {
@@ -197,10 +204,7 @@ public class VNF {
 
     public String getTotalInfo() {
         String info = "";
-        info += this.getName() + "[" + this.getType() + "] runs on " + this.getContainerNumber() + " containers: ";
-        for (LinkRun l : linkset) {
-            info += l.getContainer().getName() + " ";
-        }
+        info += this.getName() + "[" + this.getType() + "] runs on " + this.getLinkRun().getContainer().getName();
         info += "\n" + this.getName() + "[" + this.getType() + "] is in the chain of " + linksetC.size()
                 + " services: ";
         for (LinkChain l : linksetC) {

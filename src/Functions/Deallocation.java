@@ -5,10 +5,11 @@ import Classes.Container;
 import Classes.NFVIPoP;
 import Classes.Service;
 import Classes.VNF;
+import Classes.Links.LinkChain;
 
 public class Deallocation {
 
-    public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
+    /*public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
             s.getLinkChainList().forEach(
                     (vnf) -> {
                         try {
@@ -18,14 +19,28 @@ public class Deallocation {
                             e.printStackTrace();
                         }
                     });
+    }*/
+    public static boolean DeallocateService(Service s, NFVIPoP pop) throws Exception {
+        boolean res = true;
+        for(LinkChain lc : s.getLinkChainList()){
+            System.out.println("DEALLOCATINGGGG : "+lc.getVNF().getName());
+            res = res && DeallocateVNF(lc.getVNF(), pop);
+        }
+        return res;
     }
-    private static void DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
-        DeallocateServerResources(vnf.getLinkRun().iterator().next().getContainer());
-        //vnf.removeLinkRun(vnf.getLinkRun().iterator().next());
-        vnf.getLinkRun().clear();
+    private static boolean DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
+        //DeallocateServerResources(vnf.getLinkRun().iterator().next().getContainer());
+        vnf.getLinkRun().getContainer().setBusyState(false);
+        vnf.removeLinkRun(vnf.getLinkRun());
+        vnf.setAllocated(false);
+        DeallocateServerResources(vnf.getLinkRun().getContainer());
+        return true;
     }
 
+    
+
     private static void DeallocateServerResources(Container container) throws Exception {
+        //container.setBusyState(false);
         int ram = container.getRam();
         int cpu = container.getCpu();
         int cpu_usage = container.getCPUusage();

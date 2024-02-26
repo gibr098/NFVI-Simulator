@@ -1,6 +1,8 @@
 package Classes;
 
 import java.util.*;
+
+
 import Classes.*;
 import Classes.LinkManagers.*;
 import Classes.Links.*;
@@ -9,6 +11,12 @@ public class Service {
     private final String name;
     private double time;
     private int type;
+
+    // service is allocated at certain initial time
+    private boolean allocated;
+    private double initial_time;
+
+
 
     private LinkedList<VNF> functions;
 
@@ -30,6 +38,9 @@ public class Service {
         //linkset = new HashSet<LinkProvide>();
         linkset = new LinkedList<LinkChain>();
 
+        this.allocated = false;
+        this.initial_time = 0.0;
+
     }
 
     public String getName(){
@@ -50,6 +61,21 @@ public class Service {
             s+= l.getVNF().getType()+"-";
         }
         return s;
+    }
+
+    public double getInitalAllocationTime(){
+        return initial_time;
+    }
+
+    public void setInitialAllocationTime(double time){
+        initial_time = time;
+    }
+
+    public boolean isAllocated(){
+        return allocated;
+    }
+    public void setAllocated(boolean state){
+        this.allocated = state;
     }
 
     //Service -> NFVI
