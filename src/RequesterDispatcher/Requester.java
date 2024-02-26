@@ -1,19 +1,21 @@
-package RequestServe;
+package RequesterDispatcher;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import Classes.*;
-import RequestServe.*;
+import RequestServeSample.*;
+import Functions.ServiceGeneration;
 
-public class Requester {
+public class Requester implements Callable<Object>{
 
     NFVIPoP pop;
 
-    // LinkedList<Service> queue;
-    Queue queue;
+    LinkedList<Service> queue;
 
     double lambda; // rate of requests arrival
     double clock; // current time of simulation
@@ -21,7 +23,7 @@ public class Requester {
     int requests;
     boolean busy;
 
-    public Requester(double lambda, double endTime, Queue q) {
+    public Requester(double lambda, double endTime, NFVIPoP pop) {
         this.lambda = lambda;
         this.endTime = endTime;
         this.pop = pop;
@@ -30,17 +32,16 @@ public class Requester {
         requests = 0;
         busy = false;
 
-        // queue = new LinkedList<Service>();
-        //queue = new LinkedList<service>();
-
-        this.queue = q;
+        queue = pop.getQueue();
 
     }
 
-    /*
-    public LinkedList<service> getQueue() {
-        return queue;
-    }*/
+    @Override
+    public Object call() throws Exception {
+        run();
+        return null;
+    }
+
 
     private static int getPoissonRandom(double lambda) {
         Random r = new Random();
@@ -54,23 +55,21 @@ public class Requester {
         return k - 1;
     }
 
-    public void run() throws InterruptedException {
-        // while(clock < 2*endTime){
+    public void run() throws InterruptedException, Exception {
         int num = 1;
-        service s;
+        Service s;
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(1);
             clock += 1;
             if (getPoissonRandom(lambda) == 1) {
-                s = new service("service-" + num, 10);
-                queue.addElement(s);
+                s = ServiceGeneration.generateService("Service-"+num,5);
+                pop.addElementToQueue(s);;
                 requests++;
                 num++;
-                System.out.println("\tR: Request of " + s.getName() + " arrived at: " + clock + "s");
+                System.out.println(clock + "s" +"\tR: Request of " + s.getName() + " arrived at: " + clock + "s");
             }else{
-                System.out.println("R: nothing "+clock);
+                System.out.println(clock+"s"+" R: nothing ");
             }
-            
 
         }
         System.out.println("R: Total requests arrived: " + requests);

@@ -1,8 +1,9 @@
-package RequestServe;
+package RequestServeSample;
 
 //Controller class used to simulate the behavior of an M/M/1 system.
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +11,7 @@ import Classes.Service;
 
 import java.io.*;
 
-public class Dispatcher {
+public class Dispatcher implements Callable<Object>{
     double endTime;
     double clock;
     Queue queue;
@@ -26,6 +27,12 @@ public class Dispatcher {
         this.busy = false;
     }
 
+    @Override
+    public Object call() throws Exception {
+        run();
+        return null;
+    }
+
     public void run() throws InterruptedException {
         double time = 0;
         service s = new service("service0", 3);
@@ -37,19 +44,19 @@ public class Dispatcher {
             if (busy == false) {
                 if (!qq.isEmpty()) {
                     s = qq.remove();
-                    System.out.println("\tD: " + s.getName() + " Allocated at: " + clock + "s");
+                    System.out.println(+clock + "s"+ "\tD: " + s.getName() + " Allocated at: "+clock+"s");
                     served++;
                     time = clock;
                     busy = true;
                 }else{
-                    System.out.println("D: nothing "+clock);
+                    System.out.println(clock+"s"+" D: nothing");
                 }
             }else {
                 if (clock == time + 3) {
-                    System.out.println("\tD: " + s.getName() + " Deallocated at: " + clock + "s");
+                    System.out.println(clock + "s"+ "\tD: " + s.getName() + " Deallocated at: " + clock + "s");
                     busy = false;
                 } else {
-                    System.out.println("D: " + s.getName() + " running at " + clock);
+                    System.out.println(clock + "s"+ "\tD: "+ s.getName() + " running at " + clock);
                 }
             }
         }

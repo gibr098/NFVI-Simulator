@@ -6,8 +6,9 @@ import Classes.*;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkInstance;
+import Classes.Links.LinkProvide;
 import Classes.Links.LinkRun;
-import RequestServe.*;
+import RequestServeSample.*;
 
 public class Allocation {
 
@@ -17,28 +18,20 @@ public class Allocation {
             s.getLinkChainList().forEach(
                     (vnf) -> {
                         try {
+                            //LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
+                            //pop.getLinkCompose().getNFVI().insertLinkProvide(lp);
                             AllocateVNF(vnf.getVNF(), pop);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     });
         } else {
-            pop.addElementToQueue(s);
+            //pop.addElementToQueue(s);
             System.out.println(pop.getQueuePrint());
         }
         // System.out.println("\n" + pop.getTotalInfo());
     }
 
-    public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
-            s.getLinkChainList().forEach(
-                    (vnf) -> {
-                        try {
-                            DeallocateVNF(vnf.getVNF(), pop);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-    }
 
     private static void AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
         DataCenter dc = pop.getLinkOwn().getDataCenter();
@@ -62,11 +55,7 @@ public class Allocation {
             }
         }
     }
-    private static void DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
-        DeallocateServerResources(vnf.getLinkRun().iterator().next().getContainer());
-        vnf.removeLinkRun(vnf.getLinkRun().iterator().next());
-        
-    }
+    
 
     private static void AllocateServerResources(Container container) throws Exception {
         int ram = container.getRam();
@@ -82,19 +71,7 @@ public class Allocation {
 
     }
 
-    private static void DeallocateServerResources(Container container) throws Exception {
-        int ram = container.getRam();
-        int cpu = container.getCpu();
-        int cpu_usage = container.getCPUusage();
-        int storage = container.getStorage();
-        int network = container.getNetwork();
-        COTServer server = container.getLinkInstance().getCOTServer();
-        server.deallocateCPUusage(cpu_usage);
-        server.deallocateCpu(cpu);
-        server.deallocateRam(ram);
-        server.deallocateStorage(storage);
-
-    }
+    
 
     private static boolean ContainerHasResources(Container container, VNF vnf) {
         if (container.getRam() < vnf.getRam() ||
@@ -116,10 +93,6 @@ public class Allocation {
         }
         return ret;
 
-    }
-
-    private boolean checkContainerAvailability(Container container) {
-        return container.isBusy();
     }
 
     private static boolean ServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {

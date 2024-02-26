@@ -8,7 +8,7 @@ import Classes.Links.LinkContain;
 import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
 import Functions.*;
-import RequestServe.*;
+import RequestServeSample.*;
 
 import java.io.*;
 
@@ -43,6 +43,9 @@ public class App {
         int container_cpu = Integer.parseInt(prop.getProperty("C-CPU(Cores)"));
         int container_storage = Integer.parseInt(prop.getProperty("C-Storage(GB)"));
         int container_network = Integer.parseInt(prop.getProperty("C-Network(interfaces)"));
+
+        double lambda = Double.parseDouble(prop.getProperty("lambda"));
+        double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
 
         String policy = prop.getProperty("policy");
 
@@ -155,9 +158,9 @@ public class App {
         }
 
 
-        //Allocation.DeallocateService(sv1,pop);
-        //Allocation.DeallocateService(sv2,pop);
-        //Allocation.DeallocateService(sv3,pop);
+        //Deallocation.DeallocateService(sv1,pop);
+        //Deallocation.DeallocateService(sv2,pop);
+        //Deallocation.DeallocateService(sv3,pop);
 
 
 
@@ -165,6 +168,17 @@ public class App {
         System.out.println("\nServers' state after services Deallocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
+        }
+
+        AppRS app = new AppRS(lambda, duration,pop);
+        app.run();
+        System.out.println("FINAL QUEUE"+pop.getQueuePrint());
+
+        for(Service s:pop.getQueue()){
+            System.out.println(s.getName()+":");
+            for(LinkChain l : s.getLinkChainList()){
+                System.out.println("name: "+l.getVNF().getName()+" ,type: "+l.getVNF().getType());
+            }
         }
 
 

@@ -34,7 +34,7 @@ public class NFVIPoP {
         
     }
 
-    public LinkedList getQueue(){
+    public LinkedList<Service> getQueue(){
         return queue;
     }
 

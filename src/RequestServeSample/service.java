@@ -1,4 +1,4 @@
-package RequestServe;
+package RequestServeSample;
 
 public class service {
     private String name;
