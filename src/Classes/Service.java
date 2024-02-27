@@ -58,7 +58,7 @@ public class Service {
     public String getChain(){
         String s="";
         for (LinkChain l : linkset) {
-            s+= l.getVNF().getType()+"-";
+            s+= l.getVNF().getName()+" ";
         }
         return s;
     }
@@ -109,14 +109,15 @@ public class Service {
         else return (HashSet<LinkChain>)linkset.clone();
     }
     
-    public LinkedList<LinkChain> getLinkChainList() throws Exception{
-        if(linkset.size() == 0) throw new Exception("cardinality violated on service");
+    public List<LinkChain> getLinkChainList() throws Exception{
+        if(linkset.isEmpty()) throw new Exception("cardinality violated on service");
         else return linkset;
     }
 
     public void insertLinkChain(LinkChain t){
         if(t!=null && t.getService()==this){
-            ManagerChain.insert(t);}
+            ManagerChain.insert(t);
+        }
     }
 
     public void removeLinkChain(LinkChain t){

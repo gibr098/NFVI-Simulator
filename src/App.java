@@ -166,19 +166,23 @@ public class App {
         }
 
 
+        System.out.println(sv1.getChain());
         //Deallocation.DeallocateService(sv1,pop);
         //Deallocation.DeallocateService(sv2,pop);
         //Deallocation.DeallocateService(sv3,pop);
 
 
 
+        
 
         System.out.println("\nServers' state after services Deallocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
 
-        AppRS app = new AppRS(lambda, duration,pop);
+        
+
+        AppRS app = new AppRS(lambda, duration, pop);
         app.run();
         System.out.println("FINAL QUEUE"+pop.getQueuePrint());
 
@@ -196,6 +200,7 @@ public class App {
             }
 
         }
+        
 
 
         //System.out.println("\n" + pop.getTotalInfo());
