@@ -1,7 +1,7 @@
 # NFVI Simulator
 Parameters for running a NFVI with a Point of Presence can be set in the NFVI.config file.
 Running App.java will build an NFVI with the desired configuration and will run the simulation:
-It consists in simulating the arriving and the management of random-service requests to be instantiated into the NFVI.
+it consists in simulating the arriving and the management of random-service requests to be instantiated into the NFVI.
 
 ### Working on: 
 1. Multiplicity constraints(done)
