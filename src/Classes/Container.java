@@ -137,7 +137,7 @@ public class Container{
     }
 
     public void removeforManagerRun(ManagerRun a){
-        if (a != null) linkset = null;
+        if (a != null) linkset.remove(a.getLink());
     }
 
     public String getTotalInfo(){

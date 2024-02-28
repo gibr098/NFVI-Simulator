@@ -38,9 +38,10 @@ public class Allocation {
             res = res && AllocateVNF(lc.getVNF(), pop);
         }
         if(res){
-            NFVI nfvi = pop.getLinkCompose().getNFVI();
-            LinkProvide lp = new LinkProvide(nfvi, s);
-            nfvi.insertLinkProvide(lp);
+            //NFVI nfvi = pop.getLinkCompose().getNFVI();
+            //LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
+            //nfvi.insertLinkProvide(lp);
+            pop.getLinkCompose().getNFVI().insertLinkProvide(new LinkProvide(pop.getLinkCompose().getNFVI(), s));
         }
         return res;
     }

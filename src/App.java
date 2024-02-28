@@ -12,6 +12,7 @@ import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
 import Classes.Links.LinkProvide;
 import Classes.Links.LinkRun;
+
 import Functions.*;
 import RequestServeSample.*;
 import RequesterDispatcher.Dispatcher;
@@ -79,7 +80,7 @@ public class App {
             }
         }
 
-        /* 
+        /*
         COTServer s5 = new COTServer("Server-5", 100, server_cpu, server_storage, server_network);
         LinkContain lc5 = new LinkContain(dc, s5);
         dc.insertLinkContain(lc5);
@@ -92,7 +93,7 @@ public class App {
         //System.out.println(nfvi.getTotalInfo());
 
 
-        
+
         System.out.println("\nServers' state before services allocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
@@ -146,45 +147,63 @@ public class App {
         System.out.println(sv2.getTotalResourceRequired());
         System.out.println(sv3.getTotalResourceRequired());
 
-        
-
-
 
 
 
         //Allocation.AllocateService(sv1,pop);
         //Allocation.AllocateService(sv2,pop);
         //Allocation.AllocateService(sv3,pop);
+        //System.out.println("after allocation: "+nfvi.getServicesRunning());
+        //System.out.println("after allocation: "+sv1.getLinkProvide().getNFVI().getName());
 
 
         System.out.println(pop.getQueuePrint());
 
-        
+
         System.out.println("\nServers' state after services allocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
 
 
+        
+
+
         System.out.println(sv1.getChain());
         //Deallocation.DeallocateService(sv1,pop);
         //Deallocation.DeallocateService(sv2,pop);
         //Deallocation.DeallocateService(sv3,pop);
+        //System.out.println("after deallocation: "+nfvi.getServicesRunning());
 
 
 
-        
 
         System.out.println("\nServers' state after services Deallocation:");
         for (LinkContain l : dc.getLinkContain()) {
             System.out.println(l.getCOTServer().getTotalResourcesInfo());
         }
 
-        
+
 
         AppRS app = new AppRS(lambda, duration, pop);
         app.run();
-        System.out.println("FINAL QUEUE"+pop.getQueuePrint());
+
+
+        /*
+        Requester re = new RequesterDispatcher.Requester(lambda, duration, pop);
+        Dispatcher di = new RequesterDispatcher.Dispatcher(duration, pop);
+
+        ExecutorService service = Executors.newFixedThreadPool(1); //with 1 they run sequentially
+                                                                            //with 2 they run simultaneously
+        service.submit(re);
+        service.submit(di);
+        //service.submit(monitor); //class that monitor and display the state of the servers
+
+        service.shutdown();
+        service.awaitTermination(1, TimeUnit.DAYS);*/
+
+
+        
 
 
         for(Service s:pop.getQueue()){
@@ -200,13 +219,12 @@ public class App {
             }
 
         }
-        
 
 
         //System.out.println("\n" + pop.getTotalInfo());
 
 
-        
+
         /* 
         if(args[0]!=null && args[1]!=null){
             NFVI nfv = new NFVI("NFVI");

@@ -1,5 +1,7 @@
 package Functions;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
+
 import Classes.COTServer;
 import Classes.Container;
 import Classes.NFVI;
@@ -8,6 +10,8 @@ import Classes.Service;
 import Classes.VNF;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkProvide;
+
+
 
 public class Deallocation {
 
@@ -23,12 +27,15 @@ public class Deallocation {
                     });
     }*/
     public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
+        
         for(LinkChain lc : s.getLinkChainList()){
             //System.out.println("DEALLOCATING "+lc.getVNF().getName()+"...");
             DeallocateVNF(lc.getVNF(), pop);
         }
         System.out.println("CLEARING "+s.getName()+"...");
-        pop.getLinkCompose().getNFVI().removeLinkProvide(s.getLinkLinkProvide());
+        //pop.getLinkCompose().getNFVI().removeLinkProvide(s.getLinkProvide());
+        pop.getLinkCompose().getNFVI().removeLinkProvide(s.getLinkProvide());
+        //System.out.println("remove: "+pop.getLinkCompose().getNFVI().getServicesRunning());
         s.getLinkChainList().clear();
         
     }

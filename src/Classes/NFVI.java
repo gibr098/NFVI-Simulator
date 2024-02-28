@@ -24,8 +24,8 @@ public class NFVI {
         this.name = name;
         // number_of_pop = n;
 
-        linkset = new HashSet<LinkCompose>();
-        linksetS = new HashSet<LinkProvide>();
+        this.linkset = new HashSet<LinkCompose>();
+        this.linksetS = new HashSet<LinkProvide>();
 
     }
 
@@ -102,7 +102,7 @@ public class NFVI {
 
     public void removeforManagerProvide(ManagerProvide a) {
         if (a != null)
-            linksetS = null;
+            linksetS.remove(a.getLink());
     }
 
     public String getTotalInfo() throws Exception {

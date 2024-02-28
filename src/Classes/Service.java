@@ -79,7 +79,7 @@ public class Service {
     }
 
     //Service -> NFVI
-    public LinkProvide getLinkLinkProvide() throws Exception{
+    public LinkProvide getLinkProvide() throws Exception{
         if(link == null) throw new Exception("cardinality violated");
         else return link;
     }

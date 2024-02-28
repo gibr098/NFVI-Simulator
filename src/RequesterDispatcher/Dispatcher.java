@@ -47,7 +47,7 @@ public class Dispatcher implements Callable<Object> {
                     s = queue.remove();
                     if (Allocation.AllocateService(s, pop)) {
                         System.out.println(clock + "s" + "\tD: " + s.getName() + " Allocated at: " + clock + "s");
-                        System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() + "\n");
+                        System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() +  "\n");
                         served++;
                         s.setInitialAllocationTime(clock);
                         s.setAllocated(true);
@@ -63,11 +63,11 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             Deallocation.DeallocateService(s, pop);
-                            System.out.println(clock + "s" + "\tD: " + s.getName() + " Deallocated at: " + clock + "s"+"(q not empty)");
+                            System.out.println(clock + "s" + "\tD: " + s.getName() + " Deallocated at: " + clock + "s");
                             // System.out.print("NFVI PROVIDE (after deallocation): "+
                             // pop.getLinkCompose().getNFVI().getServicesRunning()+"\n");
                         } else {
-                            System.out.println(clock + "s" + "\tD: " + s.getName() + " running at " + clock+"(q not empty)");
+                            System.out.println(clock + "s" + "\tD: " + s.getName() + " running at " + clock);
                         }
                     }
                 } else {
@@ -75,7 +75,6 @@ public class Dispatcher implements Callable<Object> {
                 }
             }else{
                 // if there is a service running in pop
-                System.out.println(pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty());
                 if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
                     for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
                         Service s = lp.getService();
@@ -83,11 +82,11 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             Deallocation.DeallocateService(s, pop);
-                            System.out.println(clock + "s" + "\tD: " + s.getName() + " Deallocated at: "+clock+"(q empty)");
+                            System.out.println(clock + "s" + "\tD: " + s.getName() + " Deallocated at: "+clock);
                             //System.out.print("NFVI PROVIDE (after deallocation): "+
                             // pop.getLinkCompose().getNFVI().getServicesRunning()+"\n");
                         } else {
-                            System.out.println(clock + "s" + "\tD: " + s.getName() + " running at " + clock+"(q empty)");
+                            System.out.println(clock + "s" + "\tD: " + s.getName() + " running at " + clock);
                         }
                     }
                 } else {
@@ -98,7 +97,7 @@ public class Dispatcher implements Callable<Object> {
         System.out.println("D: Total requests served: " + served);
     }
 
-    public void run1() throws Exception {
+    /*public void run1() throws Exception {
         // Service s = new Service("Service0", 3, 0); // used only to initialize s
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(1);
@@ -165,6 +164,6 @@ public class Dispatcher implements Callable<Object> {
 
         }
         System.out.println("D: Total requests served: " + served);
-    }
+    }*/
 
 }
