@@ -61,7 +61,7 @@ public class NFVIPoP {
     //NFVIPoP -> DATACENTER
     public LinkOwn getLinkOwn()throws Exception{
         if(link == null)
-            throw new Exception("cardinality 1..1 violated on NFVIPoP");
+            throw new Exception("Cardinality Violated: PoP must own at least 1 data center");
         else return link;
     }
 
@@ -88,7 +88,7 @@ public class NFVIPoP {
     //NFVIPoP -> NFVI
     public LinkCompose getLinkCompose()throws Exception{
         if(link == null)
-            throw new Exception("cardinality 1..1 violated on NFVIPoP");
+            throw new Exception("Cardinality Violated: NFVIPoP must be in a NFVI");
         else return linkc;
     }
 

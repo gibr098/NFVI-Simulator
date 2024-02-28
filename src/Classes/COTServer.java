@@ -153,7 +153,7 @@ public class COTServer {
 
     //COTS -> DATA CENTER
     public LinkContain getLinkContain() throws Exception{
-        if (link == null) throw new Exception("Minimal cardinality violated on Data Center");
+        if (link == null) throw new Exception("Minimal cardinality violated: Server must be contained in a Data Center");
         else return link;
     }
 

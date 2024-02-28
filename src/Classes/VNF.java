@@ -166,7 +166,7 @@ public class VNF {
 
     public void removeforManagerChain(ManagerChain a) {
         if (a != null)
-            linksetC = null;
+            linksetC.remove(a.getLink());
     }
 
     // VNF -> Container
@@ -192,7 +192,7 @@ public class VNF {
     }
 
     public void insertforManagerRun(ManagerRun a) {
-        if (a != null)
+        //if (a != null)
             //linkset.add(a.getLink());
             if (a != null) linkset = a.getLink();
     }

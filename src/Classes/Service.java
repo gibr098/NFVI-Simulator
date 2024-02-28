@@ -80,7 +80,7 @@ public class Service {
 
     //Service -> NFVI
     public LinkProvide getLinkProvide() throws Exception{
-        if(link == null) throw new Exception("cardinality violated");
+        if(link == null) throw new Exception("cardinality violated: Service must be provided by a NFVI");
         else return link;
     }
 
@@ -105,12 +105,12 @@ public class Service {
     //Service -> VNF
     
     public Set<LinkChain> getLinkChain() throws Exception{
-        if(linkset.size() == 0) throw new Exception("cardinality violated on service");
+        if(linkset.size() == 0) throw new Exception("Cardinality violated: Service must contain at least 1 VNF");
         else return (HashSet<LinkChain>)linkset.clone();
     }
     
     public List<LinkChain> getLinkChainList() throws Exception{
-        if(linkset.isEmpty()) throw new Exception("cardinality violated on service");
+        if(linkset.isEmpty()) throw new Exception("Cardinality violated: Service must contain at least 1 VNF");
         else return linkset;
     }
 
@@ -130,7 +130,7 @@ public class Service {
     }
 
     public void removeforManagerChain(ManagerChain a){
-        if (a != null) linkset = null;
+        if (a != null) linkset.remove(a.getLink());
     }
 
     public String getTotalinfo(){

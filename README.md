@@ -3,9 +3,9 @@ Parameters for running a NFVI with a Point of Presence can be set in the NFVI.co
 Running App.java will build an NFVI with the desired configuration
 
 ### Working on: 
-1. Multiplicity constraints
-2. Resources allocation/de-allocation constraints
-3. Functional part: Time slotted service requests 
+1. Multiplicity constraints(done)
+2. Resources allocation/de-allocation constraints(done)
+3. Functional part: Time slotted service requests ()
 4. Output a log containing simulation info
 
 

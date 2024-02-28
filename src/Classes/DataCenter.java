@@ -53,7 +53,7 @@ public class DataCenter {
     //DATACENTER -> COTS
     public Set<LinkContain> getLinkContain() throws Exception{
         if(ServerContainNumber() < MIN_LINK_CONTAIN){
-            throw new Exception("Cardinality violted on COTS");
+            throw new Exception("Cardinality violated: Datacenter must cointain at least 1 Server");
         }else
             return (HashSet<LinkContain>)linkset.clone();
     }
@@ -76,12 +76,12 @@ public class DataCenter {
     }
 
     public void removeforManagerContain(ManagerContain a){
-        if(a!=null) linkset = null;
+        if(a!=null) linkset.remove(a.getLink());
     }
 
     //DATACENTER -> NFVIPoP
     public LinkOwn getLinkOwn() throws Exception{
-        if (link == null) throw new Exception("cardinality violated on Data Center");
+        if (link == null) throw new Exception("Cardinality violated: Data Center mus be owned by a NFVIPoP");
         else
             return link;
     }

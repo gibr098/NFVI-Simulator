@@ -52,7 +52,7 @@ public class NFVI {
     // NFVI -> NFVI-PoP
     public Set<LinkCompose> getLinkCompose() throws Exception {
         if (linkset.size() == 0)
-            throw new Exception("Minimal cardinality violated on NFVI");
+            throw new Exception("Cardinality Violated: NFVI must contain at least 1 NFVIPoP");
         return (HashSet<LinkCompose>) linkset.clone();
     }
 
@@ -75,7 +75,7 @@ public class NFVI {
 
     public void removeforManagerCompose(ManagerCompose a) {
         if (a != null)
-            linkset = null;
+            linkset.remove(a.getLink());
     }
 
     // NFVI -> Service
@@ -134,7 +134,7 @@ public class NFVI {
                 info += s.getService().getName() + " ";
             }
         }else{
-            info+="empty";
+            info+="No services";
         }
         return info + " )";
     }

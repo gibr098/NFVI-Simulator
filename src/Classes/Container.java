@@ -92,7 +92,7 @@ public class Container{
 
     //Container -> COTS
     public LinkInstance getLinkInstance() throws Exception{
-        if (link == null) throw new Exception("cardinalità minima violata Container");
+        if (link == null) throw new Exception("Cardinality violated: Container must be instantiated by a server");
         else
             return link;
     }
