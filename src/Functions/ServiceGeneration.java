@@ -26,7 +26,7 @@ public class ServiceGeneration {
         return (int) ((Math.random() * (max - min)) + min);
     }
 
-    public static Service generateService(String name, int time) throws Exception{
+    public static Service generateService(String name) throws Exception{
         List<String> types = new ArrayList<String>();
         types.add("firewall");
         types.add("routing");
@@ -37,7 +37,7 @@ public class ServiceGeneration {
 
         int VNFnumber = getRandomNumber(2, 5);
 
-        Service s = new Service(name, time, 0);
+        Service s = new Service(name, getRandomNumber(2, 10), 0);
 
         for (int i = 0; i<VNFnumber; i++){
             VNF vnf = new VNF("vnf-"+i, randomVNF(types));

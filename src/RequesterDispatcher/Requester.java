@@ -62,8 +62,8 @@ public class Requester implements Callable<Object>{
             TimeUnit.MILLISECONDS.sleep(1);
             clock += 1;
             if (getPoissonRandom(lambda) == 1) {
-                s = ServiceGeneration.generateService("Service-"+num,5);
-                pop.addElementToQueue(s);;
+                s = ServiceGeneration.generateService("Service-"+num);
+                pop.addElementToQueue(s);
                 requests++;
                 num++;
                 System.out.println(clock + "s" +"\tR: Request of " + s.getName() + " arrived at: " + clock + "s");
