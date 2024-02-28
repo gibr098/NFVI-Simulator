@@ -33,7 +33,6 @@ public class Requester implements Callable<Object>{
         busy = false;
 
         queue = pop.getQueue();
-
     }
 
     @Override
@@ -41,7 +40,6 @@ public class Requester implements Callable<Object>{
         run();
         return null;
     }
-
 
     private static int getPoissonRandom(double lambda) {
         Random r = new Random();

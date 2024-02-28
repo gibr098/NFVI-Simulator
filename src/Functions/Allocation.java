@@ -12,36 +12,16 @@ import RequestServeSample.*;
 
 public class Allocation {
 
-    // sort first the service chain by how much resources the vnf needs?
-   /*  public static void AllocateService(Service s, NFVIPoP pop) throws Exception {
-        if (ServiceCanBeAllocated(s, pop)) {
-            s.getLinkChainList().forEach(
-                    (vnf) -> {
-                        try {
-                            //LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
-                            //pop.getLinkCompose().getNFVI().insertLinkProvide(lp);
-                            AllocateVNF(vnf.getVNF(), pop);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-        } else {
-            //pop.addElementToQueue(s);
-            System.out.println(pop.getQueuePrint());
-        }
-        // System.out.println("\n" + pop.getTotalInfo());
-    }*/
-
     public static boolean AllocateService(Service s, NFVIPoP pop) throws Exception {
         boolean res = true;
         for(LinkChain lc : s.getLinkChainList()){
             res = res && AllocateVNF(lc.getVNF(), pop);
         }
-        if(res){
+        if(res){ //if all VNFs of the service are allocated
+            pop.getLinkCompose().getNFVI().insertLinkProvide(new LinkProvide(pop.getLinkCompose().getNFVI(), s)); // NFVI provide that service
             //NFVI nfvi = pop.getLinkCompose().getNFVI();
             //LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
             //nfvi.insertLinkProvide(lp);
-            pop.getLinkCompose().getNFVI().insertLinkProvide(new LinkProvide(pop.getLinkCompose().getNFVI(), s));
         }
         return res;
     }
@@ -62,7 +42,7 @@ public class Allocation {
                             vnf.setAllocated(true);
                             AllocateServerResources(container);
                             System.out.println(vnf.getName()+" runs on "+ vnf.getLinkRun().getContainer().getName());
-                            //break; // 
+                            //break; 
                             return true; //Allocation has succeded
                         }
                     }

@@ -197,7 +197,7 @@ public class COTServer {
         info+=", cpu: "+this.cpu+" cores";
         info+=", storage: "+this.storage+"GB";
         info+=", network: "+this.network;
-        info+=", cpu usage: "+this.cpu_capacity;
+        info+=", cpu capacity: "+this.cpu_capacity;
         info+=")";
 
         return info;

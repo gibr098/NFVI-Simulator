@@ -5,8 +5,9 @@ Running App.java will build an NFVI with the desired configuration
 ### Working on: 
 1. Multiplicity constraints(done)
 2. Resources allocation/de-allocation constraints(done)
-3. Functional part: Time slotted service requests ()
-4. Output a log containing simulation info
+3. Construction validity controls
+4. Functional part: Time slotted service requests
+5. Output a log containing simulation info
 
 
 # Model
