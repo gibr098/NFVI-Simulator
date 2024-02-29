@@ -41,7 +41,7 @@ public class Allocation {
                             container.setBusyState(true);
                             vnf.setAllocated(true);
                             AllocateServerResources(container);
-                            System.out.println(vnf.getName()+" runs on "+ vnf.getLinkRun().getContainer().getName());
+                            System.out.println("ALLOCATING "+vnf.getName()+" on "+ vnf.getLinkRun().getContainer().getName()+"...");
                             //break; 
                             return true; //Allocation has succeded
                         }

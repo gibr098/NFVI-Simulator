@@ -57,20 +57,20 @@ public class Requester implements Callable<Object>{
         int num = 1;
         Service s;
         while (clock != endTime) {
-            TimeUnit.MILLISECONDS.sleep(1);
+            TimeUnit.MILLISECONDS.sleep(500);
             clock += 1;
             if (getPoissonRandom(lambda) == 1) {
                 s = ServiceGeneration.generateService("Service-"+num);
                 pop.addElementToQueue(s);
                 requests++;
                 num++;
-                System.out.println(clock + "s" +"\tR: Request of " + s.getName() + " arrived at: " + clock + "s");
+                System.out.println(clock + "s" +"\tRequester: Request of " + s.getName() + " arrived at: " + clock + "s");
             }else{
-                System.out.println(clock+"s"+" R: nothing ");
+                System.out.println(clock+"s"+" Requester: nothing ");
             }
 
         }
-        System.out.println("R: Total requests arrived: " + requests);
+        System.out.println("Requester: Total requests arrived: " + requests);
     }
 
     

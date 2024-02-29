@@ -38,9 +38,10 @@ public class ServiceGeneration {
         int VNFnumber = getRandomNumber(2, 5);
 
         Service s = new Service(name, getRandomNumber(2, 10), 0);
+        int j = Integer.parseInt(name.replaceAll("[^0-9]", ""));
 
         for (int i = 0; i<VNFnumber; i++){
-            VNF vnf = new VNF("vnf-"+i, randomVNF(types));
+            VNF vnf = new VNF("vnf-"+j+i, randomVNF(types));
             LinkChain lc = new LinkChain(s, vnf);
             s.insertLinkChain(lc);
         }

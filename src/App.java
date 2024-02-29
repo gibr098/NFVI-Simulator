@@ -20,7 +20,7 @@ import RequesterDispatcher.Requester;
 
 import java.io.*;
 
-public class App {
+public class App {;
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
@@ -76,14 +76,14 @@ public class App {
 
         //PRINT The structure of the NFVI
         printPoPStructure(nfvi);
+        
 
 
         //Run the Simulation
         AppRS app = new AppRS(lambda, duration, pop);
         app.run();
 
-
-        //PRINT The result of the Simulation ???
+        //TODO: PRINT The result of the Simulation ???
         printSimulationResults();
 
     }

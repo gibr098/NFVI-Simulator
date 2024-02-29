@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import Classes.NFVIPoP;
 import Classes.Service;
+import Classes.Links.LinkContain;
 import Functions.*;
 import RequesterDispatcher.*;
 
@@ -28,6 +29,8 @@ public class AppRS{
 
         Requester r = new RequesterDispatcher.Requester(lambda, duration, pop);
         Dispatcher d = new RequesterDispatcher.Dispatcher(duration, pop);
+
+        AppMonitor monitor = new AppMonitor(pop);
 
         ExecutorService service = Executors.newFixedThreadPool(2); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously
