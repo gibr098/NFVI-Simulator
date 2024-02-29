@@ -26,6 +26,7 @@ public class Deallocation {
     private static void DeallocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
         System.out.println("DEALLOCATING "+vnf.getName()+"...");
         vnf.getLinkRun().getContainer().setBusyState(false);
+        vnf.getLinkRun().getContainer().getLinkInstance().getVirtualMachine().setRunningServiceState(false);
         DeallocateServerResources(vnf.getLinkRun().getContainer());
         vnf.removeLinkRun(vnf.getLinkRun());
         vnf.setAllocated(false);
@@ -38,7 +39,7 @@ public class Deallocation {
         int cpu_usage = container.getCPUusage();
         int storage = container.getStorage();
         int network = container.getNetwork();
-        COTServer server = container.getLinkInstance().getCOTServer();
+        COTServer server = container.getLinkInstance().getVirtualMachine().getLinkVM().getCOTServer();
         server.deallocateCPUusage(cpu_usage);
         server.deallocateCpu(cpu);
         server.deallocateRam(ram);

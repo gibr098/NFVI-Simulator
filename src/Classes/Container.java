@@ -19,7 +19,7 @@ public class Container{
 
     private HashSet<VNF> VNFs;
 
-    //CONTAINER -> COTS
+    //CONTAINER -> VM
     public LinkInstance link;
     public static final int MIN_LINK_INSTANCE = 1;
     public static final int MAX_LINK_INSTANCE = 1;
@@ -142,7 +142,7 @@ public class Container{
 
     public String getTotalInfo(){
         String  info="";
-        info+=this.getName()+" is instantiated by "+link.getCOTServer().getName();
+        info+=this.getName()+" is instantiated by "+link.getVirtualMachine().getName();
         info+=" and runs "+ this.getVNFNumber()+" VNFs: ";
         for (LinkRun l: linkset) {
             info+= l.getVNF().getName()+"["+l.getVNF().getType()+"] ";

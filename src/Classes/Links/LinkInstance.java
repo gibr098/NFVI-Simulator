@@ -3,21 +3,21 @@ package Classes.Links;
 import Classes.*;
 
 public class LinkInstance {
-    private final COTServer COTServer;
+    private final VirtualMachine VirtualMachine;
     private final Container Container;
 
-    public LinkInstance(COTServer x, Container y) throws Exception{
+    public LinkInstance(VirtualMachine x, Container y) throws Exception{
         if (x == null || y == null){
             throw new Exception
                 ("Gli oggetti devono essere inizializzati");
             }
-            COTServer = x;
+            VirtualMachine = x;
             Container = y;
     }
 
 
-    public COTServer getCOTServer(){
-        return COTServer;
+    public VirtualMachine getVirtualMachine(){
+        return VirtualMachine;
     }
 
     public Container getContainer(){
@@ -27,11 +27,11 @@ public class LinkInstance {
     public boolean equals(Object o) {
         if (o != null && getClass().equals(o.getClass())) {
             LinkInstance b = (LinkInstance)o;
-            return b.COTServer == COTServer && b.Container == Container;
+            return b.VirtualMachine == VirtualMachine && b.Container == Container;
         }else return false;
     }
 
     public int hashCode() {
-        return COTServer.hashCode() + Container.hashCode();
+        return VirtualMachine.hashCode() + Container.hashCode();
     }
 }

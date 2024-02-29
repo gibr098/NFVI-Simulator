@@ -19,8 +19,8 @@ public class COTServer {
 
     private HashSet<Container> containers;
 
-    //COTS -> CONTAINER
-    private HashSet<LinkInstance> linkset;
+    //COTS -> VM
+    private HashSet<LinkVM> linkset;
 
     //COTS -> DATA CENTER
     private LinkContain link;
@@ -42,7 +42,7 @@ public class COTServer {
 
         this.containers = new HashSet<Container>();
 
-        linkset = new HashSet<LinkInstance>();
+        linkset = new HashSet<LinkVM>();
     }
 
     public String getName(){
@@ -117,37 +117,28 @@ public class COTServer {
         return linkset.size();
     }
 
-    public String getRunningContainers(){
-        String s = "";
-        for (LinkInstance l : linkset) {
-            s+=l.getContainer().getName()+" ";
-        }
-        return s;
+
+    //COTS -> VM
+    public Set<LinkVM> getLinkVM(){
+        return (HashSet<LinkVM>)linkset.clone();
     }
 
-
-
-    //COTS -> CONTAINER
-    public Set<LinkInstance> getLinkInstance(){
-        return (HashSet<LinkInstance>)linkset.clone();
-    }
-
-    public void insertLinkInstance(LinkInstance t){
+    public void insertLinkVM(LinkVM t){
         if(t!=null && t.getCOTServer()==this){
-            ManagerInstance.insert(t);
+            ManagerVM.insert(t);
         }
     }
-    public void removeLinkInstance(LinkInstance t){
+    public void removeLinkVM(LinkVM t){
         if(t!=null && t.getCOTServer()==this){
-            ManagerInstance.remove(t);
+            ManagerVM.remove(t);
         }
     }
 
-    public void insertforManagerInstance(ManagerInstance a){
+    public void insertforManagerVM(ManagerVM a){
         if (a != null) linkset.add(a.getLink());
     }
 
-    public void removeforManagerInstance(ManagerInstance a){
+    public void removeforManagerVM(ManagerVM a){
         if (a != null) linkset = null;
     }
 
@@ -180,13 +171,12 @@ public class COTServer {
     public String getTotalInfo(){
         String info="";
         info+= this.name+" is contained in "+link.getDataCenter().getName()+" and has instantiatied "+ this.getContainerNumber()+" containers: ";
-        for (LinkInstance l : linkset) {
-            info+=l.getContainer().getName()+" ";
+        for (LinkVM l : linkset) {
+            info+=l.getVirtualMachine().getName()+" ";
         }
-        for (LinkInstance l : linkset) {
-            info+="\n"+l.getContainer().getTotalInfo();
+        for (LinkVM l : linkset) {
+            info+="\n"+l.getVirtualMachine().getTotalInfo();
         }
-
 
         return info;
     }

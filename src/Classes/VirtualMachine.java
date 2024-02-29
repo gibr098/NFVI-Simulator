@@ -11,6 +11,8 @@ import java.util.Set;
 public class VirtualMachine {
     private final String name;
 
+    private boolean runningService;
+
 
     //VM -> CONTAINER
     private HashSet<LinkInstance> linkset;
@@ -21,12 +23,21 @@ public class VirtualMachine {
 
     public VirtualMachine(String name){
         this.name = name;
+        this.runningService = false;
 
         linkset = new HashSet<LinkInstance>();
     }
 
     public String getName(){
         return name;
+    }
+
+    public boolean isRunningService(){
+        return runningService;
+    }
+
+    public void setRunningServiceState(boolean state){
+        runningService = state;
     }
 
     public int getContainerNumber(){
@@ -43,18 +54,18 @@ public class VirtualMachine {
 
 
 
-    //COTS -> CONTAINER
+    //VM -> CONTAINER
     public Set<LinkInstance> getLinkInstance(){
         return (HashSet<LinkInstance>)linkset.clone();
     }
 
     public void insertLinkInstance(LinkInstance t){
-        if(t!=null && t.getCOTServer()==this){
+        if(t!=null && t.getVirtualMachine()==this){
             ManagerInstance.insert(t);
         }
     }
     public void removeLinkInstance(LinkInstance t){
-        if(t!=null && t.getCOTServer()==this){
+        if(t!=null && t.getVirtualMachine()==this){
             ManagerInstance.remove(t);
         }
     }
@@ -67,35 +78,35 @@ public class VirtualMachine {
         if (a != null) linkset = null;
     }
 
-    //COTS -> DATA CENTER
-    public LinkContain getLinkContain() throws Exception{
+    //VM -> COTS
+    public LinkVM getLinkVM() throws Exception{
         if (link == null) throw new Exception("Minimal cardinality violated: Server must be contained in a Data Center");
         else return link;
     }
 
-    public void insertLinkContain(LinkContain t){
-        if(t!=null && t.getCOTServer() == this){
-            ManagerContain.insert(t);
+    public void insertLinkVM(LinkVM t){
+        if(t!=null && t.getVirtualMachine() == this){
+            ManagerVM.insert(t);
         }
     }
 
-    public void removeLinkContain(LinkContain t){
-        if(t!=null && t.getCOTServer() == this){
-            ManagerContain.remove(t);
+    public void removeLinkVM(LinkVM t){
+        if(t!=null && t.getVirtualMachine() == this){
+            ManagerVM.remove(t);
         }
     }
 
-    public void insertforManagerContain(ManagerContain a){
+    public void insertforManagerVM(ManagerVM a){
         if (a != null) link = a.getLink();
     }
 
-    public void removeforManagerContain(ManagerContain a){
+    public void removeforManagerVM(ManagerVM a){
         if (a != null) link = null;
     }
 
     public String getTotalInfo(){
         String info="";
-        info+= this.name+" is contained in "+link.getDataCenter().getName()+" and has instantiatied "+ this.getContainerNumber()+" containers: ";
+        info+= this.name+" is contained in "+link.getCOTServer().getName()+" and has instantiatied "+ this.getContainerNumber()+" containers: ";
         for (LinkInstance l : linkset) {
             info+=l.getContainer().getName()+" ";
         }
@@ -103,19 +114,7 @@ public class VirtualMachine {
             info+="\n"+l.getContainer().getTotalInfo();
         }
 
-
         return info;
     }
 
-    public String getTotalResourcesInfo(){
-        String info = this.name+" (";
-        info+="ram: "+this.ram+"GB";
-        info+=", cpu: "+this.cpu+" cores";
-        info+=", storage: "+this.storage+"GB";
-        info+=", network: "+this.network;
-        info+=", cpu capacity: "+this.cpu_capacity;
-        info+=")";
-
-        return info;
-    }
 }

@@ -12,7 +12,7 @@ import Classes.Links.LinkInstance;
 import Classes.Links.LinkOwn;
 import Classes.Links.LinkProvide;
 import Classes.Links.LinkRun;
-
+import Classes.Links.LinkVM;
 import Functions.*;
 import RequestServeSample.*;
 import RequesterDispatcher.Dispatcher;
@@ -40,6 +40,8 @@ public class App {
         int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
         int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
 
+        int virtual_machines = Integer.parseInt(prop.getProperty("virtual_machines"));
+
         int number_of_containers = Integer.parseInt(prop.getProperty("containers"));
         int container_cpu_usage = Integer.parseInt(prop.getProperty("container_cpu(%)"));
         int container_ram = Integer.parseInt(prop.getProperty("C-RAM(GB)"));
@@ -66,11 +68,16 @@ public class App {
             COTServer si = new COTServer("Server-" + i, server_ram, server_cpu, server_storage, server_network);
             LinkContain lci = new LinkContain(dc, si);
             dc.insertLinkContain(lci);
-            for (int j = 0; j < number_of_containers; j++) {
-                Container cij = new Container("Container-" + i + j, container_ram, container_cpu, container_storage,
-                        container_network, container_cpu_usage);
-                LinkInstance lij = new LinkInstance(si, cij);
-                si.insertLinkInstance(lij);
+            for (int j = 0; j < virtual_machines; j++) {
+                VirtualMachine vmij = new VirtualMachine("VM-" + i + j);
+                LinkVM lvm = new LinkVM(si, vmij);
+                si.insertLinkVM(lvm);
+                for (int k = 0; k < number_of_containers; k++) {
+                    Container cij = new Container("Container-" + i + j + k, container_ram, container_cpu, container_storage,
+                            container_network, container_cpu_usage);
+                    LinkInstance lij = new LinkInstance(vmij, cij);
+                    vmij.insertLinkInstance(lij);
+                }
             }
         }
 
@@ -99,9 +106,13 @@ public class App {
         for (LinkContain lc : dc.getLinkContain()) {
             COTServer s = lc.getCOTServer();
             info += " " + s.getTotalResourcesInfo() + " has:\n";
-            for (LinkInstance li : s.getLinkInstance()) {
-                Container c = li.getContainer();
-                info += "   " + c.getTotalResourcesInfo() + "\n";
+            for (LinkVM lvm : s.getLinkVM()) {
+                VirtualMachine vm = lvm.getVirtualMachine();
+                info += "  " + vm.getName() + " with \n";
+                for (LinkInstance li : vm.getLinkInstance()) {
+                    Container c = li.getContainer();
+                    info += "   " + c.getTotalResourcesInfo() + "\n";
+                }
             }
         }
 

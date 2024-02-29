@@ -16,15 +16,15 @@ public final class ManagerInstance {
     public static void insert(LinkInstance y){
         if(y!= null){//} && y.getCOTServer().getLinkInstance()==null && y.getContainer().InstanceNumber()==0){
             ManagerInstance k = new ManagerInstance(y);
-            y.getCOTServer().insertforManagerInstance(k);
+            y.getVirtualMachine().insertforManagerInstance(k);
             y.getContainer().insertforManagerInstance(k);
         }
     }
 
     public static void remove(LinkInstance y){
-        if(y!= null && y.getCOTServer().getLinkInstance().equals(y)){
+        if(y!= null && y.getVirtualMachine().getLinkInstance().equals(y)){
             ManagerInstance k = new ManagerInstance(y);
-            y.getCOTServer().removeforManagerInstance(k);
+            y.getVirtualMachine().removeforManagerInstance(k);
             y.getContainer().removeforManagerInstance(k);
         }
     }
