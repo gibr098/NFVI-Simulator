@@ -13,7 +13,7 @@ it consists in simulating the arriving and the management of random-service requ
 
 
 # Model
-![Alt text](./res/NFVI%20Model.png)
+![Alt text](./res/NFVI%20Model2.png)
 ### NFVI & NFVI-PoP
 The Network Function Virtualization Infrastructure (NFVI) is a network of nodes, each virtualizing computation, storage, and networking, and able to host VNFs. Each NFVI node is called NFVI Point-of-Presence (NFVI PoP); it might belong to Internet service providers, cloud/edge operators, or simply infrastructure providers.The NFVI includes a virtualization layer that sits on the hardware with the objective of abstracting the HW resources. In this way, these can be logically partitioned and provided to the VNFs to perform their functions and ensure their lifecycle. To this purpose, NFVI contains all the essential hardware and software elements to run instances of VNFs and compose virtual Network Services.
 
