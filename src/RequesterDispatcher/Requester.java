@@ -57,7 +57,7 @@ public class Requester implements Callable<Object>{
         int num = 1;
         Service s;
         while (clock != endTime) {
-            TimeUnit.MILLISECONDS.sleep(500);
+            TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
             if (getPoissonRandom(lambda) == 1) {
                 s = ServiceGeneration.generateService("Service-"+num);

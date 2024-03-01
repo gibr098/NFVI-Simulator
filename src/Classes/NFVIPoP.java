@@ -45,7 +45,7 @@ public class NFVIPoP {
     }
 
     public String getQueuePrint(){
-        String print = "queue:( ";
+        String print = "( ";
         for (Service service : queue) {
             print+=service.getName()+" ";
         }

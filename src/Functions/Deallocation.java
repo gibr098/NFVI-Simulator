@@ -8,6 +8,7 @@ import Classes.NFVI;
 import Classes.NFVIPoP;
 import Classes.Service;
 import Classes.VNF;
+import Classes.VirtualMachine;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkProvide;
 
@@ -16,10 +17,11 @@ import Classes.Links.LinkProvide;
 public class Deallocation {
 
     public static void DeallocateService(Service s, NFVIPoP pop) throws Exception {
+        VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
         for(LinkChain lc : s.getLinkChainList()){
             DeallocateVNF(lc.getVNF(), pop);
         }
-        System.out.println("CLEARING "+s.getName()+"["+s.getTime()+"s]...");
+        System.out.println("CLEARING "+s.getName()+"["+s.getTime()+"s] from "+vm.getName()+"...");
         pop.getLinkCompose().getNFVI().removeLinkProvide(s.getLinkProvide());
         s.getLinkChainList().clear();
     }

@@ -24,6 +24,11 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
+        File dir = new File("logs");
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
         Properties prop = new Properties();
         String fileName = "NFVI.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
@@ -73,7 +78,8 @@ public class App {
                 LinkVM lvm = new LinkVM(si, vmij);
                 si.insertLinkVM(lvm);
                 for (int k = 0; k < number_of_containers; k++) {
-                    Container cij = new Container("Container-" + i + j + k, container_ram, container_cpu, container_storage,
+                    Container cij = new Container("Container-" + i + j + k, container_ram, container_cpu,
+                            container_storage,
                             container_network, container_cpu_usage);
                     LinkInstance lij = new LinkInstance(vmij, cij);
                     vmij.insertLinkInstance(lij);
@@ -90,7 +96,32 @@ public class App {
 
         // Run the Simulation
         AppRS app = new AppRS(lambda, duration, pop);
-        app.run();
+        // app.run();
+
+        // Run the Simulation and write the log
+        File file;
+        int n = 1;
+        if (dir.listFiles().length == 0) {
+            file = new File("logs/sim1_log.txt");
+        }else{
+            n = Integer.parseInt(dir.listFiles()[dir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
+                    + 1;
+            file = new File("logs/sim" + n + "_log.txt");
+        }
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            System.out.println("SIMULATION "+n+": lambda = " + lambda + ", Sim length = " + duration+"\n");
+            out.println("SIMULATION "+n+": lambda = " + lambda + ", Sim length = " + duration + "\n");
+            app.run(out);
+            out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
+            System.out.println("Requests not served: " + pop.getQueuePrint()+"\n");
+            System.out.println("Simulation complete.");
+            System.out.println("Log: logs/sim"+n+"_log.txt");
+            out.close();
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        }
 
         // TODO: PRINT The result of the Simulation ???
         printSimulationResults();

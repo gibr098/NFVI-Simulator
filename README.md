@@ -28,7 +28,7 @@ Virtual functions also work as building blocks that can be interconnected to imp
 ### COTS
 A COTS (Commercial Off-the-Shelf) server is a readily available, all-purpose, standardized and highly compatible piece of hardware, which can have various kinds of software programs installed on it.
 
-### Containers
+### Virtual Machines & Containers
 The most traditional approach for virtualization is based on using a hypervisor, i.e. a middleware installed on a hardware infrastructure to run and monitor one or more virtual machines and the relevant usage of resources on the same physical devices. Hypervisors also supervise and coordinate the VM instances for efficient hardware resource sharing across them. However, other virtualization solutions can be adopted for VNF deployment: besides hosting VNFs inside VMs, they can run inside Containers.
 
 ### Time-slotted Service requests

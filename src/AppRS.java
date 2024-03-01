@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -25,10 +26,10 @@ public class AppRS{
 
     }
 
-    public void run() throws Exception {
+    public void run(PrintWriter out) throws Exception {
 
-        Requester r = new RequesterDispatcher.Requester(lambda, duration, pop);
-        Dispatcher d = new RequesterDispatcher.Dispatcher(duration, pop);
+        Requester r = new Requester(lambda, duration, pop);
+        Dispatcher d = new Dispatcher(duration, pop, out);
 
         AppMonitor monitor = new AppMonitor(pop);
 
