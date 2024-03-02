@@ -120,6 +120,17 @@ public class NFVIPoP {
         return info;
     }
 
+    public String getServerState() throws Exception{
+        String info= "";
+        DataCenter dc = this.getLinkOwn().getDataCenter();
+        for (LinkContain lc : dc.getLinkContain()){
+            COTServer s = lc.getCOTServer();
+            info+=s.getName()+" CPU  cores: "+s.getCpu()+"\n";
+        }
+
+        return info;
+    }
+
 
 
 

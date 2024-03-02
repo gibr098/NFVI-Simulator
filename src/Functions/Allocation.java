@@ -50,7 +50,7 @@ public class Allocation {
                                     container.setBusyState(true);
                                     vnf.setAllocated(true);
                                     AllocateServerResources(container);
-                                    System.out.println("ALLOCATING " + vnf.getName() + " on "
+                                    System.out.println("ALLOCATING " + vnf.getName()+"["+vnf.getType()+"]" + " on "
                                             + vnf.getLinkRun().getContainer().getName()+"["
                                             + vnf.getLinkRun().getContainer().getLinkInstance().getVirtualMachine().getName()+"]" + "...");
                                     // break;

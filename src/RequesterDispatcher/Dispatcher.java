@@ -5,8 +5,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
+import Classes.COTServer;
 import Classes.NFVIPoP;
 import Classes.Service;
+import Classes.VirtualMachine;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkProvide;
 import Functions.Allocation;
@@ -41,12 +43,16 @@ public class Dispatcher implements Callable<Object> {
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
             queue = pop.getQueue();
+            out.println("\n"+clock+"s: Servers' state\n"+pop.getServerState());
             if (!queue.isEmpty()){
                 Service s = queue.getFirst();
                 if (Allocation.ServiceCanBeAllocated(s, pop)) {
                     s = queue.remove();
                     if (Allocation.AllocateService(s, pop)) {
-                        out.println(clock+"s: "+s.getName() + " Allocated");
+                        VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
+                        .getLinkInstance().getVirtualMachine();
+                        COTServer sv = vm.getLinkVM().getCOTServer();
+                        out.println(clock+"s: "+s.getName() + " Allocated on "+sv.getName()+"["+vm.getName()+"]");
                         System.out.println(clock + "s" + "\tDispatcher: " + s.getName() + " Allocated at: " + clock + "s");
                         System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() +  "\n");
                         served++;
