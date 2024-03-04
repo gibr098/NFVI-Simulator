@@ -38,7 +38,6 @@ public class App {
 
         }
 
-
         int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
         int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
         int server_cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
@@ -94,6 +93,11 @@ public class App {
 
         // PRINT The structure of the NFVI
         printPoPStructure(nfvi);
+
+
+        System.out.println("Press \"ENTER\" to run the simulation...");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         // Run the Simulation
         AppRS app = new AppRS(lambda, duration, pop);
