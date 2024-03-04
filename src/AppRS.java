@@ -31,8 +31,6 @@ public class AppRS{
         Requester r = new Requester(lambda, duration, pop);
         Dispatcher d = new Dispatcher(duration, pop, out);
 
-        AppMonitor monitor = new AppMonitor(pop);
-
         ExecutorService service = Executors.newFixedThreadPool(2); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously
         service.submit(r);
