@@ -8,7 +8,7 @@ it consists in simulating the arriving and the management of random-service requ
 2. Resources allocation/de-allocation constraints(done)
 3. Construction validity controls
 4. Functional part: Time slotted service requests (done)
-5. Output a log containing simulation info (in progress)
+5. Output a log containing simulation info (done)
 6. Cost function
 
 

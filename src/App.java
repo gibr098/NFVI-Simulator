@@ -59,6 +59,10 @@ public class App {
 
         String policy = prop.getProperty("policy");
 
+        // CONTROL Construction validity
+        ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network, virtual_machines, number_of_containers, container_ram, container_cpu, container_storage, container_network);
+
+
         NFVI nfvi = new NFVI("NFVI");
         NFVIPoP pop = new NFVIPoP("PoP-1");
         DataCenter dc = new DataCenter("DC-1");
@@ -124,7 +128,7 @@ public class App {
         }
 
         // TODO: PRINT The result of the Simulation ???
-        printSimulationResults();
+        //printSimulationResults();
 
     }
 
@@ -150,7 +154,18 @@ public class App {
         System.out.println(info);
     }
 
-    public static void printSimulationResults() {
+    public static void ControlConstructionValidity(int ns, int sram, int scpu, int sstor, int snet, int nvm, int nc, int cram, int ccpu, int cstor, int cnet){
+        int tot_containers = nvm*nc;
+        if(sram < tot_containers*cram || 
+           scpu < tot_containers*ccpu ||
+           sstor < tot_containers*cstor ||
+           snet < tot_containers*cnet
+           ){
+            System.out.println("\nCONSTRUCTION PARAMETERS ARE NOT VALID!"+
+            "\nPlease insert a valid configuration in the NFVI.config file\n");
+            System.exit(0);
+        }
 
     }
+
 }
