@@ -64,9 +64,9 @@ public class Requester implements Callable<Object>{
                 pop.addElementToQueue(s);
                 requests++;
                 num++;
-                System.out.println(clock + "s" +"\tRequester: Request of " + s.getName() + " arrived at: " + clock + "s");
+                System.out.println("t"+clock +"\tRequester: Request of " + s.getName() + " arrived at: " + "t"+clock);
             }else{
-                System.out.println(clock+"s"+" Requester: nothing ");
+                System.out.println("t"+clock+" Requester: nothing ");
             }
 
         }

@@ -136,7 +136,7 @@ public class App {
         info += dc.getName() + " has " + dc.getLinkContain().size() + " servers: \n";
         for (LinkContain lc : dc.getLinkContain()) {
             COTServer s = lc.getCOTServer();
-            info += " " + s.getTotalResourcesInfo() + " has:\n";
+            info += " \n" + s.getTotalResourcesInfo() + " has:\n";
             for (LinkVM lvm : s.getLinkVM()) {
                 VirtualMachine vm = lvm.getVirtualMachine();
                 info += "  " + vm.getName() + " with \n";

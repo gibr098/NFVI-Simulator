@@ -56,9 +56,9 @@ public class Service {
     }
 
     public String getChain(){
-        String s="";
+        String s=" ";
         for (LinkChain l : linkset) {
-            s+= l.getVNF().getName()+" ";
+            s+= l.getVNF().getName()+ " ";
         }
         return s;
     }

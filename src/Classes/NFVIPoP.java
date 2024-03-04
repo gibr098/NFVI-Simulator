@@ -125,7 +125,11 @@ public class NFVIPoP {
         DataCenter dc = this.getLinkOwn().getDataCenter();
         for (LinkContain lc : dc.getLinkContain()){
             COTServer s = lc.getCOTServer();
-            info+=s.getName()+" CPU  cores: "+s.getCpu()+"\n";
+            info+=s.getName() + "(ram: "+s.getRam()+"GB, ";
+            info+="cpu: "+s.getCpu()+"cores, ";
+            info+= "storage: "+s.getStorage()+"GB, ";
+            info+= "network: "+s.getNetwork();
+            info+= ")\n";
         }
 
         return info;

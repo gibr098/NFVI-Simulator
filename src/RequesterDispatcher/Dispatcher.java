@@ -43,7 +43,7 @@ public class Dispatcher implements Callable<Object> {
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
             queue = pop.getQueue();
-            out.println("\n"+clock+"s: Servers' state\n"+pop.getServerState());
+            out.println("\n"+"t"+clock+": Servers' state\n"+pop.getServerState());
             if (!queue.isEmpty()){
                 Service s = queue.getFirst();
                 if (Allocation.ServiceCanBeAllocated(s, pop)) {
@@ -52,14 +52,14 @@ public class Dispatcher implements Callable<Object> {
                         VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
                         .getLinkInstance().getVirtualMachine();
                         COTServer sv = vm.getLinkVM().getCOTServer();
-                        out.println(clock+"s: "+s.getName() + " Allocated on "+sv.getName()+"["+vm.getName()+"]");
-                        System.out.println(clock + "s" + "\tDispatcher: " + s.getName() + " Allocated at: " + clock + "s");
+                        out.println("t"+clock+": "+s.getName()+"["+s.getChain()+"]" + " Allocated on "+sv.getName()+"["+vm.getName()+"]");
+                        System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " Allocated at: " + "t"+clock);
                         System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() +  "\n");
                         served++;
                         s.setInitialAllocationTime(clock);
                         s.setAllocated(true);
                     } else {
-                        System.out.println("ERROR IN ALLOCATING " + s.getName() + " at: " + clock + "s");
+                        System.out.println("ERROR IN ALLOCATING " + s.getName() + " at: " + "t"+clock);
                     }
                 }
                 // if there is a service running in pop (and queue is not empty)
@@ -70,16 +70,16 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             Deallocation.DeallocateService(s, pop);
-                            System.out.println(clock + "s" + "\tDispatcher: " + s.getName() + " Deallocated at: " + clock + "s");
-                            out.println(clock+"s "+s.getName() + " Deallocated");
+                            System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t"+clock);
+                            out.println("t"+clock+" "+s.getName() + " Deallocated");
                         } else {
-                            System.out.println(clock + "s: " + "\tDispatcher: " + s.getName() + " running at " + clock);
-                            out.println(clock+"s: "+s.getName() + " running");
+                            System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " running at " + "t"+clock);
+                            out.println("t"+clock+": "+s.getName() + " running");
                         }
                     }
                 } else {
-                    System.out.println(clock + "s" + " Dispatcher: nothig");
-                    out.println(clock+"s: waiting for requests");
+                    System.out.println("t"+clock + " Dispatcher: nothig");
+                    out.println("t"+clock+": waiting for requests");
                 }
             }else{
                 // if there is a service running in pop (and queue is empty)
@@ -90,21 +90,21 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             Deallocation.DeallocateService(s, pop);
-                            System.out.println(clock + "s" + "\tDispatcher: " + s.getName() + " Deallocated at: "+clock);
-                            out.println(clock+"s: "+s.getName() + " Deallocated");
+                            System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " Deallocated at: "+"t"+clock);
+                            out.println("t"+clock+": "+s.getName() + " Deallocated");
                         } else {
-                            System.out.println(clock + "s" + "\tDispatcher: " + s.getName() + " running at " + clock);
-                            out.println(clock+"s: "+s.getName() + " running");
+                            System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " running at " + "t"+clock);
+                            out.println("t"+clock+": "+s.getName() + " running");
                         }
                     }
                 } else {
-                    System.out.println(clock + "s" + " Dispatcher: nothing");
-                    out.println(clock+"s: waiting for requests");
+                    System.out.println("t"+clock + " Dispatcher: nothing");
+                    out.println("t"+clock+": waiting for requests");
                 }
             }
         }
         System.out.println("Dispatcher: Total requests served: " + served);
-        out.println("TOTAL REQUESTS SERVED: " + served);
+        out.println("\nTOTAL REQUESTS SERVED: " + served);
     }
 
 }
