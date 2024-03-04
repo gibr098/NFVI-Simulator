@@ -23,7 +23,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        File dir = new File("logs");
+        File dir = new File("../logs");
         if (!dir.exists()) {
             dir.mkdir();
         }
@@ -37,6 +37,7 @@ public class App {
         } catch (IOException ex) {
 
         }
+
 
         int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
         int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
@@ -57,6 +58,7 @@ public class App {
         double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
 
         String policy = prop.getProperty("policy");
+
 
         // CONTROL Construction validity
         ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network, virtual_machines, number_of_containers, container_ram, container_cpu, container_storage, container_network);
@@ -93,10 +95,6 @@ public class App {
         // PRINT The structure of the NFVI
         printPoPStructure(nfvi);
 
-        System.out.println("Press \"ENTER\" to run the simulation...");
-        Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
-
         // Run the Simulation
         AppRS app = new AppRS(lambda, duration, pop);
         // app.run();
@@ -105,11 +103,11 @@ public class App {
         File file;
         int n = 1;
         if (dir.listFiles().length == 0) {
-            file = new File("logs/sim1_log.txt");
+            file = new File("../logs/sim1_log.txt");
         }else{
             n = Integer.parseInt(dir.listFiles()[dir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
                     + 1;
-            file = new File("logs/sim" + n + "_log.txt");
+            file = new File("../logs/sim" + n + "_log.txt");
         }
         PrintWriter out;
         try {
