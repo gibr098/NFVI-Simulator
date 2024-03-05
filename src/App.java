@@ -150,7 +150,6 @@ public class App {
 
         //Save chart
         String filename;
-        int k = 1;
         if (chartDir.listFiles().length == 0) {
             filename = "sim1_chart.png";
         } else {
