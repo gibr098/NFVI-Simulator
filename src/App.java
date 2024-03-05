@@ -30,9 +30,13 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        File dir = new File("Simulator\\logs");
-        if (!dir.exists()) {
-            dir.mkdir();
+        File logDir = new File("Simulator\\logs");
+        if (!logDir.exists()) {
+            logDir.mkdir();
+        }
+        File chartDir = new File("Simulator\\charts");
+        if (!chartDir.exists()) {
+            chartDir.mkdir();
         }
 
         Properties prop = new Properties();
@@ -116,10 +120,10 @@ public class App {
         // Run the Simulation and write the log
         File file;
         int n = 1;
-        if (dir.listFiles().length == 0) {
+        if (logDir.listFiles().length == 0) {
             file = new File("Simulator\\logs\\sim1_log.txt");
         } else {
-            n = Integer.parseInt(dir.listFiles()[dir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
+            n = Integer.parseInt(logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
                     + 1;
             file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
@@ -145,8 +149,17 @@ public class App {
         //chart.setVisible(true);
 
         //Save chart
+        String filename;
+        int k = 1;
+        if (chartDir.listFiles().length == 0) {
+            filename = "sim1_chart.png";
+        } else {
+            n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
+                    + 1;
+            filename = "sim" + n + "_chart.png";
+        }
         try {
-            OutputStream out2 = new FileOutputStream("Simulator\\charts\\costchart1.png");
+            OutputStream out2 = new FileOutputStream("Simulator\\charts\\"+filename);
             ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
         } catch (IOException ex) {
             ex.printStackTrace();

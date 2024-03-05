@@ -64,6 +64,10 @@ public class NFVIPoP {
         return print+")";
     }
 
+    public int getNumberOfServers() throws Exception{
+        return this.getLinkOwn().getDataCenter().getLinkContain().size();
+    }
+
 
 
     public String getName(){

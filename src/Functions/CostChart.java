@@ -43,7 +43,7 @@ public class CostChart extends ApplicationFrame {
 
         final XYDataset dataset = pop.getDataset();
 
-        this.chart = createChart(dataset);
+        this.chart = createChart(dataset, pop);
 
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
@@ -55,64 +55,8 @@ public class CostChart extends ApplicationFrame {
         return this.chart;
     }
 
-    // Create Dataset
-    private XYDataset createDataset(NFVIPoP pop) throws Exception {
-
-        
-        final XYSeries series1 = new XYSeries("First");
-        //dataset.addSeries(series1);
-        series1.add(1.0, 1.0);
-        series1.add(2.0, 4.0);
-        series1.add(3.0, 3.0);
-        series1.add(4.0, 5.0);
-        series1.add(5.0, 5.0);
-        series1.add(6.0, 7.0);
-        series1.add(7.0, 7.0);
-        series1.add(8.0, 8.0);
-
-        final XYSeries series2 = new XYSeries("Second");
-        series2.add(1.0, 5.0);
-        series2.add(2.0, 7.0);
-        series2.add(3.0, 6.0);
-        series2.add(4.0, 8.0);
-        series2.add(5.0, 4.0);
-        series2.add(6.0, 4.0);
-        series2.add(7.0, 2.0);
-        series2.add(8.0, 1.0);
-
-        final XYSeries series3 = new XYSeries("Third");
-        series3.add(3.0, 4.0);
-        series3.add(4.0, 3.0);
-        series3.add(5.0, 2.0);
-        series3.add(6.0, 3.0);
-        series3.add(7.0, 6.0);
-        series3.add(8.0, 3.0);
-        series3.add(9.0, 4.0);
-        series3.add(10.0, 3.0);
-
-        final XYSeries series4 = new XYSeries("Fourth");
-        series4.add(1.0, 3.0);
-        series4.add(5.0, 7.0);
-        series4.add(1.0, 1.0);
-        series4.add(2.0, 3.0);
-        series4.add(7.0, 6.0);
-        series4.add(3.0, 3.0);
-        series4.add(9.0, 6.0);
-        series4.add(6.0, 15.0);
-
-        final XYSeriesCollection dataset = new XYSeriesCollection();
-        //dataset.addSeries(series1);
-        dataset.addSeries(series2);
-        dataset.addSeries(series3);
-        dataset.addSeries(series4);
-        
-
-        return dataset;
-
-    }
-
     // Create Chart
-    private JFreeChart createChart(final XYDataset dataset) {
+    private JFreeChart createChart(final XYDataset dataset, NFVIPoP pop) throws Exception {
 
         // create the chart...
         final JFreeChart chart = ChartFactory.createXYLineChart(
@@ -126,10 +70,12 @@ public class CostChart extends ApplicationFrame {
                 false // urls
         );
 
+        int n = pop.getNumberOfServers();
 
         chart.setBackgroundPaint(Color.white);
 
         // final StandardLegend legend = (StandardLegend) chart.getLegend();
+
         // legend.setDisplaySeriesShapes(true);
 
         // get a reference to the plot for further customisation...
@@ -140,8 +86,12 @@ public class CostChart extends ApplicationFrame {
         plot.setRangeGridlinePaint(Color.white);
 
         final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(4, false);
-        renderer.setSeriesShapesVisible(4, false);
+        //renderer.setSeriesLinesVisible(2, false);
+        //renderer.setSeriesShapesVisible(2, false);
+        for (int i = 0; i<n;i++){
+            renderer.setSeriesLinesVisible(i, true);
+            renderer.setSeriesShapesVisible(i, true);
+        }
         plot.setRenderer(renderer);
 
         // change the auto tick unit selection to integer units only...
