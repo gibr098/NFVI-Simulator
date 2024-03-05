@@ -4,6 +4,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
 import Classes.*;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkCompose;
@@ -17,24 +20,30 @@ import Functions.*;
 import RequesterDispatcher.Dispatcher;
 import RequesterDispatcher.Requester;
 
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.ui.RefineryUtilities;
+
 import java.io.*;
 
 public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        File dir = new File("../logs");
+        File dir = new File("Simulator\\logs");
         if (!dir.exists()) {
             dir.mkdir();
         }
 
         Properties prop = new Properties();
-        String fileName = "NFVI.config";
+        String fileName = "Simulator\\src\\NFVI.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
             // FileNotFoundException catch is optional and can be collapsed
+            ex.printStackTrace();
         } catch (IOException ex) {
+            ex.printStackTrace();
 
         }
 
@@ -58,10 +67,10 @@ public class App {
 
         String policy = prop.getProperty("policy");
 
-
         // CONTROL Construction validity
-        ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network, virtual_machines, number_of_containers, container_ram, container_cpu, container_storage, container_network);
-
+        ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network,
+                virtual_machines, number_of_containers, container_ram, container_cpu, container_storage,
+                container_network);
 
         NFVI nfvi = new NFVI("NFVI");
         NFVIPoP pop = new NFVIPoP("PoP-1");
@@ -99,37 +108,52 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
 
-        // Run the Simulation
+        // Set up the Simulation
         AppRS app = new AppRS(lambda, duration, pop);
         // app.run();
+
 
         // Run the Simulation and write the log
         File file;
         int n = 1;
         if (dir.listFiles().length == 0) {
-            file = new File("../logs/sim1_log.txt");
-        }else{
+            file = new File("Simulator\\logs\\sim1_log.txt");
+        } else {
             n = Integer.parseInt(dir.listFiles()[dir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
                     + 1;
-            file = new File("../logs/sim" + n + "_log.txt");
+            file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
         PrintWriter out;
         try {
             out = new PrintWriter(file);
-            System.out.println("SIMULATION "+n+": lambda = " + lambda + ", Sim length = " + duration+"\n");
-            out.println("SIMULATION "+n+": lambda = " + lambda + ", Sim length = " + duration + "\n");
+            System.out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
+            out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
             app.run(out);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
-            System.out.println("Requests not served: " + pop.getQueuePrint()+"\n");
+            System.out.println("Requests not served: " + pop.getQueuePrint() + "\n");
             System.out.println("Simulation complete.");
-            System.out.println("Log: logs/sim"+n+"_log.txt");
+            System.out.println("Log: logs/sim" + n + "_log.txt");
             out.close();
         } catch (FileNotFoundException e1) {
             e1.printStackTrace();
         }
 
+        //Create a cost chart
+        final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
+        //chart.pack();
+        //RefineryUtilities.centerFrameOnScreen(chart);
+        //chart.setVisible(true);
+
+        //Save chart
+        try {
+            OutputStream out2 = new FileOutputStream("Simulator\\charts\\costchart1.png");
+            ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         // TODO: PRINT The result of the Simulation ???
-        //printSimulationResults();
+        // printSimulationResults();
 
     }
 
@@ -155,15 +179,15 @@ public class App {
         System.out.println(info);
     }
 
-    public static void ControlConstructionValidity(int ns, int sram, int scpu, int sstor, int snet, int nvm, int nc, int cram, int ccpu, int cstor, int cnet){
-        int tot_containers = nvm*nc;
-        if(sram < tot_containers*cram || 
-           scpu < tot_containers*ccpu ||
-           sstor < tot_containers*cstor ||
-           snet < tot_containers*cnet
-           ){
-            System.out.println("\nCONSTRUCTION PARAMETERS ARE NOT VALID!"+
-            "\nPlease insert a valid configuration in the NFVI.config file\n");
+    public static void ControlConstructionValidity(int ns, int sram, int scpu, int sstor, int snet, int nvm, int nc,
+            int cram, int ccpu, int cstor, int cnet) {
+        int tot_containers = nvm * nc;
+        if (sram < tot_containers * cram ||
+                scpu < tot_containers * ccpu ||
+                sstor < tot_containers * cstor ||
+                snet < tot_containers * cnet) {
+            System.out.println("\nCONSTRUCTION PARAMETERS ARE NOT VALID!" +
+                    "\nPlease insert a valid configuration in the NFVI.config file\n");
             System.exit(0);
         }
 

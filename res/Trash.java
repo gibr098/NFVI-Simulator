@@ -1,5 +1,23 @@
 public class Trash {
     /* 
+
+    int number_of_servers = prop.getProperty("number_of_servers")!=null? Integer.parseInt(prop.getProperty("number_of_servers")) : 0;
+        int server_ram = prop.getProperty("RAM(GB)")!=null? Integer.parseInt(prop.getProperty("RAM(GB)")) : 0;
+        int server_cpu = prop.getProperty("CPU(Cores)")!=null? Integer.parseInt(prop.getProperty("CPU(Cores)")) : 0;
+        int server_storage = prop.getProperty("Storage(GB)")!=null? Integer.parseInt(prop.getProperty("Storage(GB)")) : 0;
+        int server_network = prop.getProperty("Network(interfaces)")!=null? Integer.parseInt(prop.getProperty("Network(interfaces)")) : 0;
+
+        int virtual_machines = prop.getProperty("virtual_machines")!=null? Integer.parseInt(prop.getProperty("virtual_machines")) : 0;
+
+        int number_of_containers = prop.getProperty("containers")!=null? Integer.parseInt(prop.getProperty("containers")) : 0;
+        int container_cpu_usage = prop.getProperty("container_cpu(%)")!=null? Integer.parseInt(prop.getProperty("container_cpu(%)")) : 0;
+        int container_ram = prop.getProperty("C-RAM(GB)")!=null? Integer.parseInt(prop.getProperty("C-RAM(GB)")) : 0;
+        int container_cpu = prop.getProperty("C-CPU(Cores)")!=null? Integer.parseInt(prop.getProperty("C-CPU(Cores)")) : 0;
+        int container_storage = prop.getProperty("C-Storage(GB)")!=null? Integer.parseInt(prop.getProperty("C-Storage(GB)")) : 0;
+        int container_network = prop.getProperty("C-Network(interfaces)")!=null? Integer.parseInt(prop.getProperty("C-Network(interfaces)")) : 0;
+
+        double lambda = prop.getProperty("lambda")!=null? Double.parseDouble(prop.getProperty("lambda")) : 0;
+        double duration = prop.getProperty("time_of_simulation")!=null? Double.parseDouble(prop.getProperty("time_of_simulation")) : 0;
         for (LinkContain lcc : dc.getLinkContain()){
             String info = "State of the "+lcc.getCOTServer().getName()+":\n";
             for(LinkInstance lii: lcc.getCOTServer().getLinkInstance()){

@@ -5,6 +5,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import Classes.COTServer;
 import Classes.NFVIPoP;
 import Classes.Service;
@@ -12,6 +15,7 @@ import Classes.VirtualMachine;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkProvide;
 import Functions.Allocation;
+import Functions.CostChart;
 import Functions.Deallocation;
 
 import java.io.*;
@@ -23,6 +27,7 @@ public class Dispatcher implements Callable<Object> {
     LinkedList<Service> queue;
     int served;
     PrintWriter out;
+    XYSeriesCollection dataset;
 
     public Dispatcher(double endTime, NFVIPoP pop, PrintWriter out) {
         this.endTime = endTime;
@@ -30,6 +35,9 @@ public class Dispatcher implements Callable<Object> {
         this.served = 0;
         this.pop = pop;
         this.out = out;
+        this.dataset = pop.getDataset();
+
+        
     }
 
     @Override
@@ -39,11 +47,19 @@ public class Dispatcher implements Callable<Object> {
     }
 
     public void run() throws Exception{
+        for(LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()){
+            COTServer s = lc.getCOTServer();
+            dataset.addSeries(s.getSeries());
+        }
         while(clock != endTime){
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
             queue = pop.getQueue();
             out.println("\n"+"t"+clock+": Servers' state\n"+pop.getServerState());
+            for(LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()){
+                COTServer s = lc.getCOTServer();
+                s.addToSeries(clock, s.getCpu());
+            }
             if (!queue.isEmpty()){
                 Service s = queue.getFirst();
                 if (Allocation.ServiceCanBeAllocated(s, pop)) {

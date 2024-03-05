@@ -2,6 +2,8 @@ package Classes;
 
 import java.util.LinkedList;
 
+import org.jfree.data.xy.XYSeriesCollection;
+
 import Classes.LinkManagers.*;
 import Classes.Links.*;
 
@@ -9,6 +11,7 @@ public class NFVIPoP {
     private final String name;
 
     private static LinkedList<Service> queue;
+    private XYSeriesCollection dataset;
 
     //NFVIPoP -> DATACENTER
     private LinkOwn link;
@@ -30,8 +33,17 @@ public class NFVIPoP {
         this.name = name;
 
         this.queue = new LinkedList<Service>();
+        this.dataset = new XYSeriesCollection();
 
         
+    }
+
+    public XYSeriesCollection getDataset(){
+        return dataset;
+    }
+
+    public void setDataset(XYSeriesCollection dataset){
+        this.dataset = dataset;
     }
 
     public LinkedList<Service> getQueue(){

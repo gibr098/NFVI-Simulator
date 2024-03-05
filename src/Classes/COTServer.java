@@ -4,7 +4,10 @@ import Classes.Links.*;
 import Classes.LinkManagers.*;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
+
+import org.jfree.data.xy.XYSeries;
 
 
 
@@ -16,6 +19,10 @@ public class COTServer {
     private int network;
 
     private int cpu_capacity = 100;
+
+    private XYSeries series;
+
+    //private List TimeState;
 
     private HashSet<Container> containers;
 
@@ -40,9 +47,18 @@ public class COTServer {
         this.storage = storage;
         this. network = network;
 
+        this.series= new XYSeries(name);
+
         this.containers = new HashSet<Container>();
 
         linkset = new HashSet<LinkVM>();
+    }
+
+    public XYSeries getSeries(){
+        return this.series;
+    }
+    public void addToSeries(double clock, int cpu){
+        this.series.add(clock,cpu);
     }
 
     public String getName(){
@@ -192,4 +208,6 @@ public class COTServer {
 
         return info;
     }
+
+
 }
