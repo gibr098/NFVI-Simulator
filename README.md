@@ -9,7 +9,7 @@ it consists in simulating the arriving and the management of random-service requ
 3. Construction validity controls (done)
 4. Functional part: Time slotted service requests (done)
 5. Output a log containing simulation info (done)
-6. Cost function
+6. Cost function (in progress)
 
 
 # Model
