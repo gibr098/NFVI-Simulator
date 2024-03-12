@@ -17,14 +17,20 @@ public class Allocation {
         for (LinkChain lc : s.getLinkChainList()) {
             res = res && AllocateVNF(lc.getVNF(), pop);
         }
+
         if (res) { // if all VNFs of the service are allocated
             pop.getLinkCompose().getNFVI().insertLinkProvide(new LinkProvide(pop.getLinkCompose().getNFVI(), s)); // NFVI
                                                                                                                   // provide
                                                                                                                   // that
                                                                                                                   // service
-            
-            VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
-            vm.setRunningServiceState(true);
+
+            //VirtualMachine vm =
+            //s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
+            //vm.setRunningServiceState(true);
+            for (LinkChain lc : s.getLinkChainList()) {
+                VirtualMachine vm = lc.getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
+                vm.setRunningServiceState(true);
+            }
             // NFVI nfvi = pop.getLinkCompose().getNFVI();
             // LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
             // nfvi.insertLinkProvide(lp);
@@ -49,9 +55,12 @@ public class Allocation {
                                     container.setBusyState(true);
                                     vnf.setAllocated(true);
                                     AllocateServerResources(container);
-                                    System.out.println("ALLOCATING " + vnf.getName()+"["+vnf.getType()+"]" + " on "
-                                            + vnf.getLinkRun().getContainer().getName()+"["
-                                            + vnf.getLinkRun().getContainer().getLinkInstance().getVirtualMachine().getName()+"]" + "...");
+                                    System.out
+                                            .println("ALLOCATING " + vnf.getName() + "[" + vnf.getType() + "]" + " on "
+                                                    + vnf.getLinkRun().getContainer().getName() + "["
+                                                    + vnf.getLinkRun().getContainer().getLinkInstance()
+                                                            .getVirtualMachine().getName()
+                                                    + "]" + "...");
                                     // break;
                                     return true; // Allocation has succeded
                                 }
@@ -109,14 +118,9 @@ public class Allocation {
             for (LinkVM lvm : server.getLinkVM()) {
                 VirtualMachine vm = lvm.getVirtualMachine();
                 if (!vm.isRunningService()) {
-                    for (LinkInstance li : vm.getLinkInstance()) {
-                        Container container = li.getContainer();
-                        if (!container.isBusy() && ContainerHasResourcesService(container, s)) {
-                            count++;
-                            if (count == n) {
-                                return true;
-                            }
-                        }
+                    count++;
+                    if (count == n) {
+                        return true;
                     }
                 }
             }

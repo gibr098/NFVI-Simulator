@@ -11,6 +11,7 @@ import Classes.Service;
 import Classes.Links.LinkContain;
 import Functions.*;
 import RequesterDispatcher.*;
+import jxl.write.WritableSheet;
 
 
 public class AppRS{
@@ -26,10 +27,10 @@ public class AppRS{
 
     }
 
-    public void run(PrintWriter out) throws Exception {
+    public void run(PrintWriter out, WritableSheet sheet) throws Exception {
 
         Requester r = new Requester(lambda, duration, pop);
-        Dispatcher d = new Dispatcher(duration, pop, out);
+        Dispatcher d = new Dispatcher(duration, pop, out, sheet);
 
         ExecutorService service = Executors.newFixedThreadPool(2); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously

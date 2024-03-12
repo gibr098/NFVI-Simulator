@@ -19,10 +19,12 @@ import Classes.Links.LinkVM;
 import Functions.*;
 import RequesterDispatcher.Dispatcher;
 import RequesterDispatcher.Requester;
+import jxl.write.WritableSheet;
 
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.ui.RefineryUtilities;
+
 
 import java.io.*;
 
@@ -116,6 +118,9 @@ public class App {
         AppRS app = new AppRS(lambda, duration, pop);
         // app.run();
 
+        // Create xls file of the Dataset
+        WritableSheet sheet = Functions.WriteData.createEmptyDataset();
+
 
         // Run the Simulation and write the log
         File file;
@@ -132,7 +137,7 @@ public class App {
             out = new PrintWriter(file);
             System.out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
             out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
-            app.run(out);
+            app.run(out, sheet);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
             System.out.println("Requests not served: " + pop.getQueuePrint() + "\n");
             System.out.println("Simulation complete.");
@@ -142,6 +147,10 @@ public class App {
             e1.printStackTrace();
         }
 
+        
+
+
+        /*
         //Create a cost chart
         final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
         //chart.pack();
@@ -162,9 +171,9 @@ public class App {
             ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
+        }*/
 
-        // TODO: PRINT The result of the Simulation ???
+        // PRINT The result of the Simulation ???
         // printSimulationResults();
 
     }

@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
 public class VirtualMachine {
     private final String name;
 
     private boolean runningService;
+    private String type;
 
 
     //VM -> CONTAINER
@@ -25,7 +25,16 @@ public class VirtualMachine {
         this.name = name;
         this.runningService = false;
 
+        this.type = "Medium";
+
         linkset = new HashSet<LinkInstance>();
+    }
+
+    public String getType(){
+        return this.type;
+    }
+    public void setType(String size){
+        this.type = size;
     }
 
     public String getName(){

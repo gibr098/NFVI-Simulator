@@ -34,10 +34,12 @@ public class ServiceGeneration {
         types.add("decryption");
         types.add("NAT");
         types.add("DHCP");
+        types.add("VPN");
+        types.add("DPI");
 
-        int VNFnumber = getRandomNumber(2, 5);
+        int VNFnumber = getRandomNumber(3, 8);
 
-        Service s = new Service(name, getRandomNumber(2, 10), 0);
+        Service s = new Service(name, getRandomNumber(10, 20), 0);
         int j = Integer.parseInt(name.replaceAll("[^0-9]", ""));
 
         for (int i = 0; i<VNFnumber; i++){

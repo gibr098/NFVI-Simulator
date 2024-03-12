@@ -17,6 +17,7 @@ import Classes.Links.LinkProvide;
 import Functions.Allocation;
 import Functions.CostChart;
 import Functions.Deallocation;
+import jxl.write.WritableSheet;
 
 import java.io.*;
 
@@ -27,14 +28,16 @@ public class Dispatcher implements Callable<Object> {
     LinkedList<Service> queue;
     int served;
     PrintWriter out;
+    WritableSheet sheet;
     XYSeriesCollection dataset;
 
-    public Dispatcher(double endTime, NFVIPoP pop, PrintWriter out) {
+    public Dispatcher(double endTime, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
         this.endTime = endTime;
         this.clock = 0;
         this.served = 0;
         this.pop = pop;
         this.out = out;
+        this.sheet = sheet;
         this.dataset = pop.getDataset();
 
         
