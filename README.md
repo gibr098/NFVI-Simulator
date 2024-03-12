@@ -33,6 +33,7 @@ The most traditional approach for virtualization is based on using a hypervisor,
 
 ### Time-slotted Service requests
 Requests of service instantiation in the NFVI-PoP are generated according to Poisson distribution with arrival rate λ. Requests are served by the **Dispatcher** element who first checks if the related Service (so its corresponding chain of VNFs) can be allocated into the system, i.e if the system has the necessary resources to run the Service, and then runs each VNF in a single container for the time the Service is requested to be active; once the Service time runs out all its VNFs are terminated, the related resources are de-allocated and containers are free to host new incoming VNFs.
+![Alt text](./res/Functioning.png)
 
 
 
