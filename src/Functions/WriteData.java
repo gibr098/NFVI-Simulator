@@ -13,14 +13,14 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
 public class WriteData {
-    public static WritableSheet createEmptyDataset() throws Exception {
-        File currDir = new File(".");
-        String path = currDir.getAbsolutePath();
-        String fileLocation = path.substring(0, path.length() - 1) + "dataset.xls";
+    public static void createEmptyDataset(WritableWorkbook workbook, WritableSheet sheet) throws Exception {
+        //File currDir = new File(".");
+        //String path = currDir.getAbsolutePath();
+        //String fileLocation = path.substring(0, path.length() - 1) + "dataset.xls";
 
-        WritableWorkbook workbook = Workbook.createWorkbook(new File(fileLocation));
+        //WritableWorkbook workbook = Workbook.createWorkbook(new File(fileLocation));
 
-        WritableSheet sheet = workbook.createSheet("Sheet 1", 0);
+        //WritableSheet sheet = workbook.createSheet("Sheet 1", 0);
 
         WritableCellFormat headerFormat = new WritableCellFormat();
         WritableFont font = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
@@ -80,19 +80,22 @@ public class WriteData {
         headerLabel = new Label(17, 0, "Availability of renewable energy", headerFormat);
         sheet.addCell(headerLabel);
 
-        workbook.write();
-        workbook.close();
-
-        return sheet;
+        //return sheet;
     }
 
-    public void insertStringCell(WritableSheet sheet,int rownumber, int colnumber, String field) throws Exception {
+    public static void insertStringCell(WritableSheet sheet,int rownumber, int colnumber, String field) throws Exception {
         WritableCellFormat cellFormat = new WritableCellFormat();
         cellFormat.setWrap(true);
         Label cellLabel = new Label(colnumber, rownumber, field, cellFormat);
         sheet.addCell(cellLabel);
     }
-    public void insertIntCell(WritableSheet sheet,int rownumber, int colnumber, int field) throws Exception {
+    public static void insertIntCell(WritableSheet sheet,int rownumber, int colnumber, int field) throws Exception {
+        WritableCellFormat cellFormat = new WritableCellFormat();
+        cellFormat.setWrap(true);
+        Number cellLabel = new Number(colnumber, rownumber, field, cellFormat);
+        sheet.addCell(cellLabel);
+    }
+    public static void insertDoubleCell(WritableSheet sheet,int rownumber, int colnumber, double field) throws Exception {
         WritableCellFormat cellFormat = new WritableCellFormat();
         cellFormat.setWrap(true);
         Number cellLabel = new Number(colnumber, rownumber, field, cellFormat);

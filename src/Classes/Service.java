@@ -133,6 +133,15 @@ public class Service {
         if (a != null) linkset.remove(a.getLink());
     }
 
+    public String getStringChain(){
+        String ret = "[";
+        for (LinkChain lc : linkset) {
+            ret+=lc.getVNF().getType()+"-";
+        }
+
+        return ret+"]";
+    }
+
     public String getTotalinfo(){
         String info = "";
         info+= this.getName()+" is provided by "+link.getNFVI().getName()+" and has a chain of "+this.getVNFNumber()+" VNFs: ";

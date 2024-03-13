@@ -19,12 +19,14 @@ import Classes.Links.LinkVM;
 import Functions.*;
 import RequesterDispatcher.Dispatcher;
 import RequesterDispatcher.Requester;
+import jxl.Sheet;
+import jxl.Workbook;
 import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.ui.RefineryUtilities;
-
 
 import java.io.*;
 
@@ -109,7 +111,6 @@ public class App {
         // PRINT The structure of the NFVI
         printPoPStructure(nfvi);
 
-
         System.out.println("Press \"ENTER\" to run the simulation...");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
@@ -119,8 +120,20 @@ public class App {
         // app.run();
 
         // Create xls file of the Dataset
-        WritableSheet sheet = Functions.WriteData.createEmptyDataset();
+        File wf = new File("Simulator\\dataset.xls");
+        Workbook workbook;
+        WritableWorkbook WRworkbook;
+        WritableSheet sheet;
 
+        if (!wf.exists()) {
+            WRworkbook = Workbook.createWorkbook(wf);
+            sheet = WRworkbook.createSheet("D1", 0);
+            Functions.WriteData.createEmptyDataset(WRworkbook, sheet);
+        } else {
+            workbook = Workbook.getWorkbook(wf);
+            WRworkbook = Workbook.createWorkbook(wf, workbook);
+            sheet = WRworkbook.getSheet("D1");
+        }
 
         // Run the Simulation and write the log
         File file;
@@ -128,8 +141,8 @@ public class App {
         if (logDir.listFiles().length == 0) {
             file = new File("Simulator\\logs\\sim1_log.txt");
         } else {
-            n = Integer.parseInt(logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
-                    + 1;
+            String nn = logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("[^0-9]", "");
+            n = Integer.parseInt(nn)+1;
             file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
         PrintWriter out;
@@ -147,31 +160,34 @@ public class App {
             e1.printStackTrace();
         }
 
-        
-
+        WRworkbook.write();
+        WRworkbook.close();
+        //workbook.close();
 
         /*
-        //Create a cost chart
-        final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
-        //chart.pack();
-        //RefineryUtilities.centerFrameOnScreen(chart);
-        //chart.setVisible(true);
-
-        //Save chart
-        String filename;
-        if (chartDir.listFiles().length == 0) {
-            filename = "sim1_chart.png";
-        } else {
-            n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length - 1].getName().replaceAll("[^0-9]", ""))
-                    + 1;
-            filename = "sim" + n + "_chart.png";
-        }
-        try {
-            OutputStream out2 = new FileOutputStream("Simulator\\charts\\"+filename);
-            ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
+         * //Create a cost chart
+         * final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
+         * //chart.pack();
+         * //RefineryUtilities.centerFrameOnScreen(chart);
+         * //chart.setVisible(true);
+         * 
+         * //Save chart
+         * String filename;
+         * if (chartDir.listFiles().length == 0) {
+         * filename = "sim1_chart.png";
+         * } else {
+         * n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length -
+         * 1].getName().replaceAll("[^0-9]", ""))
+         * + 1;
+         * filename = "sim" + n + "_chart.png";
+         * }
+         * try {
+         * OutputStream out2 = new FileOutputStream("Simulator\\charts\\"+filename);
+         * ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
+         * } catch (IOException ex) {
+         * ex.printStackTrace();
+         * }
+         */
 
         // PRINT The result of the Simulation ???
         // printSimulationResults();
