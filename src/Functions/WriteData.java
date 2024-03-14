@@ -50,7 +50,7 @@ public class WriteData {
         headerLabel = new Label(7, 0, "Number of VNF", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(8, 0, "Type of VNF", headerFormat);
+        headerLabel = new Label(8, 0, "Type of VNFs", headerFormat);
         sheet.addCell(headerLabel);
 
         headerLabel = new Label(9, 0, "Number of Services running", headerFormat);
@@ -59,7 +59,7 @@ public class WriteData {
         headerLabel = new Label(10, 0, "Allocation Policy", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(11, 0, "Request Rate", headerFormat);
+        headerLabel = new Label(11, 0, "Request Rate(λ)", headerFormat);
         sheet.addCell(headerLabel);
 
         headerLabel = new Label(12, 0, "Size of request", headerFormat);

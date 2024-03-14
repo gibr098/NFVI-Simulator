@@ -7,10 +7,12 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.math3.distribution.ZipfDistribution;
+
 import Classes.*;
 import Functions.ServiceGeneration;
 
-public class Requester implements Callable<Object>{
+public class Requester implements Callable<Object> {
 
     NFVIPoP pop;
 
@@ -19,12 +21,18 @@ public class Requester implements Callable<Object>{
     double lambda; // rate of requests arrival
     double clock; // current time of simulation
     double endTime; // end time of simulation
+    double alfa; // zipf exponent
+    int maxSize; // max size of the request
     int requests;
     boolean busy;
 
-    public Requester(double lambda, double endTime, NFVIPoP pop) {
+    ZipfDistribution z;
+
+    public Requester(double lambda, double endTime, double alfa, int maxSize, NFVIPoP pop) {
         this.lambda = lambda;
         this.endTime = endTime;
+        this.alfa = alfa;
+        this.maxSize = maxSize;
         this.pop = pop;
 
         clock = 0;
@@ -32,6 +40,7 @@ public class Requester implements Callable<Object>{
         busy = false;
 
         queue = pop.getQueue();
+        z = new ZipfDistribution(maxSize, alfa);
     }
 
     @Override
@@ -54,23 +63,27 @@ public class Requester implements Callable<Object>{
 
     public void run() throws InterruptedException, Exception {
         int num = 1;
+        int size = 1;
         Service s;
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
+            size = z.sample();
             if (getPoissonRandom(lambda) == 1) {
-                s = ServiceGeneration.generateService("Service-"+num);
+                s = ServiceGeneration.generateService("Service-" + num);
+                s.setDemand(size);
                 pop.addElementToQueue(s);
+                System.out.println(
+                        "t" + clock + "\tRequester: Request of " + s.getName() + "[demand: " + s.getDemand() + "x]"
+                                + " arrived at: " + "t" + clock);
                 requests++;
                 num++;
-                System.out.println("t"+clock +"\tRequester: Request of " + s.getName() + " arrived at: " + "t"+clock);
-            }else{
-                System.out.println("t"+clock+" Requester: nothing ");
+            } else {
+                System.out.println("t" + clock + " Requester: nothing ");
             }
 
         }
         System.out.println("Requester: Total requests arrived: " + requests);
     }
 
-    
 }

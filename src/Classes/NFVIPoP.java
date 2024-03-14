@@ -54,6 +54,7 @@ public class NFVIPoP {
         if(!queue.contains(s)){
             queue.add(s);
         }
+        //queue.add(s);
     }
 
     public String getQueuePrint(){

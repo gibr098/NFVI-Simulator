@@ -16,7 +16,8 @@ public class Service {
     private boolean allocated;
     private double initial_time;
 
-
+    //size of the service (1,2..) means how many instance of the service must be allocated
+    private int demand;
 
     private LinkedList<VNF> functions;
 
@@ -33,6 +34,7 @@ public class Service {
         this.name = name;
         this.time = time;
         this.type = type;
+        this.demand = 1;
         this.functions = new LinkedList<VNF>();
 
         //linkset = new HashSet<LinkProvide>();
@@ -41,6 +43,14 @@ public class Service {
         this.allocated = false;
         this.initial_time = 0.0;
 
+    }
+
+    public int getDemand(){
+        return this.demand;
+    }
+
+    public void setDemand(int demand){
+        this.demand = demand;
     }
 
     public String getName(){

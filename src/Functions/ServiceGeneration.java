@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.math3.distribution.ZipfDistribution;
+
 import Classes.Service;
 import Classes.VNF;
 import Classes.Links.LinkChain;

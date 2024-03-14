@@ -11,7 +11,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 import Classes.COTServer;
 import Classes.NFVIPoP;
 import Classes.Service;
+import Classes.VNF;
 import Classes.VirtualMachine;
+import Classes.Links.LinkChain;
 import Classes.Links.LinkContain;
 import Classes.Links.LinkProvide;
 import Functions.Allocation;
@@ -152,11 +154,23 @@ public class Dispatcher implements Callable<Object> {
         int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
         int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
+        double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
         COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
         int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
         String vmtype = (service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine().getContainerNumber() > 4)? "Large" : "Medium";
         int vnfnum = service.getLinkChainList().size();
         String vnftype = service.getStringChain();
+        double servicecost = 0;
+        for (LinkChain lc : service.getLinkChainList()) {
+            VNF vnf = lc.getVNF();
+            servicecost+= vnf.getCPU(); 
+            servicecost+= vnf.getRam();
+            servicecost+= vnf.getStorage();
+        }
+        servicecost = servicecost * service.getTime();
+        
+        // base energy consumption
+        double energycost = number_of_servers*server_ram*server_cpu*server_storage*duration;
 
         WriteData.insertIntCell(sheet,cell,0, number_of_servers);
         WriteData.insertIntCell(sheet,cell,1, server_ram);
@@ -166,16 +180,16 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertIntCell(sheet,cell,5, vmnum);
         WriteData.insertStringCell(sheet,cell,6, vmtype);
         WriteData.insertIntCell(sheet,cell,7, vnfnum);
-        WriteData.insertStringCell(sheet,cell,8, vnftype);
-        WriteData.insertIntCell(sheet,cell,9, pop.getLinkCompose().getNFVI().getServicesNumber());
-        WriteData.insertStringCell(sheet,cell,10, "FIFO, fixed VM size" );
-        WriteData.insertDoubleCell(sheet,cell,11, lambda);
-        WriteData.insertIntCell(sheet,cell,12, 1);
-        WriteData.insertStringCell(sheet,cell,13, "null" );
-        WriteData.insertDoubleCell(sheet,cell,14, service.getTime());
-        WriteData.insertIntCell(sheet,cell,15, 0 );
-        WriteData.insertIntCell(sheet,cell,16, 0);
-        WriteData.insertStringCell(sheet,cell,17, "no" );
+        WriteData.insertStringCell(sheet,cell,8, vnftype); //chain of vnf
+        WriteData.insertIntCell(sheet,cell,9, pop.getLinkCompose().getNFVI().getServicesNumber()); //services running in the system at instant t
+        WriteData.insertStringCell(sheet,cell,10, "FIFO, fixed VM size" ); //policy
+        WriteData.insertDoubleCell(sheet,cell,11, lambda); //rate of requests arrivals
+        WriteData.insertIntCell(sheet,cell,12, service.getDemand()); //size of request
+        WriteData.insertStringCell(sheet,cell,13, "???" ); //total usage of resources
+        WriteData.insertDoubleCell(sheet,cell,14, service.getTime()); //service duration
+        WriteData.insertDoubleCell(sheet,cell,15, servicecost ); //service cost
+        WriteData.insertIntCell(sheet,cell,16, 0); //energy cost
+        WriteData.insertStringCell(sheet,cell,17, "no" ); //renewable energy
 
     }
 

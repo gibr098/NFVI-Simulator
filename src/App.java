@@ -73,6 +73,9 @@ public class App {
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
         double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
 
+        double alfa = Double.parseDouble(prop.getProperty("alfa"));
+        int maxSize = Integer.parseInt(prop.getProperty("max_size"));
+
         String policy = prop.getProperty("policy");
 
         // CONTROL Construction validity
@@ -116,7 +119,7 @@ public class App {
         scanner.nextLine();
 
         // Set up the Simulation
-        AppRS app = new AppRS(lambda, duration, pop);
+        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop);
         // app.run();
 
         // Create xls file of the Dataset

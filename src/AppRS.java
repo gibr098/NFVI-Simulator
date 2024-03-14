@@ -17,19 +17,23 @@ import jxl.write.WritableSheet;
 public class AppRS{
     double lambda;
     double duration;
+    double alfa;  
+    int maxSize; 
 
     NFVIPoP pop;
 
-    public AppRS(double lambda, double duration, NFVIPoP pop){
+    public AppRS(double lambda, double duration, double alfa, int maxSize, NFVIPoP pop){
         this.pop = pop;
         this.lambda = lambda;
         this.duration = duration;
+        this.alfa = alfa;
+        this.maxSize = maxSize;
 
     }
 
     public void run(PrintWriter out, WritableSheet sheet) throws Exception {
 
-        Requester r = new Requester(lambda, duration, pop);
+        Requester r = new Requester(lambda, duration, alfa, maxSize, pop);
         Dispatcher d = new Dispatcher(duration, pop, out, sheet);
 
         ExecutorService service = Executors.newFixedThreadPool(2); //with 1 they run sequentially
