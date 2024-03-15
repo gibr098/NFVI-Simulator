@@ -129,8 +129,9 @@ public class COTServer {
         if(c!=null) containers.remove(c);
     }
 
+    //Total
     public int getContainerNumber(){
-        return linkset.size();
+        return linkset.size() * linkset.iterator().next().getVirtualMachine().getContainerNumber();
     }
 
 

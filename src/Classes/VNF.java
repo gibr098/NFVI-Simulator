@@ -138,6 +138,10 @@ public class VNF {
         allocated = state;
     }
 
+    public void emptyChain(){
+        this.linksetC.clear();
+    }
+
     /*public String getContainers() {
         String s = " ";
         for (LinkRun linkRun : linkset) {

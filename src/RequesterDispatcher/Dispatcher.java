@@ -19,8 +19,11 @@ import Classes.Links.LinkProvide;
 import Functions.Allocation;
 import Functions.CostChart;
 import Functions.Deallocation;
+import Functions.ServiceGeneration;
 import Functions.WriteData;
 import jxl.write.WritableSheet;
+
+
 
 import java.io.*;
 
@@ -60,6 +63,7 @@ public class Dispatcher implements Callable<Object> {
         //int cell = sheet.getRows()+1;
         //System.out.println("PROSSIMA RIGA DOVE SCRIVERE: "+sheet.getRows());
         int cell = sheet.getRows();
+        int removeServiceCouter = 0;
         while(clock != endTime){
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
@@ -71,9 +75,13 @@ public class Dispatcher implements Callable<Object> {
             }
             if (!queue.isEmpty()){
                 Service s = queue.getFirst();
-                if (Allocation.ServiceCanBeAllocated(s, pop)) {
+                if (Allocation.ServiceCanBeAllocated(s, pop)){
+                    for(int i = 0; i< s.getDemand()-1; i++){
+                    queue.add(Functions.ServiceGeneration.generateCopyService(s,i+1));
+                    }
                     s = queue.remove();
                     if (Allocation.AllocateService(s, pop)) {
+                        //s = queue.remove();
                         VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
                         .getLinkInstance().getVirtualMachine();
                         COTServer sv = vm.getLinkVM().getCOTServer();
@@ -94,8 +102,19 @@ public class Dispatcher implements Callable<Object> {
                         double service_init_time = s.getInitalAllocationTime();
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
-                            writeDataset(sheet,cell,s,pop);
-                            cell++;
+                            if(s.getDemand()==1 && !s.getName().contains("[")){
+                                writeDataset(sheet,cell,s,pop);
+                                cell++;
+                                System.out.println(s.getName()+"SCRITTO IN DS");
+                            }
+                            //System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
+                            if(s.getName().contains("["+String.valueOf(s.getReqDemand()-1)+"]")){
+                                writeDataset(sheet,cell,s,pop);
+                                cell++;
+                                System.out.println(s.getName()+"SCRITTO IN DS");
+                            }
+                            //writeDataset(sheet,cell,s,pop);
+                            //cell++;
                             Deallocation.DeallocateService(s, pop);
                             System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t"+clock);
                             out.println("t"+clock+" "+s.getName() + " Deallocated");
@@ -116,8 +135,19 @@ public class Dispatcher implements Callable<Object> {
                         double service_init_time = s.getInitalAllocationTime();
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
-                            writeDataset(sheet,cell,s,pop);
-                            cell++;
+                            if(s.getDemand()==1 && !s.getName().contains("[")){
+                                writeDataset(sheet,cell,s,pop);
+                                cell++;
+                                System.out.println(s.getName()+"SCRITTO IN DS");
+                            }
+                            //System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
+                            if(s.getName().contains("["+String.valueOf(s.getReqDemand()-1)+"]")){
+                                writeDataset(sheet,cell,s,pop);
+                                cell++;
+                                System.out.println(s.getName()+"SCRITTO IN DS");
+                            }
+                            //writeDataset(sheet,cell,s,pop);
+                            //cell++
                             Deallocation.DeallocateService(s, pop);
                             System.out.println("t"+clock + "\tDispatcher: " + s.getName() + " Deallocated at: "+"t"+clock);
                             out.println("t"+clock+": "+s.getName() + " Deallocated");
@@ -156,7 +186,9 @@ public class Dispatcher implements Callable<Object> {
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
         double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
         COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
-        int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
+        VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
+        //int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
+        int vmnum =(service.getLinkChainList().size()==vm.getContainerNumber())?1: (service.getLinkChainList().size()/vm.getContainerNumber())+1;
         String vmtype = (service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine().getContainerNumber() > 4)? "Large" : "Medium";
         int vnfnum = service.getLinkChainList().size();
         String vnftype = service.getStringChain();
@@ -167,7 +199,7 @@ public class Dispatcher implements Callable<Object> {
             servicecost+= vnf.getRam();
             servicecost+= vnf.getStorage();
         }
-        servicecost = servicecost * service.getTime();
+        servicecost = servicecost * service.getTime() * service.getReqDemand();
         
         // base energy consumption
         double energycost = number_of_servers*server_ram*server_cpu*server_storage*duration;
@@ -184,7 +216,7 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertIntCell(sheet,cell,9, pop.getLinkCompose().getNFVI().getServicesNumber()); //services running in the system at instant t
         WriteData.insertStringCell(sheet,cell,10, "FIFO, fixed VM size" ); //policy
         WriteData.insertDoubleCell(sheet,cell,11, lambda); //rate of requests arrivals
-        WriteData.insertIntCell(sheet,cell,12, service.getDemand()); //size of request
+        WriteData.insertIntCell(sheet,cell,12, service.getReqDemand()); //size of request
         WriteData.insertStringCell(sheet,cell,13, "???" ); //total usage of resources
         WriteData.insertDoubleCell(sheet,cell,14, service.getTime()); //service duration
         WriteData.insertDoubleCell(sheet,cell,15, servicecost ); //service cost

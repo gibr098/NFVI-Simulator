@@ -70,7 +70,7 @@ public class Requester implements Callable<Object> {
             clock += 1;
             size = z.sample();
             if (getPoissonRandom(lambda) == 1) {
-                s = ServiceGeneration.generateService("Service-" + num);
+                s = ServiceGeneration.generateService("Service-" + num, size);
                 s.setDemand(size);
                 pop.addElementToQueue(s);
                 System.out.println(
@@ -81,6 +81,7 @@ public class Requester implements Callable<Object> {
             } else {
                 System.out.println("t" + clock + " Requester: nothing ");
             }
+            
 
         }
         System.out.println("Requester: Total requests arrived: " + requests);

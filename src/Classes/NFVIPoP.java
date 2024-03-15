@@ -51,10 +51,10 @@ public class NFVIPoP {
     }
 
     public static void addElementToQueue(Service s){
-        if(!queue.contains(s)){
+        /*if(!queue.contains(s)){
             queue.add(s);
-        }
-        //queue.add(s);
+        }*/
+        queue.add(s);
     }
 
     public String getQueuePrint(){

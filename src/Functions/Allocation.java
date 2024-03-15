@@ -16,7 +16,7 @@ public class Allocation {
         boolean res = true;
         for (LinkChain lc : s.getLinkChainList()) {
             res = res && AllocateVNF(lc.getVNF(), pop);
-        }
+    }
 
         if (res) { // if all VNFs of the service are allocated
             pop.getLinkCompose().getNFVI().insertLinkProvide(new LinkProvide(pop.getLinkCompose().getNFVI(), s)); // NFVI
@@ -111,6 +111,7 @@ public class Allocation {
 
     public static boolean ServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {
         int n = s.getLinkChainList().size();
+        int demand = s.getDemand();
         int count = 0;
         DataCenter dc = pop.getLinkOwn().getDataCenter();
         for (LinkContain l : dc.getLinkContain()) {
@@ -118,8 +119,8 @@ public class Allocation {
             for (LinkVM lvm : server.getLinkVM()) {
                 VirtualMachine vm = lvm.getVirtualMachine();
                 if (!vm.isRunningService()) {
-                    count++;
-                    if (count == n) {
+                    count+=vm.getContainerNumber();
+                    if (count >= n*demand) {
                         return true;
                     }
                 }

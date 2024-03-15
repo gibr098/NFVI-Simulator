@@ -18,6 +18,7 @@ public class Service {
 
     //size of the service (1,2..) means how many instance of the service must be allocated
     private int demand;
+    private int reqdemand;
 
     private LinkedList<VNF> functions;
 
@@ -35,6 +36,7 @@ public class Service {
         this.time = time;
         this.type = type;
         this.demand = 1;
+        this.reqdemand = 1;
         this.functions = new LinkedList<VNF>();
 
         //linkset = new HashSet<LinkProvide>();
@@ -51,6 +53,14 @@ public class Service {
 
     public void setDemand(int demand){
         this.demand = demand;
+    }
+
+    public int getReqDemand(){
+        return this.reqdemand;
+    }
+
+    public void setReqDemand(int demand){
+        this.reqdemand = demand;
     }
 
     public String getName(){
