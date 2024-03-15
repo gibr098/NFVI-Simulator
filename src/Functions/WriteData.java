@@ -65,19 +65,19 @@ public class WriteData {
         headerLabel = new Label(12, 0, "Size of request", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(13, 0, "Total consume of resources", headerFormat);
+        //headerLabel = new Label(13, 0, "Total consume of resources", headerFormat);
+        //sheet.addCell(headerLabel);
+
+        headerLabel = new Label(13, 0, "Service duration(h)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(14, 0, "Service duration", headerFormat);
+        headerLabel = new Label(14, 0, "Service cost(€)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(15, 0, "Service cost", headerFormat);
+        headerLabel = new Label(15, 0, "Energy cost(€)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(16, 0, "Energy cost", headerFormat);
-        sheet.addCell(headerLabel);
-
-        headerLabel = new Label(17, 0, "Availability of renewable energy", headerFormat);
+        headerLabel = new Label(16, 0, "Availability of renewable energy", headerFormat);
         sheet.addCell(headerLabel);
 
         //return sheet;

@@ -195,9 +195,9 @@ public class Dispatcher implements Callable<Object> {
         double servicecost = 0;
         for (LinkChain lc : service.getLinkChainList()) {
             VNF vnf = lc.getVNF();
-            servicecost+= vnf.getCPU(); 
-            servicecost+= vnf.getRam();
-            servicecost+= vnf.getStorage();
+            servicecost+= vnf.getCPU()*0.003; //0.003 euro per core hour
+            servicecost+= vnf.getRam()*0.013;  // 0.013 euro per RAM(GB) hour
+            servicecost+= vnf.getStorage()*0.00001; //0.00001 per GB (storage) per hour
         }
         servicecost = servicecost * service.getTime() * service.getReqDemand();
         
@@ -217,11 +217,11 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertStringCell(sheet,cell,10, "FIFO, fixed VM size" ); //policy
         WriteData.insertDoubleCell(sheet,cell,11, lambda); //rate of requests arrivals
         WriteData.insertIntCell(sheet,cell,12, service.getReqDemand()); //size of request
-        WriteData.insertStringCell(sheet,cell,13, "???" ); //total usage of resources
-        WriteData.insertDoubleCell(sheet,cell,14, service.getTime()); //service duration
-        WriteData.insertDoubleCell(sheet,cell,15, servicecost ); //service cost
-        WriteData.insertIntCell(sheet,cell,16, 0); //energy cost
-        WriteData.insertStringCell(sheet,cell,17, "no" ); //renewable energy
+        //WriteData.insertStringCell(sheet,cell,13, "???" ); //total usage of resources
+        WriteData.insertDoubleCell(sheet,cell,13, service.getTime()); //service duration
+        WriteData.insertDoubleCell(sheet,cell,14, servicecost ); //service cost
+        WriteData.insertIntCell(sheet,cell,15, 0); //energy cost
+        WriteData.insertStringCell(sheet,cell,16, "no" ); //renewable energy
 
     }
 

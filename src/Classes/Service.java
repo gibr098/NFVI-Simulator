@@ -156,7 +156,7 @@ public class Service {
     public String getStringChain(){
         String ret = "[";
         for (LinkChain lc : linkset) {
-            ret+=lc.getVNF().getType()+"-";
+            ret+=lc.getVNF().getType()+" ";
         }
 
         return ret+"]";
