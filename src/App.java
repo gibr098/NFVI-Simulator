@@ -145,7 +145,7 @@ public class App {
             file = new File("Simulator\\logs\\sim1_log.txt");
         } else {
             String nn = logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("[^0-9]", "");
-            n = Integer.parseInt(nn)+1;
+            n = Integer.parseInt(nn) + 1;
             file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
         PrintWriter out;
@@ -165,32 +165,30 @@ public class App {
 
         WRworkbook.write();
         WRworkbook.close();
-        //workbook.close();
+        // workbook.close();
 
-        /*
-         * //Create a cost chart
-         * final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
-         * //chart.pack();
-         * //RefineryUtilities.centerFrameOnScreen(chart);
-         * //chart.setVisible(true);
-         * 
-         * //Save chart
-         * String filename;
-         * if (chartDir.listFiles().length == 0) {
-         * filename = "sim1_chart.png";
-         * } else {
-         * n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length -
-         * 1].getName().replaceAll("[^0-9]", ""))
-         * + 1;
-         * filename = "sim" + n + "_chart.png";
-         * }
-         * try {
-         * OutputStream out2 = new FileOutputStream("Simulator\\charts\\"+filename);
-         * ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
-         * } catch (IOException ex) {
-         * ex.printStackTrace();
-         * }
-         */
+        // Create a cost chart
+        final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
+        // chart.pack();
+        // RefineryUtilities.centerFrameOnScreen(chart);
+        // chart.setVisible(true);
+
+        // Save chart
+        String filename;
+        if (chartDir.listFiles().length == 0) {
+            filename = "sim1_chart.png";
+        } else {
+            n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length -
+                    1].getName().replaceAll("[^0-9]", ""))
+                    + 1;
+            filename = "sim" + n + "_chart.png";
+        }
+        try {
+            OutputStream out2 = new FileOutputStream("Simulator\\charts\\" + filename);
+            ChartUtilities.writeChartAsPNG(out2, chart.getChart(), 500, 300);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
         // PRINT The result of the Simulation ???
         // printSimulationResults();

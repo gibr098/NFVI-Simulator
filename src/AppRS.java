@@ -35,12 +35,13 @@ public class AppRS{
 
         Requester r = new Requester(lambda, duration, alfa, maxSize, pop);
         Dispatcher d = new Dispatcher(duration, pop, out, sheet);
+        Monitor m = new Monitor(pop, duration);
 
-        ExecutorService service = Executors.newFixedThreadPool(2); //with 1 they run sequentially
+        ExecutorService service = Executors.newFixedThreadPool(3); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously
         service.submit(r);
         service.submit(d);
-        //service.submit(monitor); //class that monitor and display the state of the servers
+        service.submit(m); //class that monitor and display the state of the servers
 
         service.shutdown();
         service.awaitTermination(1, TimeUnit.DAYS);

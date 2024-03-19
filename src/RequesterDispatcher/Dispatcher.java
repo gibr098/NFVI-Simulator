@@ -103,13 +103,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             if(s.getDemand()==1 && !s.getName().contains("[")){
-                                writeDataset(sheet,cell,s,pop);
+                                writeDataset(sheet,cell,s,pop,clock);
                                 cell++;
                                 System.out.println(s.getName()+"SCRITTO IN DS");
                             }
                             //System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if(s.getName().contains("["+String.valueOf(s.getReqDemand()-1)+"]")){
-                                writeDataset(sheet,cell,s,pop);
+                                writeDataset(sheet,cell,s,pop,clock);
                                 cell++;
                                 System.out.println(s.getName()+"SCRITTO IN DS");
                             }
@@ -136,13 +136,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             if(s.getDemand()==1 && !s.getName().contains("[")){
-                                writeDataset(sheet,cell,s,pop);
+                                writeDataset(sheet,cell,s,pop, clock);
                                 cell++;
                                 System.out.println(s.getName()+"SCRITTO IN DS");
                             }
                             //System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if(s.getName().contains("["+String.valueOf(s.getReqDemand()-1)+"]")){
-                                writeDataset(sheet,cell,s,pop);
+                                writeDataset(sheet,cell,s,pop,clock);
                                 cell++;
                                 System.out.println(s.getName()+"SCRITTO IN DS");
                             }
@@ -166,7 +166,7 @@ public class Dispatcher implements Callable<Object> {
         out.println("\nTOTAL REQUESTS SERVED: " + served);
     }
 
-    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop) throws Exception{
+    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock) throws Exception{
         Properties prop = new Properties();
         String fileName = "Simulator\\src\\NFVI.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
@@ -202,7 +202,29 @@ public class Dispatcher implements Callable<Object> {
         servicecost = servicecost * service.getTime() * service.getReqDemand();
         
         // base energy consumption
-        double energycost = number_of_servers*server_ram*server_cpu*server_storage*duration;
+        //double serverONcost= 0.300 * duration * 0.45;  //0.300 kWh * totale ore * 0.45 euro/KWatt
+        double serverONcost= 0.300 * clock * 0.08;  //0.300 kWh * totale ore * 0.08 euro/kWh
+        double ramUsagecost = 0;
+        double cpuUsagecost = 0;
+        for(LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()){
+            COTServer server = lc.getCOTServer();
+            for (int cores : server.getCpuUsage().keySet()) {
+                // 200 Watt at 100% -> 0.2 kWh at 100%
+                // 0.08 euro/kWh
+                double cputime = server.getCpuUsage().get(cores);
+                double percent = (cores/server_cpu == 0)? 0.01: cores/server_cpu;
+                cpuUsagecost += percent * 0.2 * cputime * 0.08;
+            }
+            for (int ram: server.getRamUsage().keySet()) {
+                // 3 Watt every 8 GB -> 0.4 Watt each GB -> 0.0004 kWh GB
+                // 0.08 euro/kWh
+                double ramtime = server.getRamUsage().get(ram);
+                ramUsagecost += ram * 0.0004 * ramtime * 0.08;
+            }
+        }
+        double serverUsageCost = ramUsagecost + cpuUsagecost;
+        double renewableEnergy = 0;
+        double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
 
         WriteData.insertIntCell(sheet,cell,0, number_of_servers);
         WriteData.insertIntCell(sheet,cell,1, server_ram);
@@ -220,7 +242,7 @@ public class Dispatcher implements Callable<Object> {
         //WriteData.insertStringCell(sheet,cell,13, "???" ); //total usage of resources
         WriteData.insertDoubleCell(sheet,cell,13, service.getTime()); //service duration
         WriteData.insertDoubleCell(sheet,cell,14, servicecost ); //service cost
-        WriteData.insertIntCell(sheet,cell,15, 0); //energy cost
+        WriteData.insertDoubleCell(sheet,cell,15, energycost); //energy cost
         WriteData.insertStringCell(sheet,cell,16, "no" ); //renewable energy
 
     }

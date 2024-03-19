@@ -3,8 +3,10 @@ package Classes;
 import Classes.Links.*;
 import Classes.LinkManagers.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 import org.jfree.data.xy.XYSeries;
@@ -17,6 +19,9 @@ public class COTServer {
     private int cpu;
     private int storage;
     private int network;
+
+    HashMap<Integer, Double> cpuUsage;
+    HashMap<Integer, Double> ramUsage;
 
     private int cpu_capacity = 100;
 
@@ -47,11 +52,30 @@ public class COTServer {
         this.storage = storage;
         this. network = network;
 
+        this.cpuUsage = new HashMap<>();
+        this.ramUsage = new HashMap<>();
+
         this.series= new XYSeries(name);
 
         this.containers = new HashSet<Container>();
 
         linkset = new HashSet<LinkVM>();
+    }
+
+    public Map<Integer, Double>  getCpuUsage(){
+        return (HashMap<Integer, Double>)cpuUsage;
+    }
+
+    public Map<Integer, Double>  getRamUsage(){
+        return (HashMap<Integer, Double>)ramUsage;
+    }
+
+    public void insertCpuUsage(int key, double value){
+        cpuUsage.put(key, value);
+    }
+
+    public void insertRamUsage(int key, double value){
+        ramUsage.put(key, value);
     }
 
     public XYSeries getSeries(){
