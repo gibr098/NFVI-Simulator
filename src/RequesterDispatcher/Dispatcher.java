@@ -225,7 +225,7 @@ public class Dispatcher implements Callable<Object> {
         double serverONcost = 0.300 * clock * 0.08; // 0.300 kWh * totale ore * 0.08 euro/kWh
         double ramUsagecost = 0;
         double cpuUsagecost = 0;
-        for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
+        /*for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
             COTServer server = lc.getCOTServer();
             for (int cores : server.getCpuUsage().keySet()) {
                 // 200 Watt at 100% -> 0.2 kWh at 100%
@@ -240,10 +240,17 @@ public class Dispatcher implements Callable<Object> {
                 double ramtime = server.getRamUsage().get(ram);
                 ramUsagecost += ram * 0.0004 * ramtime * 0.08;
             }
+        }*/
+        for(LinkChain lc : service.getLinkChainList()){
+            VNF vnf = lc.getVNF();
+            ramUsagecost += vnf.getRam();
+            cpuUsagecost += vnf.getCPU();
         }
+        ramUsagecost = ramUsagecost * 0.0004 * service.getTime() * 0.08;
+        cpuUsagecost = cpuUsagecost * 0.2 * service.getTime() * 0.08;
         double serverUsageCost = ramUsagecost + cpuUsagecost;
         double renewableEnergy = 0;
-        double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
+        double serviceEnergycost = (serverONcost + serverUsageCost - renewableEnergy)* service.getReqDemand();
 
         WriteData.insertStringCell(sheet, cell, 0, "t-" + (int) clock); // timestamp
         WriteData.insertStringCell(sheet, cell, 1, servicename); // service name
@@ -256,7 +263,7 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertIntCell(sheet, cell, 8, service.getReqDemand()); // size of request
         WriteData.insertDoubleCell(sheet, cell, 9, service.getTime()); // service duration
         WriteData.insertDoubleCell(sheet, cell, 10, servicecost); // service cost
-        WriteData.insertDoubleCell(sheet, cell, 11, energycost); // service energy cost
+        WriteData.insertDoubleCell(sheet, cell, 11, serviceEnergycost); // service energy cost
 
     }
 

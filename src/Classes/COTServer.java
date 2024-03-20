@@ -22,6 +22,7 @@ public class COTServer {
 
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
+    HashMap<Integer, Double> storageUsage;
 
     private int cpu_capacity = 100;
 
@@ -54,6 +55,7 @@ public class COTServer {
 
         this.cpuUsage = new HashMap<>();
         this.ramUsage = new HashMap<>();
+        this.storageUsage = new HashMap<>();
 
         this.series= new XYSeries(name);
 
@@ -70,12 +72,51 @@ public class COTServer {
         return (HashMap<Integer, Double>)ramUsage;
     }
 
+    public Map<Integer, Double>  getStorageUsage(){
+        return (HashMap<Integer, Double>)storageUsage;
+    }
+
+    public String getRamUsagePrint() {
+        String ret = this.name+"( ";
+        for (Object ob : this.getRamUsage().keySet()) {
+            String key = ob.toString();
+            String value = this.getRamUsage().get(ob).toString();
+            ret+=key+" GB" + " for " + value+" h ";
+        }
+        return ret+" )";
+    }
+
+    public String getCpuUsagePrint() {
+        String ret = this.name+"( ";
+        for (Object ob : this.getCpuUsage().keySet()) {
+            String key = ob.toString();
+            String value = this.getCpuUsage().get(ob).toString();
+            ret+=key+" cores" + " for " + value+" h ";
+        }
+        return ret+" )";
+    }
+
+    public String getStorageUsagePrint() {
+        String ret = this.name+"( ";
+        for (Object ob : this.getCpuUsage().keySet()) {
+            String key = ob.toString();
+            String value = this.getCpuUsage().get(ob).toString();
+            ret+=key+" GB" + " for " + value+" h ";
+        }
+        return ret+" )";
+    }
+
+
     public void insertCpuUsage(int key, double value){
         cpuUsage.put(key, value);
     }
 
     public void insertRamUsage(int key, double value){
         ramUsage.put(key, value);
+    }
+
+    public void insertStorageUsage(int key, double value){
+        storageUsage.put(key, value);
     }
 
     public XYSeries getSeries(){
