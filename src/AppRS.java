@@ -31,11 +31,11 @@ public class AppRS{
 
     }
 
-    public void run(PrintWriter out, WritableSheet sheet) throws Exception {
+    public void run(PrintWriter out, WritableSheet sheet1, WritableSheet sheet2) throws Exception {
 
         Requester r = new Requester(lambda, duration, alfa, maxSize, pop);
-        Dispatcher d = new Dispatcher(duration, pop, out, sheet);
-        Monitor m = new Monitor(pop, duration);
+        Dispatcher d = new Dispatcher(duration, pop, out, sheet1);
+        Monitor m = new Monitor(pop, duration, sheet2);
 
         ExecutorService service = Executors.newFixedThreadPool(3); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously

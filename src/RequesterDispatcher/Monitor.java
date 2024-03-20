@@ -1,9 +1,13 @@
 package RequesterDispatcher;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -11,8 +15,11 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.distribution.ZipfDistribution;
 
 import Classes.*;
+import Classes.Links.LinkChain;
 import Classes.Links.LinkContain;
 import Functions.ServiceGeneration;
+import Functions.WriteData;
+import jxl.write.WritableSheet;
 
 public class Monitor implements Callable<Object> {
 
@@ -20,13 +27,17 @@ public class Monitor implements Callable<Object> {
     double endTime;
     double clock;
 
+    WritableSheet sheet;
+
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
 
-    public Monitor(NFVIPoP pop, double endTime) {
+    public Monitor(NFVIPoP pop, double endTime, WritableSheet sheet) {
         this.pop = pop;
         this.endTime = endTime;
         this.clock = 0;
+
+        this.sheet = sheet;
 
         this.cpuUsage = new HashMap<>();
         this.ramUsage = new HashMap<>();
@@ -41,9 +52,14 @@ public class Monitor implements Callable<Object> {
     public void run() throws InterruptedException, Exception {
         double ramtime = 0.0;
         double cputime = 0.0;
+        int cell = sheet.getRows();
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(100);
-            clock += 1;
+            clock++;
+            if(clock%10 == 0){
+                writeDataset(sheet, cell, pop, clock);
+                cell++;
+            }
             for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
                 COTServer server = lc.getCOTServer();
                 // Cpu usage
@@ -87,6 +103,76 @@ public class Monitor implements Callable<Object> {
             System.out.println(key+" GB" + " for " + value+" h");
         }
         System.out.println("\n");
+    }
+
+    public static void writeDataset(WritableSheet sheet, int cell, NFVIPoP pop, double clock) throws Exception{
+        Properties prop = new Properties();
+        String fileName = "Simulator\\src\\NFVI.config";
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            prop.load(fis);
+        } catch (FileNotFoundException ex) {
+            // FileNotFoundException catch is optional and can be collapsed
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+
+        }
+        int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
+        int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
+        int server_cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
+        int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
+        int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
+        double lambda = Double.parseDouble(prop.getProperty("lambda"));
+        double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
+        COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
+        VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
+        //int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
+
+        
+        // base energy consumption
+        //double serverONcost= 0.300 * duration * 0.45;  //0.300 kWh * totale ore * 0.45 euro/KWatt
+        double serverONcost= 0.300 * clock * 0.08;  //0.300 kWh * totale ore * 0.08 euro/kWh
+        double ramUsagecost = 0;
+        double cpuUsagecost = 0;
+        for(LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()){
+            COTServer server = lc.getCOTServer();
+            for (int cores : server.getCpuUsage().keySet()) {
+                // 200 Watt at 100% -> 0.2 kWh at 100%
+                // 0.08 euro/kWh
+                double cputime = server.getCpuUsage().get(cores);
+                double percent = (cores/server_cpu == 0)? 0.01: cores/server_cpu;
+                cpuUsagecost += percent * 0.2 * cputime * 0.08;
+            }
+            for (int ram: server.getRamUsage().keySet()) {
+                // 3 Watt every 8 GB -> 0.4 Watt each GB -> 0.0004 kWh GB
+                // 0.08 euro/kWh
+                double ramtime = server.getRamUsage().get(ram);
+                ramUsagecost += ram * 0.0004 * ramtime * 0.08;
+            }
+        }
+        double serverUsageCost = ramUsagecost + cpuUsagecost;
+        double renewableEnergy = 0;
+        double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
+
+        WriteData.insertStringCell(sheet,cell,0, "t-"+(int)clock); //timestamp
+        WriteData.insertIntCell(sheet,cell,1, number_of_servers); //number of servers
+        WriteData.insertIntCell(sheet,cell,2, server_ram); // ram
+        WriteData.insertIntCell(sheet,cell,3, server_cpu); //cpu
+        WriteData.insertIntCell(sheet,cell,4, server_storage); // storage
+        WriteData.insertIntCell(sheet,cell,5, server_network); //network 
+        WriteData.insertIntCell(sheet,cell,6, ); //VMs active
+        WriteData.insertIntCell(sheet,cell,7, ); // VMs type
+        WriteData.insertIntCell(sheet,cell,8,  ); // number of services running
+        WriteData.insertStringCell(sheet,cell,9, pop.getQueuePrint()); // service running
+        WriteData.insertStringCell(sheet,cell,10,"FIFO, fixed VM size" ); //allocation policy
+        WriteData.insertDoubleCell(sheet,cell,11, lambda); //req rate
+        WriteData.insertIntCell(sheet,cell,12, ); //consume of ram
+        WriteData.insertIntCell(sheet,cell,13, ); // consume of cpu
+        WriteData.insertIntCell(sheet,cell,14, ); //consume of storage
+        WriteData.insertIntCell(sheet,cell,15, ); //energy cost
+        WriteData.insertStringCell(sheet,cell,16, "no"); // renewable
+        
+
     }
 
 }

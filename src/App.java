@@ -126,16 +126,20 @@ public class App {
         File wf = new File("Simulator\\dataset.xls");
         Workbook workbook;
         WritableWorkbook WRworkbook;
-        WritableSheet sheet;
+        WritableSheet sheet1;
+        WritableSheet sheet2;
 
         if (!wf.exists()) {
             WRworkbook = Workbook.createWorkbook(wf);
-            sheet = WRworkbook.createSheet("D1", 0);
-            Functions.WriteData.createEmptyDataset(WRworkbook, sheet);
+            sheet1 = WRworkbook.createSheet("Services", 0);
+            sheet2 = WRworkbook.createSheet("System", 0);
+            Functions.WriteData.initiSheet1(WRworkbook, sheet1);
+            Functions.WriteData.initSheet2(WRworkbook, sheet2);
         } else {
             workbook = Workbook.getWorkbook(wf);
             WRworkbook = Workbook.createWorkbook(wf, workbook);
-            sheet = WRworkbook.getSheet("D1");
+            sheet1 = WRworkbook.getSheet("Services");
+            sheet2 = WRworkbook.getSheet("System");
         }
 
         // Run the Simulation and write the log
@@ -153,7 +157,7 @@ public class App {
             out = new PrintWriter(file);
             System.out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
             out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
-            app.run(out, sheet);
+            app.run(out, sheet1, sheet2);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
             System.out.println("Requests not served: " + pop.getQueuePrint() + "\n");
             System.out.println("Simulation complete.");
