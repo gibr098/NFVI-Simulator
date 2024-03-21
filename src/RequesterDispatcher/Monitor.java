@@ -54,15 +54,13 @@ public class Monitor implements Callable<Object> {
         double ramtime = 0.0;
         double cputime = 0.0;
         double stortime = 0.0;
+        double c = 0.0;
         int cell = sheet.getRows();
+        String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
             System.out.println("t" + clock + " Monitor");
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
-            if (clock % 10 == 0) {
-                writeDataset(sheet, cell, pop, clock);
-                cell++;
-            }
             for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
                 COTServer server = lc.getCOTServer();
                 // Cpu usage
@@ -70,7 +68,7 @@ public class Monitor implements Callable<Object> {
                     cputime = server.getCpuUsage().get(server.getCpu()) + 1;
                     server.insertCpuUsage(server.getCpu(), cputime);
                 } else {
-                    server.insertCpuUsage(server.getCpu(), 0.0);
+                    server.insertCpuUsage(server.getCpu(), 1.0);
                 }
 
                 // Ram Usage
@@ -78,7 +76,7 @@ public class Monitor implements Callable<Object> {
                     ramtime = server.getRamUsage().get(server.getRam()) + 1;
                     server.insertRamUsage(server.getRam(), ramtime);
                 } else {
-                    server.insertRamUsage(server.getRam(), 0.0);
+                    server.insertRamUsage(server.getRam(), 1.0);
                 }
 
                 // Storage Usage
@@ -86,12 +84,16 @@ public class Monitor implements Callable<Object> {
                     stortime = server.getStorageUsage().get(server.getStorage()) + 1;
                     server.insertStorageUsage(server.getStorage(), stortime);
                 } else {
-                    server.insertStorageUsage(server.getStorage(), 0.0);
+                    server.insertStorageUsage(server.getStorage(), 1.0);
                 }
                 // printCpuUsage(server);
                 // printRamUsage(server);
             }
 
+            if (clock % 10 == 0) {
+                writeDataset(sheet, cell, pop, clock, id);
+                cell++;
+            }
         }
 
     }
@@ -116,7 +118,7 @@ public class Monitor implements Callable<Object> {
         System.out.println("\n");
     }
 
-    public static void writeDataset(WritableSheet sheet, int cell, NFVIPoP pop, double clock) throws Exception {
+    public static void writeDataset(WritableSheet sheet, int cell, NFVIPoP pop, double clock, String id) throws Exception {
         Properties prop = new Properties();
         String fileName = "Simulator\\src\\NFVI.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
@@ -150,7 +152,7 @@ public class Monitor implements Callable<Object> {
         // base energy consumption
         // double serverONcost= 0.300 * duration * 0.45; //0.300 kWh * totale ore * 0.45
         // euro/KWatt
-        double serverONcost = 0.300 * clock * 0.08; // 0.300 kWh * totale ore * 0.08 euro/kWh
+        double serverONcost = 0.300 * clock * 0.08; // 0.300 kW * totale ore * 0.08 euro/kWh
         double ramUsagecost = 0;
         double cpuUsagecost = 0;
         for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -159,7 +161,7 @@ public class Monitor implements Callable<Object> {
             consumeOfram += server.getName() + "( ";
             consumeOfstrorage += server.getName() + "( ";
             for (int cores : server.getCpuUsage().keySet()) {
-                // 200 Watt at 100% -> 0.2 kWh at 100%
+                // 200 Watt at 100% -> 0.2 kW at 100%
                 // 0.08 euro/kWh
                 double cputime = server.getCpuUsage().get(cores);
                 double percent = (cores / server_cpu == 0) ? 0.01 : cores / server_cpu;
@@ -171,7 +173,7 @@ public class Monitor implements Callable<Object> {
             }
             consumeOfcpu += " )\n";
             for (int ram : server.getRamUsage().keySet()) {
-                // 3 Watt every 8 GB -> 0.4 Watt each GB -> 0.0004 kWh GB
+                // 3 Watt every 8 GB -> 0.4 Watt each GB -> 0.0004 kW GB
                 // 0.08 euro/kWh
                 double ramtime = server.getRamUsage().get(ram);
                 ramUsagecost += ram * 0.0004 * ramtime * 0.08;
@@ -218,25 +220,29 @@ public class Monitor implements Callable<Object> {
         double renewableEnergy = 0;
         double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
 
-        WriteData.insertStringCell(sheet, cell, 0, "t-" + (int) clock); // timestamp
-        WriteData.insertIntCell(sheet, cell, 1, number_of_servers); // number of servers
-        WriteData.insertIntCell(sheet, cell, 2, server_ram); // ram
-        WriteData.insertIntCell(sheet, cell, 3, server_cpu); // cpu
-        WriteData.insertIntCell(sheet, cell, 4, server_storage); // storage
-        WriteData.insertIntCell(sheet, cell, 5, server_network); // network
-        WriteData.insertIntCell(sheet, cell, 6, vmnum); // VMs active
-        WriteData.insertStringCell(sheet, cell, 7, vmtype); // VMs type
-        WriteData.insertIntCell(sheet, cell, 8, pop.getLinkCompose().getNFVI().getServicesNumber()); // number of
-                                                                                                     // services running
-        WriteData.insertStringCell(sheet, cell, 9, pop.getLinkCompose().getNFVI().getServicesRunning()); // service
-                                                                                                         // running
-        WriteData.insertStringCell(sheet, cell, 10, "FIFO, fixed VM size"); // allocation policy
-        WriteData.insertDoubleCell(sheet, cell, 11, lambda); // req rate
-        WriteData.insertStringCell(sheet, cell, 12, consumeOfram); // consume of ram
-        WriteData.insertStringCell(sheet, cell, 13, consumeOfcpu); // consume of cpu
-        WriteData.insertStringCell(sheet, cell, 14, consumeOfstrorage); // consume of storage
-        WriteData.insertDoubleCell(sheet, cell, 15, energycost); // energy cost
-        WriteData.insertStringCell(sheet, cell, 16, "no"); // renewable
+        int servicenum = pop.getLinkCompose().getNFVI().getServicesNumber();
+        String servicesrunning = pop.getLinkCompose().getNFVI().getServicesRunning();
+
+
+
+        WriteData.insertStringCell(sheet, cell, 0, id); //simulation id
+        WriteData.insertStringCell(sheet, cell, 1, "t-" + (int) clock); // timestamp
+        WriteData.insertIntCell(sheet, cell, 2, number_of_servers); // number of servers
+        WriteData.insertIntCell(sheet, cell, 3, server_ram); // ram
+        WriteData.insertIntCell(sheet, cell, 4, server_cpu); // cpu
+        WriteData.insertIntCell(sheet, cell, 5, server_storage); // storage
+        WriteData.insertIntCell(sheet, cell, 6, server_network); // network
+        WriteData.insertIntCell(sheet, cell, 7, vmnum); // VMs active
+        WriteData.insertStringCell(sheet, cell, 8, vmtype); // VMs type
+        WriteData.insertIntCell(sheet, cell, 9, servicenum); // number of services running
+        WriteData.insertStringCell(sheet, cell, 10, servicesrunning); // service running
+        WriteData.insertStringCell(sheet, cell, 11, "FIFO, fixed VM size"); // allocation policy
+        WriteData.insertDoubleCell(sheet, cell, 12, lambda); // req rate
+        WriteData.insertStringCell(sheet, cell, 13, consumeOfram); // consume of ram
+        WriteData.insertStringCell(sheet, cell, 14, consumeOfcpu); // consume of cpu
+        WriteData.insertStringCell(sheet, cell, 15, consumeOfstrorage); // consume of storage
+        WriteData.insertDoubleCell(sheet, cell, 16, energycost); // energy cost
+        WriteData.insertStringCell(sheet, cell, 17, "no"); // renewable
 
     }
 

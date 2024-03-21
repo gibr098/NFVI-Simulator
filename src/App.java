@@ -148,7 +148,7 @@ public class App {
         if (logDir.listFiles().length == 0) {
             file = new File("Simulator\\logs\\sim1_log.txt");
         } else {
-            String nn = logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("[^0-9]", "");
+            String nn = logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("\\D", "");
             n = Integer.parseInt(nn) + 1;
             file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
@@ -183,7 +183,7 @@ public class App {
             filename = "sim1_chart.png";
         } else {
             n = Integer.parseInt(chartDir.listFiles()[chartDir.listFiles().length -
-                    1].getName().replaceAll("[^0-9]", ""))
+                    1].getName().replaceAll("\\D", ""))
                     + 1;
             filename = "sim" + n + "_chart.png";
         }

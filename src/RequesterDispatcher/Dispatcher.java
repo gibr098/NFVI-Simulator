@@ -60,7 +60,7 @@ public class Dispatcher implements Callable<Object> {
         // int cell = sheet.getRows()+1;
         // System.out.println("PROSSIMA RIGA DOVE SCRIVERE: "+sheet.getRows());
         int cell = sheet.getRows();
-        int removeServiceCouter = 0;
+        String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
@@ -102,13 +102,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock);
+                                writeDataset(sheet, cell, s, pop, clock, id);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
                             // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock);
+                                writeDataset(sheet, cell, s, pop, clock, id);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
@@ -137,13 +137,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getTime();
                         if (clock == service_init_time + service_duration) {
                             if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock);
+                                writeDataset(sheet, cell, s, pop, clock, id);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
                             // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock);
+                                writeDataset(sheet, cell, s, pop, clock, id);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
@@ -169,7 +169,7 @@ public class Dispatcher implements Callable<Object> {
         out.println("\nTOTAL REQUESTS SERVED: " + served);
     }
 
-    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock)
+    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock, String id)
             throws Exception {
         Properties prop = new Properties();
         String fileName = "Simulator\\src\\NFVI.config";
@@ -188,19 +188,14 @@ public class Dispatcher implements Callable<Object> {
             int startIndex = servicename.indexOf("[");
             int endIndex = servicename.indexOf("]");
             String replacement = "";
-            String toBeReplaced = servicename.substring(startIndex + 1, endIndex);
-            servicename = servicename.replace("[", replacement);
-            servicename = servicename.replace("]", replacement);
+            String toBeReplaced = servicename.substring(startIndex, endIndex+1);
+            //servicename = servicename.replace("[", replacement);
+            //servicename = servicename.replace("]", replacement);
             servicename = servicename.replace(toBeReplaced, replacement);
             //servicename.replace("S", "replacement");
         }
-        int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
-        int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
-        int server_cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
-        int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
-        int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
+
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
-        double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
         COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
         VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
         // int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
@@ -215,14 +210,14 @@ public class Dispatcher implements Callable<Object> {
             VNF vnf = lc.getVNF();
             servicecost += vnf.getCPU() * 0.003; // 0.003 euro per core hour
             servicecost += vnf.getRam() * 0.013; // 0.013 euro per RAM(GB) hour
-            servicecost += vnf.getStorage() * 0.00001; // 0.00001 per GB (storage) per hour
+            servicecost += vnf.getStorage() * 0.00001; // 0.00001 euro per GB (storage) hour
         }
         servicecost = servicecost * service.getTime() * service.getReqDemand();
 
         // base energy consumption
-        // double serverONcost= 0.300 * duration * 0.45; //0.300 kWh * totale ore * 0.45
+        // double serverONcost= 0.300 * duration * 0.45; //0.300 kW * totale ore * 0.45
         // euro/KWatt
-        double serverONcost = 0.300 * clock * 0.08; // 0.300 kWh * totale ore * 0.08 euro/kWh
+        double serverONcost = 0.300 * clock * 0.08; // 0.300 kW * totale ore * 0.08 euro/kWh
         double ramUsagecost = 0;
         double cpuUsagecost = 0;
         /*for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -252,18 +247,19 @@ public class Dispatcher implements Callable<Object> {
         double renewableEnergy = 0;
         double serviceEnergycost = (serverONcost + serverUsageCost - renewableEnergy)* service.getReqDemand();
 
-        WriteData.insertStringCell(sheet, cell, 0, "t-" + (int) clock); // timestamp
-        WriteData.insertStringCell(sheet, cell, 1, servicename); // service name
-        WriteData.insertIntCell(sheet, cell, 2, vmnum); // number of VMs used
-        WriteData.insertStringCell(sheet, cell, 3, vmtype); // type of VMs
-        WriteData.insertIntCell(sheet, cell, 4, vnfnum); // number of vnf
-        WriteData.insertStringCell(sheet, cell, 5, vnftype); // chain of vnf
-        WriteData.insertStringCell(sheet, cell, 6, "FIFO, fixed VM size"); // policy
-        WriteData.insertDoubleCell(sheet, cell, 7, lambda); // rate of requests arrivals
-        WriteData.insertIntCell(sheet, cell, 8, service.getReqDemand()); // size of request
-        WriteData.insertDoubleCell(sheet, cell, 9, service.getTime()); // service duration
-        WriteData.insertDoubleCell(sheet, cell, 10, servicecost); // service cost
-        WriteData.insertDoubleCell(sheet, cell, 11, serviceEnergycost); // service energy cost
+        WriteData.insertStringCell(sheet, cell, 0, id); //simulation id
+        WriteData.insertStringCell(sheet, cell, 1, "t-" + (int) clock); // timestamp
+        WriteData.insertStringCell(sheet, cell, 2, servicename); // service name
+        WriteData.insertIntCell(sheet, cell, 3, vmnum); // number of VMs used
+        WriteData.insertStringCell(sheet, cell, 4, vmtype); // type of VMs
+        WriteData.insertIntCell(sheet, cell, 5, vnfnum); // number of vnf
+        WriteData.insertStringCell(sheet, cell, 6, vnftype); // chain of vnf
+        WriteData.insertStringCell(sheet, cell, 7, "FIFO, fixed VM size"); // policy
+        WriteData.insertDoubleCell(sheet, cell, 8, lambda); // rate of requests arrivals
+        WriteData.insertIntCell(sheet, cell, 9, service.getReqDemand()); // size of request
+        WriteData.insertDoubleCell(sheet, cell, 10, service.getTime()); // service duration
+        WriteData.insertDoubleCell(sheet, cell, 11, servicecost); // service cost
+        WriteData.insertDoubleCell(sheet, cell, 12, serviceEnergycost); // service energy cost
 
     }
 
