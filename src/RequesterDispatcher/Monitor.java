@@ -17,6 +17,7 @@ import org.apache.commons.math3.distribution.ZipfDistribution;
 import Classes.*;
 import Classes.Links.LinkChain;
 import Classes.Links.LinkContain;
+import Classes.Links.LinkProvide;
 import Classes.Links.LinkVM;
 import Functions.ServiceGeneration;
 import Functions.WriteData;
@@ -90,7 +91,7 @@ public class Monitor implements Callable<Object> {
                 // printRamUsage(server);
             }
 
-            if (clock % 10 == 0) {
+            if (clock % 5 == 0) {
                 writeDataset(sheet, cell, pop, clock, id);
                 cell++;
             }
@@ -221,7 +222,18 @@ public class Monitor implements Callable<Object> {
         double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
 
         int servicenum = pop.getLinkCompose().getNFVI().getServicesNumber();
-        String servicesrunning = pop.getLinkCompose().getNFVI().getServicesRunning();
+        //String servicesrunning = pop.getLinkCompose().getNFVI().getServicesRunning();
+
+        String servicesrunning = "(";
+        if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
+            for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
+                servicesrunning += lp.getService().getName()+id + " ";
+            }
+        }else{
+            servicesrunning+="No services";
+        }
+        servicesrunning += " )";
+    
 
 
 

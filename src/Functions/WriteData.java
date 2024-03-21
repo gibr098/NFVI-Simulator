@@ -41,7 +41,7 @@ public class WriteData {
         headerLabel = new Label(4, 0, "Type of VM", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(5, 0, "Number of VNF", headerFormat);
+        headerLabel = new Label(5, 0, "Number of VNFs", headerFormat);
         sheet.addCell(headerLabel);
 
         headerLabel = new Label(6, 0, "Type of VNFs", headerFormat);
@@ -120,7 +120,7 @@ public class WriteData {
         headerLabel = new Label(15, 0, "Total Storage used", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(16, 0, "Energy cost(€)", headerFormat);
+        headerLabel = new Label(16, 0, "System Energy cost(€)", headerFormat);
         sheet.addCell(headerLabel);
 
         headerLabel = new Label(17, 0, "Availability of renewable energy", headerFormat);

@@ -202,7 +202,7 @@ public class Dispatcher implements Callable<Object> {
         int vmnum = (service.getLinkChainList().size() == vm.getContainerNumber()) ? 1
                 : (service.getLinkChainList().size() / vm.getContainerNumber()) + 1;
         String vmtype = (service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
-                .getLinkInstance().getVirtualMachine().getContainerNumber() > 4) ? "Large" : "Medium";
+                .getLinkInstance().getVirtualMachine().getContainerNumber() > 3) ? "Medium" : "Small";
         int vnfnum = service.getLinkChainList().size();
         String vnftype = service.getStringChain();
         double servicecost = 0;
@@ -249,7 +249,7 @@ public class Dispatcher implements Callable<Object> {
 
         WriteData.insertStringCell(sheet, cell, 0, id); //simulation id
         WriteData.insertStringCell(sheet, cell, 1, "t-" + (int) clock); // timestamp
-        WriteData.insertStringCell(sheet, cell, 2, servicename); // service name
+        WriteData.insertStringCell(sheet, cell, 2, servicename+id); // service name
         WriteData.insertIntCell(sheet, cell, 3, vmnum); // number of VMs used
         WriteData.insertStringCell(sheet, cell, 4, vmtype); // type of VMs
         WriteData.insertIntCell(sheet, cell, 5, vnfnum); // number of vnf

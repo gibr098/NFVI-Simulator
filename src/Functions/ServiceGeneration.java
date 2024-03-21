@@ -52,7 +52,7 @@ public class ServiceGeneration {
 
         int VNFnumber = getRandomNumber(3, 8);
 
-        Service s = new Service(name, getRandomNumber(5, 10), 0);
+        Service s = new Service(name, getRandomNumber(10, 20), 0);
         int j = Integer.parseInt(name.replaceAll("[^0-9]", ""));
 
         for (int i = 0; i<VNFnumber; i++){
