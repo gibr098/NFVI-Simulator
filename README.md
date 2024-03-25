@@ -12,7 +12,7 @@ it consists in simulating the arriving and the management of random-service requ
 4. Functional part: Time slotted service requests (done)
 5. Output a log containing simulation info (done)
 6. Cost function (done)
-7. Add more complexity
+7. Add more complexity and variety
 
 # Model
 
