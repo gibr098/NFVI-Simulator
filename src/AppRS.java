@@ -37,6 +37,27 @@ public class AppRS{
         Dispatcher d = new Dispatcher(duration, pop, out, sheet1);
         Monitor m = new Monitor(pop, duration, sheet2);
 
+        /*
+        policy = getPolicy();
+        switch(policy){
+            case 1: //policy fifo
+            Dispatcher1 = new Dispatcher1(...);
+            break;
+
+            case 2: //policy reduce cost
+            Dispatcher2 = new Dispatcher2(...);
+            break;
+
+            case 3: //policy..
+            Dispatcher3 = new Dispatcher3(...);
+            break;
+
+            .
+            .
+            .
+        }
+        */
+
         ExecutorService service = Executors.newFixedThreadPool(3); //with 1 they run sequentially
                                                                             //with 2 they run simultaneously
         service.submit(r);

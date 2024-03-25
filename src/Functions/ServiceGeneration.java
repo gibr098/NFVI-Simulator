@@ -24,6 +24,28 @@ import Classes.Links.LinkProvide;
 
 public class ServiceGeneration {
 
+    public static int getProperty(String name){
+
+    Properties prop = new Properties();
+    String fileName = "Simulator\\src\\NFVI.config";
+        try (FileInputStream fis = new FileInputStream(fileName)) {
+            prop.load(fis);
+        } catch (FileNotFoundException e) {
+            // FileNotFoundException catch is optional and can be collapsed
+            e.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+
+        }
+        return Integer.parseInt(prop.getProperty(name));
+    }
+
+    static int min_duration = getProperty("min_duration");
+    static int max_duration = getProperty("max_duration");
+    static int min_vnf = getProperty("min_vnf");
+    static int max_vnf = getProperty("max_vnf");
+
+
     public static String randomVNF(List<String> types) {
         String randomvnf = "";
         Random rand = new Random();
@@ -50,9 +72,11 @@ public class ServiceGeneration {
         types.add("VPN");
         types.add("DPI");
 
-        int VNFnumber = getRandomNumber(3, 8);
+        //int VNFnumber = getRandomNumber(3, 8);
+        int VNFnumber = getRandomNumber(min_vnf, max_vnf);
 
-        Service s = new Service(name, getRandomNumber(10, 20), 0);
+        //Service s = new Service(name, getRandomNumber(10, 20), 0);
+        Service s = new Service(name, getRandomNumber(min_duration, max_duration), 0);
         int j = Integer.parseInt(name.replaceAll("[^0-9]", ""));
 
         for (int i = 0; i<VNFnumber; i++){

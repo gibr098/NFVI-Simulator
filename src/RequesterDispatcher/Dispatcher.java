@@ -195,6 +195,12 @@ public class Dispatcher implements Callable<Object> {
             //servicename.replace("S", "replacement");
         }
 
+        double cpu_cost = Double.parseDouble(prop.getProperty("cpu_cost"));
+        double ram_cost = Double.parseDouble(prop.getProperty("ram_cost"));
+        double storage_cost = Double.parseDouble(prop.getProperty("storage_cost"));
+        double energy_cost = Double.parseDouble(prop.getProperty("energy_cost"));
+        double renewable_energy = Double.parseDouble(prop.getProperty("renewable_energy"));
+
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
         COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
         VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
@@ -208,16 +214,19 @@ public class Dispatcher implements Callable<Object> {
         double servicecost = 0;
         for (LinkChain lc : service.getLinkChainList()) {
             VNF vnf = lc.getVNF();
-            servicecost += vnf.getCPU() * 0.003; // 0.003 euro per core hour
-            servicecost += vnf.getRam() * 0.013; // 0.013 euro per RAM(GB) hour
-            servicecost += vnf.getStorage() * 0.00001; // 0.00001 euro per GB (storage) hour
+            //servicecost += vnf.getCPU() * 0.003; // 0.003 euro per core hour
+            //servicecost += vnf.getRam() * 0.013; // 0.013 euro per RAM(GB) hour
+            //servicecost += vnf.getStorage() * 0.00001; // 0.00001 euro per GB (storage) hour
+            servicecost += vnf.getCPU() * cpu_cost; // 0.003 euro per core hour
+            servicecost += vnf.getRam() * ram_cost; // 0.013 euro per RAM(GB) hour
+            servicecost += vnf.getStorage() * storage_cost; // 0.00001 euro per GB (storage) hour
         }
         servicecost = servicecost * service.getTime() * service.getReqDemand();
 
         // base energy consumption
         // double serverONcost= 0.300 * duration * 0.45; //0.300 kW * totale ore * 0.45
         // euro/KWatt
-        double serverONcost = 0.300 * clock * 0.08; // 0.300 kW * totale ore * 0.08 euro/kWh
+        double serverONcost = 0.300 * clock * energy_cost; // 0.300 kW * totale ore * 0.08 euro/kWh
         double ramUsagecost = 0;
         double cpuUsagecost = 0;
         /*for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -244,7 +253,7 @@ public class Dispatcher implements Callable<Object> {
         ramUsagecost = ramUsagecost * 0.0004 * service.getTime() * 0.08;
         cpuUsagecost = cpuUsagecost * 0.2 * service.getTime() * 0.08;
         double serverUsageCost = ramUsagecost + cpuUsagecost;
-        double renewableEnergy = 0;
+        double renewableEnergy = renewable_energy;
         double serviceEnergycost = (serverONcost + serverUsageCost - renewableEnergy)* service.getReqDemand();
 
         WriteData.insertStringCell(sheet, cell, 0, id); //simulation id

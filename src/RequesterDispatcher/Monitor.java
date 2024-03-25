@@ -137,7 +137,10 @@ public class Monitor implements Callable<Object> {
         int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
         int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
-        double duration = Double.parseDouble(prop.getProperty("time_of_simulation"));
+
+        double energy_cost = Double.parseDouble(prop.getProperty("energy_cost"));
+        double renewable_energy = Double.parseDouble(prop.getProperty("renewable_energy"));
+
         COTServer s = pop.getLinkOwn().getDataCenter().getLinkContain().iterator().next().getCOTServer();
         // VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
         // int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
@@ -153,7 +156,8 @@ public class Monitor implements Callable<Object> {
         // base energy consumption
         // double serverONcost= 0.300 * duration * 0.45; //0.300 kWh * totale ore * 0.45
         // euro/KWatt
-        double serverONcost = 0.300 * clock * 0.08; // 0.300 kW * totale ore * 0.08 euro/kWh
+        //double serverONcost = 0.300 * clock * 0.08; // 0.300 kW * totale ore * 0.08 euro/kWh
+        double serverONcost = 0.300 * clock * energy_cost;
         double ramUsagecost = 0;
         double cpuUsagecost = 0;
         for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -166,7 +170,8 @@ public class Monitor implements Callable<Object> {
                 // 0.08 euro/kWh
                 double cputime = server.getCpuUsage().get(cores);
                 double percent = (cores / server_cpu == 0) ? 0.01 : cores / server_cpu;
-                cpuUsagecost += percent * 0.2 * cputime * 0.08;
+                //cpuUsagecost += percent * 0.2 * cputime * 0.08;
+                cpuUsagecost += percent * 0.2 * cputime * energy_cost;
 
                 String keyc = String.valueOf(server_cpu - cores);
                 String valuec = String.valueOf(cputime);
@@ -177,7 +182,8 @@ public class Monitor implements Callable<Object> {
                 // 3 Watt every 8 GB -> 0.4 Watt each GB -> 0.0004 kW GB
                 // 0.08 euro/kWh
                 double ramtime = server.getRamUsage().get(ram);
-                ramUsagecost += ram * 0.0004 * ramtime * 0.08;
+                //ramUsagecost += ram * 0.0004 * ramtime * 0.08;
+                ramUsagecost += ram * 0.0004 * ramtime * energy_cost;
 
                 String keyr = String.valueOf(server_ram - ram);
                 String valuer = String.valueOf(ramtime);
@@ -218,7 +224,7 @@ public class Monitor implements Callable<Object> {
             vmtype += " )";
         }
         double serverUsageCost = ramUsagecost + cpuUsagecost;
-        double renewableEnergy = 0;
+        double renewableEnergy = renewable_energy;
         double energycost = serverONcost * number_of_servers + serverUsageCost - renewableEnergy;
 
         int servicenum = pop.getLinkCompose().getNFVI().getServicesNumber();

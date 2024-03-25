@@ -171,6 +171,7 @@ public class App {
         WRworkbook.close();
         // workbook.close();
 
+        /*----------
         // Create a cost chart
         final CostChart chart = new CostChart("Servers's CPU Utilization", pop);
         // chart.pack();
@@ -193,9 +194,8 @@ public class App {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        ------------*/
 
-        // PRINT The result of the Simulation ???
-        // printSimulationResults();
 
     }
 
