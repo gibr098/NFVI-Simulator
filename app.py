@@ -5,7 +5,7 @@ from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 
-# Load the model and scaler
+# Load the model
 model = load_model('model.h5')
 
 test = [[  2.      , 137.      ,  12.      ,  32.      ,  16.      ,
@@ -12754,10 +12754,13 @@ test = [[  2.      , 137.      ,  12.      ,  32.      ,  16.      ,
           0.      ,   0.      ,   0.      ,   0.      ,   1.      ]]
 
 @app.route('/', methods=['GET'])
+def hello():
+    return ("Welcome!")
+    
+
+@app.route('/predict', methods=['GET'])
 def predict():
     try:
-        #input_data = np.array([request.json['data']])
-        #input_data = np.array([request])
         prediction = model.predict(np.array(test))
         return jsonify(prediction.tolist())
     except Exception as e:
