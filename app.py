@@ -10,7 +10,7 @@ model = load_model('model.h5')
 
 
 
-
+#Fixed state of the system
 input =[[  2.      , 137.      ,  12.      ,  32.      ,  16.      ,
          64.      ,  16.      ,  22.      ,  13.      ,  52.966976,
           1.      ,   4.      ,   0.      ,   0.      ,   1.      ,
