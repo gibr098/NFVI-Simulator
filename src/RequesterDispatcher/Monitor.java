@@ -91,10 +91,14 @@ public class Monitor implements Callable<Object> {
                 // printRamUsage(server);
             }
 
+            writeDataset(sheet, cell, pop, clock, id);
+            cell++;
+
+            /* 
             if (clock % 5 == 0) {
                 writeDataset(sheet, cell, pop, clock, id);
                 cell++;
-            }
+            }*/
         }
 
     }

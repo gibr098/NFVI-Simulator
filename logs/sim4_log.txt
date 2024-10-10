@@ -1,0 +1,336 @@
+SIMULATION 4: lambda = 1.0, Sim length = 20.0
+
+
+t1.0: Servers' state
+Server-6(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t1.0: waiting for requests
+
+t2.0: Servers' state
+Server-6(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t2.0: waiting for requests
+
+t3.0: Servers' state
+Server-6(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t3.0: waiting for requests
+
+t4.0: Servers' state
+Server-6(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t4.0: Service-1[ vnf-10 vnf-11 vnf-12 vnf-13 ] Allocated on Server-6[VM-61]
+t4.0: Service-1 running
+
+t5.0: Servers' state
+Server-6(ram: 16GB, cpu: 8cores, storage: 32GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t5.0: Service-1[1][ vnf-10[1] vnf-11[1] vnf-12[1] vnf-13[1] ] Allocated on Server-6[VM-60]
+t5.0: Service-1 running
+t5.0: Service-1[1] running
+
+t6.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t6.0: Service-1 running
+t6.0: Service-1[1] running
+
+t7.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t7.0: Service-1 running
+t7.0: Service-1[1] running
+
+t8.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t8.0: Service-1 running
+t8.0: Service-1[1] running
+
+t9.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t9.0: Service-1 running
+t9.0: Service-1[1] running
+
+t10.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t10.0: Service-1 running
+t10.0: Service-1[1] running
+
+t11.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t11.0: Service-1 running
+t11.0: Service-1[1] running
+
+t12.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t12.0: Service-1 running
+t12.0: Service-1[1] running
+
+t13.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t13.0: Service-2[ vnf-20 vnf-21 vnf-22 ] Allocated on Server-1[VM-11]
+t13.0: Service-2 running
+t13.0: Service-1[1] running
+t13.0: Service-1 running
+
+t14.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 20GB, cpu: 10cores, storage: 40GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t14.0: Service-2[1][ vnf-20[1] vnf-21[1] vnf-22[1] ] Allocated on Server-1[VM-10]
+t14.0: Service-2 running
+t14.0: Service-1[1] running
+t14.0: Service-1 running
+t14.0: Service-2[1] running
+
+t15.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t15.0: Service-2[2][ vnf-20[2] vnf-21[2] vnf-22[2] ] Allocated on Server-9[VM-90]
+t15.0: Service-2 running
+t15.0: Service-2[2] running
+t15.0: Service-1[1] running
+t15.0: Service-1 running
+t15.0: Service-2[1] running
+
+t16.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 20GB, cpu: 10cores, storage: 40GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t16.0: Service-2[3][ vnf-20[3] vnf-21[3] vnf-22[3] ] Allocated on Server-9[VM-91]
+t16.0: Service-2 running
+t16.0: Service-2[2] running
+t16.0: Service-1[1] running
+t16.0: Service-1 running
+t16.0: Service-2[1] running
+t16.0: Service-2[3] running
+
+t17.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t17.0: Service-2 running
+t17.0: Service-2[2] running
+t17.0: Service-1[1] running
+t17.0: Service-1 running
+t17.0: Service-2[1] running
+t17.0: Service-2[3] running
+
+t18.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-8(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t18.0: Service-3[ vnf-30 vnf-31 vnf-32 vnf-33 vnf-34 vnf-35 ] Allocated on Server-8[VM-80]
+t18.0: Service-2 running
+t18.0: Service-2[2] running
+t18.0: Service-1[1] running
+t18.0: Service-1 running
+t18.0: Service-2[1] running
+t18.0: Service-3 running
+t18.0: Service-2[3] running
+
+t19.0: Servers' state
+Server-6(ram: 0GB, cpu: 0cores, storage: 0GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-8(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t19.0: Service-2 running
+t19.0: Service-2[2] running
+t19.0: Service-1[1] running
+t19.0: Service-1 Deallocated
+t19.0: Service-2[1] running
+t19.0: Service-3 running
+t19.0: Service-2[3] running
+
+t20.0: Servers' state
+Server-6(ram: 16GB, cpu: 8cores, storage: 32GB, network: 16)
+Server-1(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-9(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-8(ram: 8GB, cpu: 4cores, storage: 16GB, network: 16)
+Server-3(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-0(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-4(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-5(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-2(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+Server-7(ram: 32GB, cpu: 16cores, storage: 64GB, network: 16)
+
+t20.0: Service-2 running
+t20.0: Service-2[2] running
+t20.0: Service-1[1] Deallocated
+t20.0: Service-2[1] running
+t20.0: Service-3 running
+t20.0: Service-2[3] running
+
+TOTAL REQUESTS SERVED: 7
+REQUESTS NOT SERVED: ( Service-4 )
