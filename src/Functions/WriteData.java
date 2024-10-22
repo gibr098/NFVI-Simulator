@@ -119,11 +119,20 @@ public class WriteData {
 
         headerLabel = new Label(15, 0, "Total Storage used", headerFormat);
         sheet.addCell(headerLabel);
-
-        headerLabel = new Label(16, 0, "System Energy cost(€)", headerFormat);
+        
+        headerLabel = new Label(16, 0, "RAM busy(%)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(17, 0, "Availability of renewable energy", headerFormat);
+        headerLabel = new Label(17, 0, "CPU busy(%)", headerFormat);
+        sheet.addCell(headerLabel);
+
+        headerLabel = new Label(18, 0, "Storage busy(%)", headerFormat);
+        sheet.addCell(headerLabel);
+
+        headerLabel = new Label(19, 0, "System Energy cost(€)", headerFormat);
+        sheet.addCell(headerLabel);
+
+        headerLabel = new Label(20, 0, "Availability of renewable energy", headerFormat);
         sheet.addCell(headerLabel);
     }
 

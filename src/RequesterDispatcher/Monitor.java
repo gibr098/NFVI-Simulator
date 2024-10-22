@@ -142,6 +142,10 @@ public class Monitor implements Callable<Object> {
         int server_network = Integer.parseInt(prop.getProperty("Network(interfaces)"));
         double lambda = Double.parseDouble(prop.getProperty("lambda"));
 
+        int total_ram = server_ram * number_of_servers;
+        int total_cpu = server_cpu * number_of_servers;
+        int total_storage = server_storage * number_of_servers;
+
         double energy_cost = Double.parseDouble(prop.getProperty("energy_cost"));
         double renewable_energy = Double.parseDouble(prop.getProperty("renewable_energy"));
 
@@ -157,6 +161,10 @@ public class Monitor implements Callable<Object> {
         String vmtype = "";
         HashMap<String, Integer> vmused = new HashMap<>();
 
+        double busyram = 0;
+        double busycpu = 0;
+        double busystorage = 0;
+
         // base energy consumption
         // double serverONcost= 0.300 * duration * 0.45; //0.300 kWh * totale ore * 0.45
         // euro/KWatt
@@ -166,6 +174,9 @@ public class Monitor implements Callable<Object> {
         double cpuUsagecost = 0;
         for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
             COTServer server = lc.getCOTServer();
+            busyram+= server.getRam();
+            busycpu += server.getCpu();
+            busystorage += server.getStorage();
             consumeOfcpu += server.getName() + "( ";
             consumeOfram += server.getName() + "( ";
             consumeOfstrorage += server.getName() + "( ";
@@ -192,6 +203,7 @@ public class Monitor implements Callable<Object> {
                 String keyr = String.valueOf(server_ram - ram);
                 String valuer = String.valueOf(ramtime);
                 consumeOfram += keyr + " GB" + " for " + valuer + "h ";
+                
             }
             consumeOfram += " )\n";
             for (int stor : server.getStorageUsage().keySet()) {
@@ -226,6 +238,7 @@ public class Monitor implements Callable<Object> {
                 vmtype += type + ": " + v + " ";
             }
             vmtype += " )";
+
         }
         double serverUsageCost = ramUsagecost + cpuUsagecost;
         double renewableEnergy = renewable_energy;
@@ -243,8 +256,12 @@ public class Monitor implements Callable<Object> {
             servicesrunning+="No services";
         }
         servicesrunning += " )";
-    
 
+        
+        
+        busyram = busyram/total_ram;
+        busycpu = busycpu/total_cpu;
+        busystorage = busystorage/total_storage;
 
 
         WriteData.insertStringCell(sheet, cell, 0, id); //simulation id
@@ -263,8 +280,11 @@ public class Monitor implements Callable<Object> {
         WriteData.insertStringCell(sheet, cell, 13, consumeOfram); // consume of ram
         WriteData.insertStringCell(sheet, cell, 14, consumeOfcpu); // consume of cpu
         WriteData.insertStringCell(sheet, cell, 15, consumeOfstrorage); // consume of storage
-        WriteData.insertDoubleCell(sheet, cell, 16, energycost); // energy cost
-        WriteData.insertStringCell(sheet, cell, 17, "no"); // renewable
+        WriteData.insertDoubleCell(sheet, cell, 16, 1-busyram); // total % consume of ram
+        WriteData.insertDoubleCell(sheet, cell, 17, 1-busycpu); // total % consume of cpu
+        WriteData.insertDoubleCell(sheet, cell, 18, 1-busystorage); // total % consume of storage
+        WriteData.insertDoubleCell(sheet, cell, 19, energycost); // energy cost
+        WriteData.insertStringCell(sheet, cell, 20, "no"); // renewable
 
     }
 
