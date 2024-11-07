@@ -34,8 +34,10 @@ public class Dispatcher implements Callable<Object> {
     PrintWriter out;
     WritableSheet sheet;
     XYSeriesCollection dataset;
+    String a_policy;
+    String q_policy;
 
-    public Dispatcher(double endTime, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
+    public Dispatcher(double endTime, String a_policy, String q_policy, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
         this.endTime = endTime;
         this.clock = 0;
         this.served = 0;
@@ -43,6 +45,8 @@ public class Dispatcher implements Callable<Object> {
         this.out = out;
         this.sheet = sheet;
         this.dataset = pop.getDataset();
+        this.a_policy = a_policy;
+        this.q_policy = q_policy;
 
     }
 
@@ -58,112 +62,144 @@ public class Dispatcher implements Callable<Object> {
             dataset.addSeries(s.getSeries());
         }
         // int cell = sheet.getRows()+1;
-        // System.out.println("PROSSIMA RIGA DOVE SCRIVERE: "+sheet.getRows());
+        // System.out.println("PROSSIMA RIGA DOVE SCRIVERE: "+ sheet.getRows());
         int cell = sheet.getRows();
         String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
-            queue = pop.getQueue();
-            out.println("\n" + "t" + clock + ": Servers' state\n" + pop.getServerState());
-            for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
-                COTServer s = lc.getCOTServer();
-                s.addToSeries(clock, s.getCpu());
-            }
-            if (!queue.isEmpty()) {
-                Service s = queue.getFirst();
-                if (Allocation.ServiceCanBeAllocated(s, pop)) {
-                    for (int i = 0; i < s.getDemand() - 1; i++) {
-                        queue.add(Functions.ServiceGeneration.generateCopyService(s, i + 1));
+            switch(a_policy) {
+                case "FA":
+                queue = pop.getQueue();
+                out.println("\n" + "t" + clock + ": Servers' state\n" + pop.getServerState());
+                for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
+                    COTServer s = lc.getCOTServer();
+                    s.addToSeries(clock, s.getCpu());
+                }
+                if (!queue.isEmpty()) {
+                    Service s = new Service("null", 0, 0);
+                    switch(q_policy){
+                        case "FIFO":
+                        s = queue.getFirst();
+                        break;
+
+                        case "SDF":
+                        for(Service se: queue){
+                           s = se;
+                        }
+                        break;
+
+                        default:
+                        s = queue.getFirst();
+                        System.out.println("Policy " + q_policy + " not supported");
+                        System.exit(0);
                     }
-                    s = queue.remove();
-                    if (Allocation.AllocateService(s, pop)) {
-                        // s = queue.remove();
-                        VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
-                                .getLinkInstance().getVirtualMachine();
-                        COTServer sv = vm.getLinkVM().getCOTServer();
-                        out.println("t" + clock + ": " + s.getName() + "[" + s.getChain() + "]" + " Allocated on "
-                                + sv.getName() + "[" + vm.getName() + "]");
-                        System.out.println(
-                                "t" + clock + "\tDispatcher: " + s.getName() + " Allocated at: " + "t" + clock);
-                        System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() + "\n");
-                        served++;
-                        s.setInitialAllocationTime(clock);
-                        s.setAllocated(true);
+                    if (Allocation.ServiceCanBeAllocated(s, pop)) {
+                        for (int i = 0; i < s.getDemand() - 1; i++) {
+                            queue.add(Functions.ServiceGeneration.generateCopyService(s, i + 1));
+                        }
+                        s = queue.remove();
+                        if (Allocation.AllocateService(s, pop)) {
+                            // s = queue.remove();
+                            VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
+                                    .getLinkInstance().getVirtualMachine();
+                            COTServer sv = vm.getLinkVM().getCOTServer();
+                            out.println("t" + clock + ": " + s.getName() + "[" + s.getChain() + "]" + " Allocated on "
+                                    + sv.getName() + "[" + vm.getName() + "]");
+                            System.out.println(
+                                    "t" + clock + "\tDispatcher: " + s.getName() + " Allocated at: " + "t" + clock);
+                            System.out.print("NFVI PROVIDE: " + pop.getLinkCompose().getNFVI().getServicesRunning() + "\n");
+                            served++;
+                            s.setInitialAllocationTime(clock);
+                            s.setAllocated(true);
+                        } else {
+                            System.out.println("ERROR IN ALLOCATING " + s.getName() + " at: " + "t" + clock);
+                        }
+                    }
+                    // if there is a service running in pop (and queue is not empty)
+                    if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
+                        for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
+                            s = lp.getService();
+                            double service_init_time = s.getInitalAllocationTime();
+                            double service_duration = s.getDuration();
+                            if (clock == service_init_time + service_duration) {
+                                if (s.getDemand() == 1 && !s.getName().contains("[")) {
+                                    writeDataset(sheet, cell, s, pop, clock, id);
+                                    cell++;
+                                    System.out.println(s.getName() + "SCRITTO IN DS");
+                                }
+                                // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
+                                if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
+                                    writeDataset(sheet, cell, s, pop, clock, id);
+                                    cell++;
+                                    System.out.println(s.getName() + "SCRITTO IN DS");
+                                }
+                                // writeDataset(sheet,cell,s,pop);
+                                // cell++;
+                                Deallocation.DeallocateService(s, pop);
+                                System.out.println(
+                                        "t" + clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t" + clock);
+                                out.println("t" + clock + " " + s.getName() + " Deallocated");
+                            } else {
+                                System.out.println(
+                                        "t" + clock + "\tDispatcher: " + s.getName() + " running at " + "t" + clock);
+                                out.println("t" + clock + ": " + s.getName() + " running");
+                            }
+                        }
                     } else {
-                        System.out.println("ERROR IN ALLOCATING " + s.getName() + " at: " + "t" + clock);
-                    }
-                }
-                // if there is a service running in pop (and queue is not empty)
-                if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
-                    for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
-                        s = lp.getService();
-                        double service_init_time = s.getInitalAllocationTime();
-                        double service_duration = s.getTime();
-                        if (clock == service_init_time + service_duration) {
-                            if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
-                                cell++;
-                                System.out.println(s.getName() + "SCRITTO IN DS");
-                            }
-                            // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
-                            if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
-                                cell++;
-                                System.out.println(s.getName() + "SCRITTO IN DS");
-                            }
-                            // writeDataset(sheet,cell,s,pop);
-                            // cell++;
-                            Deallocation.DeallocateService(s, pop);
-                            System.out.println(
-                                    "t" + clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t" + clock);
-                            out.println("t" + clock + " " + s.getName() + " Deallocated");
-                        } else {
-                            System.out.println(
-                                    "t" + clock + "\tDispatcher: " + s.getName() + " running at " + "t" + clock);
-                            out.println("t" + clock + ": " + s.getName() + " running");
-                        }
+                        System.out.println("t" + clock + " Dispatcher: nothig");
+                        out.println("t" + clock + ": waiting for requests");
                     }
                 } else {
-                    System.out.println("t" + clock + " Dispatcher: nothig");
-                    out.println("t" + clock + ": waiting for requests");
-                }
-            } else {
-                // if there is a service running in pop (and queue is empty)
-                if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
-                    for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
-                        Service s = lp.getService();
-                        double service_init_time = s.getInitalAllocationTime();
-                        double service_duration = s.getTime();
-                        if (clock == service_init_time + service_duration) {
-                            if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
-                                cell++;
-                                System.out.println(s.getName() + "SCRITTO IN DS");
+                    // if there is a service running in pop (and queue is empty)
+                    if (!pop.getLinkCompose().getNFVI().getLinkProvide().isEmpty()) {
+                        for (LinkProvide lp : pop.getLinkCompose().getNFVI().getLinkProvide()) {
+                            Service s = lp.getService();
+                            double service_init_time = s.getInitalAllocationTime();
+                            double service_duration = s.getDuration();
+                            if (clock == service_init_time + service_duration) {
+                                if (s.getDemand() == 1 && !s.getName().contains("[")) {
+                                    writeDataset(sheet, cell, s, pop, clock, id);
+                                    cell++;
+                                    System.out.println(s.getName() + "SCRITTO IN DS");
+                                }
+                                // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
+                                if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
+                                    writeDataset(sheet, cell, s, pop, clock, id);
+                                    cell++;
+                                    System.out.println(s.getName() + "SCRITTO IN DS");
+                                }
+                                // writeDataset(sheet,cell,s,pop);
+                                // cell++
+                                Deallocation.DeallocateService(s, pop);
+                                System.out.println(
+                                        "t" + clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t" + clock);
+                                out.println("t" + clock + ": " + s.getName() + " Deallocated");
+                            } else {
+                                System.out.println(
+                                        "t" + clock + "\tDispatcher: " + s.getName() + " running at " + "t" + clock);
+                                out.println("t" + clock + ": " + s.getName() + " running");
                             }
-                            // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
-                            if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
-                                cell++;
-                                System.out.println(s.getName() + "SCRITTO IN DS");
-                            }
-                            // writeDataset(sheet,cell,s,pop);
-                            // cell++
-                            Deallocation.DeallocateService(s, pop);
-                            System.out.println(
-                                    "t" + clock + "\tDispatcher: " + s.getName() + " Deallocated at: " + "t" + clock);
-                            out.println("t" + clock + ": " + s.getName() + " Deallocated");
-                        } else {
-                            System.out.println(
-                                    "t" + clock + "\tDispatcher: " + s.getName() + " running at " + "t" + clock);
-                            out.println("t" + clock + ": " + s.getName() + " running");
                         }
+                    } else {
+                        System.out.println("t" + clock + " Dispatcher: nothing");
+                        out.println("t" + clock + ": waiting for requests");
                     }
-                } else {
-                    System.out.println("t" + clock + " Dispatcher: nothing");
-                    out.println("t" + clock + ": waiting for requests");
                 }
-            }
+                break;
+
+                case "SDF":
+                System.out.println("Policy: " + a_policy);
+                break;
+
+                case "R-A":
+                System.out.println("Policy: Random Allocation");
+                break;
+
+                default:
+                System.out.println("Policy " + a_policy + " not supported");
+                System.exit(0);
+            } 
         }
         System.out.println("Dispatcher: Total requests served: " + served);
         out.println("\nTOTAL REQUESTS SERVED: " + served);
@@ -221,7 +257,7 @@ public class Dispatcher implements Callable<Object> {
             servicecost += vnf.getRam() * ram_cost; // 0.013 euro per RAM(GB) hour
             servicecost += vnf.getStorage() * storage_cost; // 0.00001 euro per GB (storage) hour
         }
-        servicecost = servicecost * service.getTime() * service.getReqDemand();
+        servicecost = servicecost * service.getDuration() * service.getReqDemand();
 
         // base energy consumption
         // double serverONcost= 0.300 * duration * 0.45; //0.300 kW * totale ore * 0.45
@@ -250,8 +286,8 @@ public class Dispatcher implements Callable<Object> {
             ramUsagecost += vnf.getRam();
             cpuUsagecost += vnf.getCPU();
         }
-        ramUsagecost = ramUsagecost * 0.0004 * service.getTime() * 0.08;
-        cpuUsagecost = cpuUsagecost * 0.2 * service.getTime() * 0.08;
+        ramUsagecost = ramUsagecost * 0.0004 * service.getDuration() * 0.08;
+        cpuUsagecost = cpuUsagecost * 0.2 * service.getDuration() * 0.08;
         double serverUsageCost = ramUsagecost + cpuUsagecost;
         double renewableEnergy = renewable_energy;
         double serviceEnergycost = (serverONcost + serverUsageCost - renewableEnergy)* service.getReqDemand();
@@ -266,7 +302,7 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertStringCell(sheet, cell, 7, "FIFO, fixed VM size"); // policy
         WriteData.insertDoubleCell(sheet, cell, 8, lambda); // rate of requests arrivals
         WriteData.insertIntCell(sheet, cell, 9, service.getReqDemand()); // size of request
-        WriteData.insertDoubleCell(sheet, cell, 10, service.getTime()); // service duration
+        WriteData.insertDoubleCell(sheet, cell, 10, service.getDuration()); // service duration
         WriteData.insertDoubleCell(sheet, cell, 11, servicecost); // service cost
         WriteData.insertDoubleCell(sheet, cell, 12, serviceEnergycost); // service energy cost
 

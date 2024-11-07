@@ -76,7 +76,10 @@ public class App {
         double alfa = Double.parseDouble(prop.getProperty("alfa"));
         int maxSize = Integer.parseInt(prop.getProperty("max_size"));
 
-        String policy = prop.getProperty("policy");
+        double crash = Double.parseDouble(prop.getProperty("server_crash"));
+
+        String a_policy = prop.getProperty("Allocation_policy");
+        String q_policy = prop.getProperty("Queue_policy");
 
         // CONTROL Construction validity
         ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network,
@@ -119,7 +122,7 @@ public class App {
         scanner.nextLine();
 
         // Set up the Simulation
-        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop);
+        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, a_policy, q_policy, crash);
         // app.run();
 
         // Create xls file of the Dataset

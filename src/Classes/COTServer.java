@@ -20,6 +20,8 @@ public class COTServer {
     private int storage;
     private int network;
 
+    private boolean online;
+
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
     HashMap<Integer, Double> storageUsage;
@@ -52,6 +54,7 @@ public class COTServer {
         this.cpu = cpu;
         this.storage = storage;
         this. network = network;
+        this.online = true;
 
         this.cpuUsage = new HashMap<>();
         this.ramUsage = new HashMap<>();
@@ -62,6 +65,24 @@ public class COTServer {
         this.containers = new HashSet<Container>();
 
         linkset = new HashSet<LinkVM>();
+    }
+
+    public boolean isOnline(){
+        return online;
+    }
+
+    public void setOnlineState(boolean state){
+        online = state;
+    }
+
+    public boolean isRunningAService(){
+        for(LinkVM lv: this.getLinkVM()){
+            VirtualMachine vm = lv.getVirtualMachine();
+            if (vm.isRunningService()){
+                return true;
+            }
+        }
+        return false;
     }
 
     public Map<Integer, Double>  getCpuUsage(){

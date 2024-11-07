@@ -89,7 +89,7 @@ public class ServiceGeneration {
     }
 
     public static Service generateCopyService(Service s, int i) throws Exception{
-        Service copy = new Service(s.getName()+"["+i+"]", s.getTime(), 0);
+        Service copy = new Service(s.getName()+"["+i+"]", s.getDuration(), 0);
         copy.setReqDemand(s.getDemand());
         for (LinkChain lc : s.getLinkChainList()) {
             VNF vnfcopy = new VNF(lc.getVNF().getName()+"["+i+"]", lc.getVNF().getType());

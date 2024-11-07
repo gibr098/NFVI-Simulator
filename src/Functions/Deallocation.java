@@ -21,7 +21,7 @@ public class Deallocation {
         for(LinkChain lc : s.getLinkChainList()){
             DeallocateVNF(lc.getVNF(), pop);
         }
-        System.out.println("CLEARING "+s.getName()+"["+s.getTime()+"s] from "+vm.getName()+"...");
+        System.out.println("CLEARING "+s.getName()+"["+s.getDuration()+"s] from "+vm.getName()+"...");
         pop.getLinkCompose().getNFVI().removeLinkProvide(s.getLinkProvide());
         s.getLinkChainList().clear();
     }

@@ -67,7 +67,7 @@ public class Service {
         return name;
     }
 
-    public double getTime(){
+    public double getDuration(){
         return time;
     }
 

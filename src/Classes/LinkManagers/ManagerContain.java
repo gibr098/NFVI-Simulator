@@ -25,7 +25,7 @@ public class ManagerContain {
 
     public static void remove(LinkContain y){
         try{
-            if(y!=null && y.getDataCenter().getLinkContain().equals(y)){
+            if(y!=null && y.getDataCenter().getLinkContain().contains(y)){
                 ManagerContain k = new ManagerContain(y);
                 y.getDataCenter().removeforManagerContain(k);
                 y.getCOTServer().removeforManagerContain(k);

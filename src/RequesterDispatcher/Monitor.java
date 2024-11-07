@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,22 +23,29 @@ import Classes.Links.LinkVM;
 import Functions.ServiceGeneration;
 import Functions.WriteData;
 import jxl.write.WritableSheet;
+import Functions.ServiceGeneration;
 
 public class Monitor implements Callable<Object> {
 
     NFVIPoP pop;
     double endTime;
     double clock;
+    double crash;
+
+    PrintWriter out;
 
     WritableSheet sheet;
 
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
 
-    public Monitor(NFVIPoP pop, double endTime, WritableSheet sheet) {
+    public Monitor(NFVIPoP pop, double endTime, double crash, PrintWriter out, WritableSheet sheet) {
         this.pop = pop;
         this.endTime = endTime;
         this.clock = 0;
+        this.crash = crash;
+
+        this.out = out;
 
         this.sheet = sheet;
 
@@ -62,6 +70,19 @@ public class Monitor implements Callable<Object> {
             System.out.println("t" + clock + " Monitor");
             TimeUnit.MILLISECONDS.sleep(100);
             clock += 1;
+            double rand = Math.random();
+            for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
+                DataCenter dc = lc.getCOTServer().getLinkContain().getDataCenter();
+                COTServer s = lc.getCOTServer();
+                if(lc.getCOTServer().isOnline() && !lc.getCOTServer().isRunningAService()){
+                    if(crash >= rand){
+                        s.removeLinkContain(s.getLinkContain());
+                        System.out.println("XXXXXXXX " + lc.getCOTServer().getName()+" has crashed X");
+                        out.println("X  " + lc.getCOTServer().getName()+" has crashed X");
+                        break;
+                    }
+                }
+            }
             for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
                 COTServer server = lc.getCOTServer();
                 // Cpu usage
@@ -135,7 +156,8 @@ public class Monitor implements Callable<Object> {
             ex.printStackTrace();
 
         }
-        int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
+        //int number_of_servers = Integer.parseInt(prop.getProperty("number_of_servers"));
+        int number_of_servers = pop.getNumberOfServers();
         int server_ram = Integer.parseInt(prop.getProperty("RAM(GB)"));
         int server_cpu = Integer.parseInt(prop.getProperty("CPU(Cores)"));
         int server_storage = Integer.parseInt(prop.getProperty("Storage(GB)"));
@@ -259,9 +281,9 @@ public class Monitor implements Callable<Object> {
 
         
         
-        busyram = busyram/total_ram;
-        busycpu = busycpu/total_cpu;
-        busystorage = busystorage/total_storage;
+        busyram = (int)100*(1-(busyram/total_ram));
+        busycpu = (int)100*(1-(busycpu/total_cpu));
+        busystorage = (int)100*(1-(busystorage/total_storage));
 
 
         WriteData.insertStringCell(sheet, cell, 0, id); //simulation id
@@ -280,9 +302,9 @@ public class Monitor implements Callable<Object> {
         WriteData.insertStringCell(sheet, cell, 13, consumeOfram); // consume of ram
         WriteData.insertStringCell(sheet, cell, 14, consumeOfcpu); // consume of cpu
         WriteData.insertStringCell(sheet, cell, 15, consumeOfstrorage); // consume of storage
-        WriteData.insertDoubleCell(sheet, cell, 16, 1-busyram); // total % consume of ram
-        WriteData.insertDoubleCell(sheet, cell, 17, 1-busycpu); // total % consume of cpu
-        WriteData.insertDoubleCell(sheet, cell, 18, 1-busystorage); // total % consume of storage
+        WriteData.insertDoubleCell(sheet, cell, 16, busyram); // total % consume of ram
+        WriteData.insertDoubleCell(sheet, cell, 17, busycpu); // total % consume of cpu
+        WriteData.insertDoubleCell(sheet, cell, 18, busystorage); // total % consume of storage
         WriteData.insertDoubleCell(sheet, cell, 19, energycost); // energy cost
         WriteData.insertStringCell(sheet, cell, 20, "no"); // renewable
 
