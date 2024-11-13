@@ -149,27 +149,29 @@ public class Dispatcher implements Callable<Object> {
                     System.out.println("Policy " + q_policy + " not supported");
                     System.exit(0);
                 }
-                if (Allocation.ServiceCanBeAllocated(s, pop)) {
+                if (Allocation.ServiceCanBeAllocated1(s, pop)) {
                     for (int i = 0; i < s.getDemand() - 1; i++) {
                         queue.add(Functions.ServiceGeneration.generateCopyService(s, i + 1));
                     }
                     //s = queue.remove();
                     queue.remove(s);
+                    /*
                     boolean allocationResult = false;
                     switch (a_policy){
-                        case "FA":
+                        case "FAS":
                         allocationResult = Allocation.AllocateService(s, pop);
                         break;
 
-                        case "R-A":
+                        case "RANDOM":
+                        allocationResult = Allocation.AllocateService(s, pop);
                         break;
 
                         default:
                         System.out.println("Policy " + a_policy + " not supported");
                         System.exit(0);
-                    }
+                    }*/
                     
-                    if (allocationResult) {
+                    if (Allocation.NewAllocateService(s, pop, a_policy)) {
                         // s = queue.remove();
                         VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
                                 .getLinkInstance().getVirtualMachine();

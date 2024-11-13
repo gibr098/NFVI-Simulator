@@ -21,10 +21,13 @@ public class COTServer {
     private int network;
 
     private boolean online;
+    private boolean available;
 
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
     HashMap<Integer, Double> storageUsage;
+
+    private double totalUsage;
 
     private int cpu_capacity = 100;
 
@@ -55,10 +58,13 @@ public class COTServer {
         this.storage = storage;
         this. network = network;
         this.online = true;
+        this.available = true;
 
         this.cpuUsage = new HashMap<>();
         this.ramUsage = new HashMap<>();
         this.storageUsage = new HashMap<>();
+
+        this.totalUsage = 0.0;
 
         this.series= new XYSeries(name);
 
@@ -73,6 +79,14 @@ public class COTServer {
 
     public void setOnlineState(boolean state){
         online = state;
+    }
+
+    public boolean isAvailable(){
+        return available;
+    }
+
+    public void setAvailableState(boolean state){
+        available = state;
     }
 
     public boolean isRunningAService(){
@@ -95,6 +109,18 @@ public class COTServer {
 
     public Map<Integer, Double>  getStorageUsage(){
         return (HashMap<Integer, Double>)storageUsage;
+    }
+
+    public int getResourcesSum(){
+        return ram+cpu+storage;
+    }
+
+    public boolean allVMBusy(){
+        boolean ret = true;
+        for(LinkVM l : this.linkset){
+            ret = ret && l.getVirtualMachine().isRunningService();
+        }
+        return ret;
     }
 
     public String getRamUsagePrint() {
@@ -218,6 +244,46 @@ public class COTServer {
     //Total
     public int getContainerNumber(){
         return linkset.size() * linkset.iterator().next().getVirtualMachine().getContainerNumber();
+    }
+    public int getContainerperVMNumber(){
+        return linkset.iterator().next().getVirtualMachine().getContainerNumber();
+    }
+
+    public int getAvailableContainersNumber(){
+        int ret = 0;
+        for(LinkVM lvm: this.getLinkVM()){
+            VirtualMachine vm = lvm.getVirtualMachine();
+            for(LinkInstance lc : vm.getLinkInstance()){
+                Container c = lc.getContainer();
+                if(!c.isBusy()){
+                    ret+=1;
+                }
+            }
+        }
+        return ret;
+    }
+
+    public int getAvailableVMNumber(){
+        int ret = 0;
+        for(LinkVM lvm: this.getLinkVM()){
+            VirtualMachine vm = lvm.getVirtualMachine();
+            if(!vm.isRunningService()){
+                ret+=1;
+            }
+        }
+        return ret;
+    }
+    public String printContainerState(){
+        String ret = " \n";
+        for(LinkVM lvm: this.getLinkVM()){
+            ret+=lvm.getVirtualMachine().getName() + " runnignservice: "+lvm.getVirtualMachine().isRunningService();
+            for(LinkInstance li : lvm.getVirtualMachine().getLinkInstance()){
+                Container c = li.getContainer();
+                ret+= c.getName()+" busy: "+c.isBusy()+" \n";
+
+            }
+        }
+        return ret;
     }
 
 
