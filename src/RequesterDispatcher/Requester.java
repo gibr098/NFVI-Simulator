@@ -66,7 +66,7 @@ public class Requester implements Callable<Object> {
         int size = 1;
         Service s;
         while (clock != endTime) {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(250);
             clock += 1;
             size = z.sample();
             if (getPoissonRandom(lambda) == 1) {

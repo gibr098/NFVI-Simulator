@@ -105,34 +105,40 @@ public class WriteData {
         headerLabel = new Label(10, 0, "Services running", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(11, 0, "Allocation Policy", headerFormat);
+        headerLabel = new Label(11, 0, "Queue Policy", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(12, 0, "Request Rate(λ)", headerFormat);
+        headerLabel = new Label(12, 0, "Server Selection Policy", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(13, 0, "Total RAM used", headerFormat);
+        headerLabel = new Label(13, 0, "Allocation Policy", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(14, 0, "Total CPU used", headerFormat);
+        headerLabel = new Label(14, 0, "Request Rate(λ)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(15, 0, "Total Storage used", headerFormat);
+        headerLabel = new Label(15, 0, "Total RAM used", headerFormat);
+        sheet.addCell(headerLabel);
+
+        headerLabel = new Label(16, 0, "Total CPU used", headerFormat);
+        sheet.addCell(headerLabel);
+
+        headerLabel = new Label(17, 0, "Total Storage used", headerFormat);
         sheet.addCell(headerLabel);
         
-        headerLabel = new Label(16, 0, "RAM busy(%)", headerFormat);
+        headerLabel = new Label(18, 0, "RAM busy(%)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(17, 0, "CPU busy(%)", headerFormat);
+        headerLabel = new Label(19, 0, "CPU busy(%)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(18, 0, "Storage busy(%)", headerFormat);
+        headerLabel = new Label(20, 0, "Storage busy(%)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(19, 0, "System Energy cost(€)", headerFormat);
+        headerLabel = new Label(21, 0, "System Energy cost(€)", headerFormat);
         sheet.addCell(headerLabel);
 
-        headerLabel = new Label(20, 0, "Availability of renewable energy", headerFormat);
+        headerLabel = new Label(22, 0, "Availability of renewable energy", headerFormat);
         sheet.addCell(headerLabel);
     }
 

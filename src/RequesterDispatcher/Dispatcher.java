@@ -34,10 +34,10 @@ public class Dispatcher implements Callable<Object> {
     PrintWriter out;
     WritableSheet sheet;
     XYSeriesCollection dataset;
-    String a_policy;
+    String ss_policy;
     String q_policy;
 
-    public Dispatcher(double endTime, String a_policy, String q_policy, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
+    public Dispatcher(double endTime, String ss_policy, String q_policy, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
         this.endTime = endTime;
         this.clock = 0;
         this.served = 0;
@@ -45,7 +45,7 @@ public class Dispatcher implements Callable<Object> {
         this.out = out;
         this.sheet = sheet;
         this.dataset = pop.getDataset();
-        this.a_policy = a_policy;
+        this.ss_policy = ss_policy;
         this.q_policy = q_policy;
 
     }
@@ -66,7 +66,7 @@ public class Dispatcher implements Callable<Object> {
         int cell = sheet.getRows();
         String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(250);
             clock += 1;
             queue = pop.getQueue();
 
@@ -171,7 +171,7 @@ public class Dispatcher implements Callable<Object> {
                         System.exit(0);
                     }*/
                     
-                    if (Allocation.NewAllocateService(s, pop, a_policy)) {
+                    if (Allocation.NewAllocateService(s, pop, ss_policy)) {
                         // s = queue.remove();
                         VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
                                 .getLinkInstance().getVirtualMachine();
@@ -358,7 +358,7 @@ public class Dispatcher implements Callable<Object> {
         WriteData.insertStringCell(sheet, cell, 4, vmtype); // type of VMs
         WriteData.insertIntCell(sheet, cell, 5, vnfnum); // number of vnf
         WriteData.insertStringCell(sheet, cell, 6, vnftype); // chain of vnf
-        WriteData.insertStringCell(sheet, cell, 7, "FIFO, fixed VM size"); // policy
+        WriteData.insertStringCell(sheet, cell, 7, "-"); // allocation policy
         WriteData.insertDoubleCell(sheet, cell, 8, lambda); // rate of requests arrivals
         WriteData.insertIntCell(sheet, cell, 9, service.getReqDemand()); // size of request
         WriteData.insertDoubleCell(sheet, cell, 10, service.getDuration()); // service duration

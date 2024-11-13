@@ -60,6 +60,7 @@ public class Monitor implements Callable<Object> {
     }
 
     public void run() throws InterruptedException, Exception {
+        String crashedServers=" ";
         double ramtime = 0.0;
         double cputime = 0.0;
         double stortime = 0.0;
@@ -68,7 +69,7 @@ public class Monitor implements Callable<Object> {
         String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
             System.out.println("t" + clock + " Monitor");
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(250);
             clock += 1;
             double rand = Math.random();
             for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -77,7 +78,8 @@ public class Monitor implements Callable<Object> {
                 if(lc.getCOTServer().isOnline() && !lc.getCOTServer().isRunningAService()){
                     if(crash >= rand){
                         s.removeLinkContain(s.getLinkContain());
-                        System.out.println("XXXXXXXX " + lc.getCOTServer().getName()+" has crashed X");
+                        crashedServers+=s.getName()+" ";
+                        System.out.println("\nXXXXX " + lc.getCOTServer().getName()+" has crashed XXXXX\n");
                         out.println("X  " + lc.getCOTServer().getName()+" has crashed X");
                         break;
                     }
@@ -121,7 +123,7 @@ public class Monitor implements Callable<Object> {
                 cell++;
             }*/
         }
-
+        System.out.println("Monitor: "+crashedServers+"  crashed");
     }
 
     public void printCpuUsage(COTServer s) {
@@ -167,6 +169,9 @@ public class Monitor implements Callable<Object> {
         int total_ram = server_ram * number_of_servers;
         int total_cpu = server_cpu * number_of_servers;
         int total_storage = server_storage * number_of_servers;
+
+        String ss_policy = prop.getProperty("ServerSelection_policy");
+        String q_policy = prop.getProperty("Queue_policy");
 
         double energy_cost = Double.parseDouble(prop.getProperty("energy_cost"));
         double renewable_energy = Double.parseDouble(prop.getProperty("renewable_energy"));
@@ -297,16 +302,18 @@ public class Monitor implements Callable<Object> {
         WriteData.insertStringCell(sheet, cell, 8, vmtype); // VMs type
         WriteData.insertIntCell(sheet, cell, 9, servicenum); // number of services running
         WriteData.insertStringCell(sheet, cell, 10, servicesrunning); // service running
-        WriteData.insertStringCell(sheet, cell, 11, "FIFO, fixed VM size"); // allocation policy
-        WriteData.insertDoubleCell(sheet, cell, 12, lambda); // req rate
-        WriteData.insertStringCell(sheet, cell, 13, consumeOfram); // consume of ram
-        WriteData.insertStringCell(sheet, cell, 14, consumeOfcpu); // consume of cpu
-        WriteData.insertStringCell(sheet, cell, 15, consumeOfstrorage); // consume of storage
-        WriteData.insertDoubleCell(sheet, cell, 16, busyram); // total % consume of ram
-        WriteData.insertDoubleCell(sheet, cell, 17, busycpu); // total % consume of cpu
-        WriteData.insertDoubleCell(sheet, cell, 18, busystorage); // total % consume of storage
-        WriteData.insertDoubleCell(sheet, cell, 19, energycost); // energy cost
-        WriteData.insertStringCell(sheet, cell, 20, "no"); // renewable
+        WriteData.insertStringCell(sheet, cell, 11, q_policy); // queue policy
+        WriteData.insertStringCell(sheet, cell, 12, ss_policy); // server selection policy
+        WriteData.insertStringCell(sheet, cell, 13, "-"); // allocation policy
+        WriteData.insertDoubleCell(sheet, cell, 14, lambda); // req rate
+        WriteData.insertStringCell(sheet, cell, 15, consumeOfram); // consume of ram
+        WriteData.insertStringCell(sheet, cell, 16, consumeOfcpu); // consume of cpu
+        WriteData.insertStringCell(sheet, cell, 17, consumeOfstrorage); // consume of storage
+        WriteData.insertDoubleCell(sheet, cell, 18, busyram); // total % consume of ram
+        WriteData.insertDoubleCell(sheet, cell, 19, busycpu); // total % consume of cpu
+        WriteData.insertDoubleCell(sheet, cell, 20, busystorage); // total % consume of storage
+        WriteData.insertDoubleCell(sheet, cell, 21, energycost); // energy cost
+        WriteData.insertStringCell(sheet, cell, 22, "no"); // renewable
 
     }
 

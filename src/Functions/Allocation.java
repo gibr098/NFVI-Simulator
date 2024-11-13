@@ -19,7 +19,7 @@ public class Allocation {
         COTServer server = new COTServer("init", 0, 0, 0, 0);
         // Server Selection
         DataCenter dc = pop.getLinkOwn().getDataCenter();
-        COTServer slu = dc.getLinkContain().iterator().next().getCOTServer();
+        COTServer ss = dc.getLinkContain().iterator().next().getCOTServer();
         for (LinkContain l : dc.getLinkContain()) {
             //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
             if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber() &&
@@ -32,10 +32,17 @@ public class Allocation {
                 break;
 
                 case "LUS":
-                if( l.getCOTServer().getResourcesSum() > slu.getResourcesSum()){
-                    slu = l.getCOTServer();
+                if( l.getCOTServer().getResourcesSum() > ss.getResourcesSum()){
+                    ss = l.getCOTServer();
                 }
-                server = slu;
+                server = ss;
+                break;
+
+                case "MUS":
+                if( l.getCOTServer().getResourcesSum() < ss.getResourcesSum()){
+                    ss = l.getCOTServer();
+                }
+                server = ss;
                 break;
 
                 case "RANDOM":

@@ -142,11 +142,15 @@ public class NFVIPoP {
         DataCenter dc = this.getLinkOwn().getDataCenter();
         for (LinkContain lc : dc.getLinkContain()){
             COTServer s = lc.getCOTServer();
-            info+=s.getName() + "(ram: "+s.getRam()+"GB, ";
-            info+="cpu: "+s.getCpu()+"cores, ";
-            info+= "storage: "+s.getStorage()+"GB, ";
-            info+= "network: "+s.getNetwork();
-            info+= ")\n";
+            if(s.isOnline()){
+                info+=s.getName() + "(ram: "+s.getRam()+"GB, ";
+                info+="cpu: "+s.getCpu()+"cores, ";
+                info+= "storage: "+s.getStorage()+"GB, ";
+                info+= "network: "+s.getNetwork();
+                info+= ")\n";
+            }else{
+                info+=s.getName() +" has crashed";
+            }
         }
 
         return info;

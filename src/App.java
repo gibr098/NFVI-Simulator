@@ -78,7 +78,7 @@ public class App {
 
         double crash = Double.parseDouble(prop.getProperty("server_crash"));
 
-        String a_policy = prop.getProperty("Allocation_policy");
+        String ss_policy = prop.getProperty("ServerSelection_policy");
         String q_policy = prop.getProperty("Queue_policy");
 
         // CONTROL Construction validity
@@ -122,7 +122,7 @@ public class App {
         scanner.nextLine();
 
         // Set up the Simulation
-        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, a_policy, q_policy, crash);
+        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, ss_policy, q_policy, crash);
         // app.run();
 
         // Create xls file of the Dataset
