@@ -61,6 +61,14 @@ public class VirtualMachine {
         return s;
     }
 
+    public boolean allContainersBusy(){
+        boolean ret = true;
+        for(LinkInstance li: linkset){
+            ret = ret && li.getContainer().isBusy();
+        }
+        return ret;
+    }
+
 
 
     //VM -> CONTAINER

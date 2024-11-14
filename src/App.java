@@ -81,6 +81,8 @@ public class App {
         String ss_policy = prop.getProperty("ServerSelection_policy");
         String q_policy = prop.getProperty("Queue_policy");
 
+        String service_isolation = prop.getProperty("service_isolation");
+
         // CONTROL Construction validity
         ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network,
                 virtual_machines, number_of_containers, container_ram, container_cpu, container_storage,
@@ -122,7 +124,7 @@ public class App {
         scanner.nextLine();
 
         // Set up the Simulation
-        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, ss_policy, q_policy, crash);
+        AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, ss_policy, q_policy, service_isolation, crash);
         // app.run();
 
         // Create xls file of the Dataset

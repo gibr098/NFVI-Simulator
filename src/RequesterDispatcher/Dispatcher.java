@@ -36,8 +36,9 @@ public class Dispatcher implements Callable<Object> {
     XYSeriesCollection dataset;
     String ss_policy;
     String q_policy;
+    String s_isolation;
 
-    public Dispatcher(double endTime, String ss_policy, String q_policy, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
+    public Dispatcher(double endTime, String ss_policy, String q_policy, String s_isolation, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
         this.endTime = endTime;
         this.clock = 0;
         this.served = 0;
@@ -47,6 +48,7 @@ public class Dispatcher implements Callable<Object> {
         this.dataset = pop.getDataset();
         this.ss_policy = ss_policy;
         this.q_policy = q_policy;
+        this.s_isolation = s_isolation;
 
     }
 
@@ -70,13 +72,12 @@ public class Dispatcher implements Callable<Object> {
             clock += 1;
             queue = pop.getQueue();
 
-            //---------Debug code--------------//
+            //---------Check code--------------//
             System.out.println("QUEUE: "+ pop.getQueuePrint());
             for(int i=0; i < queue.size(); i++){
                 System.out.println(queue.get(i).getName()+" duration: "+ queue.get(i).getDuration()+" chain: "+ queue.get(i).getVNFNumber()+" vnfs");
-                
             }
-            //---------Debug code---------------//
+            //---------Check code---------------//
 
 
             out.println("\n" + "t" + clock + ": Servers' state\n" + pop.getServerState());
@@ -85,7 +86,7 @@ public class Dispatcher implements Callable<Object> {
                 s.addToSeries(clock, s.getCpu());
             }
             if (!queue.isEmpty()) {
-                Service s = new Service("null", 0, 0);
+                Service s;// = new Service("null", 0, 0);
                 switch(q_policy){
                     case "FIFO":
                     s = queue.getFirst();
@@ -149,7 +150,7 @@ public class Dispatcher implements Callable<Object> {
                     System.out.println("Policy " + q_policy + " not supported");
                     System.exit(0);
                 }
-                if (Allocation.ServiceCanBeAllocated1(s, pop)) {
+                if (Allocation.NewServiceCanBeAllocated(s, pop)) {
                     for (int i = 0; i < s.getDemand() - 1; i++) {
                         queue.add(Functions.ServiceGeneration.generateCopyService(s, i + 1));
                     }
@@ -171,7 +172,7 @@ public class Dispatcher implements Callable<Object> {
                         System.exit(0);
                     }*/
                     
-                    if (Allocation.NewAllocateService(s, pop, ss_policy)) {
+                    if (Allocation.NewAllocateService(s, pop, ss_policy, s_isolation)) {
                         // s = queue.remove();
                         VirtualMachine vm = s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
                                 .getLinkInstance().getVirtualMachine();

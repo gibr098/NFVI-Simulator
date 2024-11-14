@@ -21,11 +21,12 @@ public class AppRS{
     int maxSize; 
     String ss_policy;
     String q_policy;
+    String s_isolation;
     double crash;
 
     NFVIPoP pop;
 
-    public AppRS(double lambda, double duration, double alfa, int maxSize, NFVIPoP pop, String ss_policy, String q_policy,double crash){
+    public AppRS(double lambda, double duration, double alfa, int maxSize, NFVIPoP pop, String ss_policy, String q_policy, String s_isolation, double crash){
         this.pop = pop;
         this.lambda = lambda;
         this.duration = duration;
@@ -33,6 +34,7 @@ public class AppRS{
         this.maxSize = maxSize;
         this.ss_policy = ss_policy;
         this.q_policy = q_policy;
+        this.s_isolation = s_isolation;
         this.crash = crash;
 
     }
@@ -40,7 +42,7 @@ public class AppRS{
     public void run(PrintWriter out, WritableSheet sheet1, WritableSheet sheet2) throws Exception {
 
         Requester r = new Requester(lambda, duration, alfa, maxSize, pop);
-        Dispatcher d = new Dispatcher(duration, ss_policy, q_policy, pop, out, sheet1);
+        Dispatcher d = new Dispatcher(duration, ss_policy, q_policy, s_isolation, pop, out, sheet1);
         Monitor m = new Monitor(pop, duration, crash, out, sheet2);
 
         /*

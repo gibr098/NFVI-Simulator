@@ -13,9 +13,8 @@ import Classes.Links.LinkVM;
 
 public class Allocation {
 
-    public static boolean NewAllocateService(Service s, NFVIPoP pop, String policy) throws Exception{
+    public static boolean NewAllocateService(Service s, NFVIPoP pop, String policy, String s_isolation) throws Exception{
         boolean res = true;
-        
         COTServer server = new COTServer("init", 0, 0, 0, 0);
         // Server Selection
         DataCenter dc = pop.getLinkOwn().getDataCenter();
@@ -73,15 +72,25 @@ public class Allocation {
             //VirtualMachine vm =
             //s.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
             //vm.setRunningServiceState(true);
-            for (LinkChain lc : s.getLinkChainList()) {
-                VirtualMachine vm = lc.getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
-                vm.setRunningServiceState(true);
+            if(s_isolation.equals("no")){
+                for (LinkChain lc : s.getLinkChainList()) {
+                    VirtualMachine vm = lc.getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
+                    if(vm.allContainersBusy()){
+                        vm.setRunningServiceState(true);
+                    }
+                }
+
+            }else{
+                for (LinkChain lc : s.getLinkChainList()) {
+                    VirtualMachine vm = lc.getVNF().getLinkRun().getContainer().getLinkInstance().getVirtualMachine();
+                    vm.setRunningServiceState(true);
+                }
+                // NFVI nfvi = pop.getLinkCompose().getNFVI();
+                // LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
+                // nfvi.insertLinkProvide(lp);
             }
-            // NFVI nfvi = pop.getLinkCompose().getNFVI();
-            // LinkProvide lp = new LinkProvide(pop.getLinkCompose().getNFVI(), s);
-            // nfvi.insertLinkProvide(lp);
         }else{
-            System.out.println("////////////////ERROR in ALLOCATING VNFs in AllocateService()");
+            System.out.println("//////////////// ERROR in ALLOCATING VNFs in AllocateService()");
         }
         return res;
 
@@ -117,6 +126,57 @@ public class Allocation {
         return false;
     }
 
+    private static void AllocateServerResources(Container container) throws Exception {
+        int ram = container.getRam();
+        int cpu = container.getCpu();
+        int cpu_usage = container.getCPUusage();
+        int storage = container.getStorage();
+        int network = container.getNetwork();
+        COTServer server = container.getLinkInstance().getVirtualMachine().getLinkVM().getCOTServer();
+        server.allocateCPUusage(cpu_usage);
+        server.allocateCpu(cpu);
+        server.allocateRam(ram);
+        server.allocateStorage(storage);
+
+    }
+
+    private static boolean ContainerHasResources(Container container, VNF vnf) {
+        if (container.getRam() < vnf.getRam() ||
+                container.getCpu() < vnf.getCPU() ||
+                container.getCPUusage() < vnf.getCPUusage() ||
+                container.getStorage() < vnf.getStorage() ||
+                container.getNetwork() < vnf.getNetwork()) {
+            System.out.println(container.getName() + " hasn't resources to allocate " + vnf.getName());
+            return false;
+
+        } else
+            return true;
+    }
+
+    public static boolean NewServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {
+        int n = s.getVNFNumber();
+        int demand = s.getDemand();
+        //int count = 0;
+        DataCenter dc = pop.getLinkOwn().getDataCenter();
+        for (LinkContain l : dc.getLinkContain()) {
+            COTServer server = l.getCOTServer();
+            //System.out.println("--------->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
+            //System.out.println("Containers available on " +server.getName()+" "+server.getAvailableContainersNumber()+", vnf to allocate = "+n);
+            if(server.getAvailableContainersNumber() >= n*demand && 
+               (double)server.getAvailableVMNumber() >= (double)s.getVNFNumber()/server.getContainerperVMNumber()){ //&& !server.allVMBusy()){
+                //System.out.println("----SELECTED----->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
+
+                return true;
+            }
+        }
+        System.out.println(">>>>>"+s.getName()+" WAITING...");
+        return false;
+    }
+
+
+
+//------------------------------------------------
+/* 
     public static boolean AllocateService(Service s, NFVIPoP pop, String policy) throws Exception {
         COTServer server = new COTServer("init", 0, 0, 0, 0);
         DataCenter dc = pop.getLinkOwn().getDataCenter();
@@ -174,11 +234,6 @@ public class Allocation {
         return res;
     }
 
-    // Policy FA (First Available Server): 
-    // Il primo server disponibile viene usato per allocare il servizio
-    // In quel server la prima VM disponibile viene usata per allocare le VNFs
-    // Ogni container della VM esegue 1 VNF
-
     private static boolean AllocateVNF(VNF vnf, NFVIPoP pop, COTServer server) throws Exception {
         //DataCenter dc = pop.getLinkOwn().getDataCenter();
         //for (LinkContain l : dc.getLinkContain()) {
@@ -215,51 +270,6 @@ public class Allocation {
         return false;
     }
 
-    
-
-    // Policy RANDOM:
-    // Le VNFs del servizio vengono allocate ognuna in 1 container disponibile a caso
-
-    private static boolean RANDOM_AllocateVNF(VNF vnf, NFVIPoP pop) throws Exception {
-        return false;
-    }
-
-    private static void AllocateServerResources(Container container) throws Exception {
-        int ram = container.getRam();
-        int cpu = container.getCpu();
-        int cpu_usage = container.getCPUusage();
-        int storage = container.getStorage();
-        int network = container.getNetwork();
-        COTServer server = container.getLinkInstance().getVirtualMachine().getLinkVM().getCOTServer();
-        server.allocateCPUusage(cpu_usage);
-        server.allocateCpu(cpu);
-        server.allocateRam(ram);
-        server.allocateStorage(storage);
-
-    }
-
-    private static boolean ContainerHasResources(Container container, VNF vnf) {
-        if (container.getRam() < vnf.getRam() ||
-                container.getCpu() < vnf.getCPU() ||
-                container.getCPUusage() < vnf.getCPUusage() ||
-                container.getStorage() < vnf.getStorage() ||
-                container.getNetwork() < vnf.getNetwork()) {
-            System.out.println(container.getName() + " hasn't resources to allocate " + vnf.getName());
-            return false;
-
-        } else
-            return true;
-    }
-
-    private static boolean ContainerHasResourcesService(Container c, Service s) throws Exception {
-        boolean ret = true;
-        for (LinkChain lc : s.getLinkChainList()) {
-            ret = ret && ContainerHasResources(c, lc.getVNF());
-        }
-        return ret;
-
-    }
-
     public static boolean ServiceCanBeAllocated(Service s, NFVIPoP pop) throws Exception {
         //int n = s.getLinkChainList().size();
         int n = s.getVNFNumber();
@@ -282,25 +292,5 @@ public class Allocation {
         //System.out.println(">>>>>"+s.getName()+" WAITING...");
         return false;
     }
-
-    public static boolean ServiceCanBeAllocated1(Service s, NFVIPoP pop) throws Exception {
-        int n = s.getVNFNumber();
-        int demand = s.getDemand();
-        //int count = 0;
-        DataCenter dc = pop.getLinkOwn().getDataCenter();
-        for (LinkContain l : dc.getLinkContain()) {
-            COTServer server = l.getCOTServer();
-            //System.out.println("--------->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
-            //System.out.println("Containers available on " +server.getName()+" "+server.getAvailableContainersNumber()+", vnf to allocate = "+n);
-            if(server.getAvailableContainersNumber() >= n*demand && 
-               (double)server.getAvailableVMNumber() >= (double)s.getVNFNumber()/server.getContainerperVMNumber()){ //&& !server.allVMBusy()){
-                //System.out.println("----SELECTED----->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
-
-                return true;
-            }
-        }
-        System.out.println(">>>>>"+s.getName()+" WAITING...");
-        return false;
-    }
-
+    */
 }
