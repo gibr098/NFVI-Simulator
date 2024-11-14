@@ -1,6 +1,7 @@
 package Functions;
 
 import java.util.Iterator;
+import java.util.Random;
 
 import Classes.*;
 import Classes.Links.LinkChain;
@@ -21,7 +22,7 @@ public class Allocation {
         COTServer ss = dc.getLinkContain().iterator().next().getCOTServer();
         for (LinkContain l : dc.getLinkContain()) {
             //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
-            if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber() &&
+            if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
                (double)l.getCOTServer().getAvailableVMNumber() >= (double)s.getVNFNumber()/l.getCOTServer().getContainerperVMNumber()){
             switch(policy){
                 case "FAS":
@@ -53,6 +54,7 @@ public class Allocation {
             }
             }  
         }
+
 
         //Allocation of VNFs
         System.out.println(">>>>>"+server.getName()+ " SELECTED FOR "+s.getName());

@@ -164,7 +164,8 @@ public class App {
             out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
             app.run(out, sheet1, sheet2);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
-            System.out.println("Requests not served: " + pop.getQueuePrint() + "\n");
+            System.out.println("Requests not served: " + pop.getQueuePrint());
+            System.out.println(number_of_servers-pop.getNumberOfServers() + " server have crushed\n");
             System.out.println("Simulation complete.");
             System.out.println("Log: logs/sim" + n + "_log.txt");
             out.close();

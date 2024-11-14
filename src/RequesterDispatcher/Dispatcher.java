@@ -72,6 +72,7 @@ public class Dispatcher implements Callable<Object> {
             clock += 1;
             queue = pop.getQueue();
 
+            System.out.println("QUEUE: "+ pop.getQueuePrint());
             /* //---------Check code--------------//
             System.out.println("QUEUE: "+ pop.getQueuePrint());
             for(int i=0; i < queue.size(); i++){
