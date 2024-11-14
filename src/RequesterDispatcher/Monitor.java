@@ -123,7 +123,7 @@ public class Monitor implements Callable<Object> {
                 cell++;
             }*/
         }
-        System.out.println("Monitor: "+crashedServers+"  crashed");
+        System.out.println("Crashed servers: "+crashedServers);
     }
 
     public void printCpuUsage(COTServer s) {

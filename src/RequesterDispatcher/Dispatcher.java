@@ -72,12 +72,12 @@ public class Dispatcher implements Callable<Object> {
             clock += 1;
             queue = pop.getQueue();
 
-            //---------Check code--------------//
+            /* //---------Check code--------------//
             System.out.println("QUEUE: "+ pop.getQueuePrint());
             for(int i=0; i < queue.size(); i++){
                 System.out.println(queue.get(i).getName()+" duration: "+ queue.get(i).getDuration()+" chain: "+ queue.get(i).getVNFNumber()+" vnfs");
             }
-            //---------Check code---------------//
+            //---------Check code---------------// */
 
 
             out.println("\n" + "t" + clock + ": Servers' state\n" + pop.getServerState());

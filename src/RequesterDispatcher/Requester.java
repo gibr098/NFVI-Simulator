@@ -74,7 +74,10 @@ public class Requester implements Callable<Object> {
                 s.setDemand(size);
                 pop.addElementToQueue(s);
                 System.out.println(
-                        "t" + clock + "\tRequester: Request of " + s.getName() + "[demand: " + s.getDemand() + "x]"
+                        "t" + clock + "\tRequester: Request of " + s.getName() 
+                        + "[demand: " + s.getDemand() + "x, "
+                        + "duration: " + s.getDuration()+" h, "
+                        + "chain: " + s.getVNFNumber()+" vnfs]"
                                 + " arrived at: " + "t" + clock);
                 requests++;
                 num++;
