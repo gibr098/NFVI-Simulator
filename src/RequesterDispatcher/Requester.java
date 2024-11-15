@@ -69,7 +69,6 @@ public class Requester implements Callable<Object> {
             TimeUnit.MILLISECONDS.sleep(250);
             clock += 1;
             size = z.sample();
-            System.out.println("////////////////ATTENZIONE AL VALORE DI GETPOISSON---------------> "+ getPoissonRandom(lambda));
             if (getPoissonRandom(lambda) >= 1) {
                 s = ServiceGeneration.generateService("Service-" + num, size);
                 s.setDemand(size);
