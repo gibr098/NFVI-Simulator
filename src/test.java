@@ -1,13 +1,27 @@
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Random;
 
-import org.apache.commons.math3.distribution.*;
+//import org.apache.commons.math3.distribution.*;
 
 public class test {
 
-    public static void ciao(String[] args) {
+    private static int getPoissonRandom(double lambda) {
+        Random r = new Random();
+        double l = Math.exp(-lambda);
+        int k = 0;
+        double p = 1.0;
+        do {
+            p = p * r.nextDouble();
+            k++;
+        } while (p > l);
+        return k - 1;
+    }
+
+    public static void main(String[] args) {
 
         double x = 0;
+        int t = 100;
         int n = 0;
         int n0 = 0;
         int n1 = 0;
@@ -19,15 +33,19 @@ public class test {
         double alfa = 2.0;
         int min = 4; //number of elements(in my case size of request)
 
-        while (i < 1000) {
+        
+
+        while (i < t) {
             i++;
 
-            ZipfDistribution z = new ZipfDistribution(min, alfa);
-            PoissonDistribution p = new PoissonDistribution(1.0,1.0);
-            ExponentialDistribution e = new ExponentialDistribution(10);
+            //ZipfDistribution z = new ZipfDistribution(min, alfa);
+            //PoissonDistribution p = new PoissonDistribution(1.0,1.0);
+            //ExponentialDistribution e = new ExponentialDistribution(10);
 
-            
-            n = (int) p.sample();
+
+            //n = (int) p.sample();
+            n = getPoissonRandom(0.1);
+
             if(n==0){
                 n0++;
             }
@@ -48,8 +66,9 @@ public class test {
 
 
         }
-        System.out.println("0: "+n0+"/1000");
-        System.out.println("1: "+n1+"/1000");
+        System.out.println("0: "+n0+"/"+t);
+        System.out.println("1: "+n1+"/"+t);
+        //System.out.println(">1: "+n2+"/"+t);
         //System.out.println("2: "+n2+"/1000");
         //System.out.println("3: "+n3+"/1000");
         //System.out.println("4: "+n4+"/1000");
