@@ -262,8 +262,8 @@ public class Dispatcher implements Callable<Object> {
             }
             
         }
-        System.out.println("Dispatcher: Total requests served: " + served);
-        out.println("\nTOTAL REQUESTS SERVED: " + served);
+        System.out.println("Dispatcher: Total services allocated: " + served);
+        out.println("\nTOTAL SERVICES ALLOCATED: " + served);
     }
 
     public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock, String id)

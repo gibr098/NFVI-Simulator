@@ -20,6 +20,21 @@ public class Allocation {
         // Server Selection
         DataCenter dc = pop.getLinkOwn().getDataCenter();
         COTServer ss = dc.getLinkContain().iterator().next().getCOTServer();
+        if(policy.equals("RANDOM")){
+            boolean found = false;
+            LinkContain[] servers = dc.getLinkContain().toArray(new LinkContain[dc.getLinkContain().size()]);
+            while (!found) {
+                System.out.println("FINDING server... ");
+                Random r = new Random();
+                COTServer selectedServer = servers[r.nextInt(dc.getLinkContain().size())].getCOTServer();
+                if( selectedServer.getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
+                    (double)selectedServer.getAvailableVMNumber() >= (double)s.getVNFNumber()/selectedServer.getContainerperVMNumber() ){
+                    server = selectedServer;
+                    found = true;
+                }
+            }
+
+        }else{
         for (LinkContain l : dc.getLinkContain()) {
             //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
             if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
@@ -54,6 +69,7 @@ public class Allocation {
             }
             }  
         }
+    }
 
 
         //Allocation of VNFs
