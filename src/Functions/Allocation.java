@@ -37,7 +37,7 @@ public class Allocation {
         }else{
         for (LinkContain l : dc.getLinkContain()) {
             //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
-            if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
+            if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber() &&
                (double)l.getCOTServer().getAvailableVMNumber() >= (double)s.getVNFNumber()/l.getCOTServer().getContainerperVMNumber()){
             switch(policy){
                 case "FAS":
@@ -180,7 +180,7 @@ public class Allocation {
             COTServer server = l.getCOTServer();
             //System.out.println("--------->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
             //System.out.println("Containers available on " +server.getName()+" "+server.getAvailableContainersNumber()+", vnf to allocate = "+n);
-            if(server.getAvailableContainersNumber() >= n*demand && 
+            if(server.getAvailableContainersNumber() >= n && 
                (double)server.getAvailableVMNumber() >= (double)s.getVNFNumber()/server.getContainerperVMNumber()){ //&& !server.allVMBusy()){
                 //System.out.println("----SELECTED----->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
 
