@@ -44,7 +44,7 @@ public class test {
 
 
             //n = (int) p.sample();
-            n = getPoissonRandom(0.1);
+            n = getPoissonRandom(5.0);
 
             if(n==0){
                 n0++;

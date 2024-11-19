@@ -44,7 +44,8 @@ public class App {
         }
 
         Properties prop = new Properties();
-        String fileName = "Simulator\\src\\NFVI.config";
+        //String fileName = "Simulator\\src\\NFVI.config";
+        String fileName = "Simulator\\Config files\\POP-1.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
