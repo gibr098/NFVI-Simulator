@@ -33,17 +33,19 @@ public class Dispatcher implements Callable<Object> {
     int served;
     PrintWriter out;
     WritableSheet sheet;
+    String fileName;
     XYSeriesCollection dataset;
     String ss_policy;
     String q_policy;
     String s_isolation;
 
-    public Dispatcher(double endTime, String ss_policy, String q_policy, String s_isolation, NFVIPoP pop, PrintWriter out, WritableSheet sheet) {
+    public Dispatcher(double endTime, String ss_policy, String q_policy, String s_isolation, NFVIPoP pop, PrintWriter out, WritableSheet sheet, String fileName) {
         this.endTime = endTime;
         this.clock = 0;
         this.served = 0;
         this.pop = pop;
         this.out = out;
+        this.fileName = fileName;
         this.sheet = sheet;
         this.dataset = pop.getDataset();
         this.ss_policy = ss_policy;
@@ -198,13 +200,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getDuration();
                         if (clock == service_init_time + service_duration) {
                             if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
+                                writeDataset(sheet, cell, s, pop, clock, id, fileName);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
                             // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
+                                writeDataset(sheet, cell, s, pop, clock, id, fileName);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
@@ -233,13 +235,13 @@ public class Dispatcher implements Callable<Object> {
                         double service_duration = s.getDuration();
                         if (clock == service_init_time + service_duration) {
                             if (s.getDemand() == 1 && !s.getName().contains("[")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
+                                writeDataset(sheet, cell, s, pop, clock, id, fileName);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
                             // System.out.println(s.getName()+"----------------"+"["+String.valueOf(s.getReqDemand()-1)+"]");
                             if (s.getName().contains("[" + String.valueOf(s.getReqDemand() - 1) + "]")) {
-                                writeDataset(sheet, cell, s, pop, clock, id);
+                                writeDataset(sheet, cell, s, pop, clock, id, fileName);
                                 cell++;
                                 System.out.println(s.getName() + "SCRITTO IN DS");
                             }
@@ -266,10 +268,11 @@ public class Dispatcher implements Callable<Object> {
         out.println("\nTOTAL SERVICES ALLOCATED: " + served);
     }
 
-    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock, String id)
+    public static void writeDataset(WritableSheet sheet, int cell, Service service, NFVIPoP pop, double clock, String id, String fileName)
             throws Exception {
         Properties prop = new Properties();
-        String fileName = "Simulator\\src\\NFVI.config";
+        //String fileName = "Simulator\\src\\NFVI.config";
+        //String fileName = "Simulator\\Config files\\POP-1.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
@@ -304,8 +307,10 @@ public class Dispatcher implements Callable<Object> {
         // int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
         int vmnum = (service.getLinkChainList().size() == vm.getContainerNumber()) ? 1
                 : (service.getLinkChainList().size() / vm.getContainerNumber()) + 1;
-        String vmtype = (service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
-                .getLinkInstance().getVirtualMachine().getContainerNumber() > 3) ? "Medium" : "Small";
+        //String vmtype = (service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
+          //      .getLinkInstance().getVirtualMachine().getContainerNumber() > 3) ? "Medium" : "Small";
+        String vmtype = service.getLinkChainList().iterator().next().getVNF().getLinkRun().getContainer()
+              .getLinkInstance().getVirtualMachine().getType();
         int vnfnum = service.getLinkChainList().size();
         String vnftype = service.getStringChain();
         double servicecost = 0;

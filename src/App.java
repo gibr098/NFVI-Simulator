@@ -81,8 +81,11 @@ public class App {
 
         String ss_policy = prop.getProperty("ServerSelection_policy");
         String q_policy = prop.getProperty("Queue_policy");
+        String all_policy = prop.getProperty("Allocation_policy");
 
         String service_isolation = prop.getProperty("service_isolation");
+
+        String vmtype = number_of_containers == 4 ? "Medium" : "Large";
 
         // CONTROL Construction validity
         ControlConstructionValidity(number_of_servers, server_ram, server_cpu, server_storage, server_network,
@@ -104,7 +107,7 @@ public class App {
             LinkContain lci = new LinkContain(dc, si);
             dc.insertLinkContain(lci);
             for (int j = 0; j < virtual_machines; j++) {
-                VirtualMachine vmij = new VirtualMachine("VM-" + i + j);
+                VirtualMachine vmij = new VirtualMachine("VM-" + i + j, vmtype);
                 LinkVM lvm = new LinkVM(si, vmij);
                 si.insertLinkVM(lvm);
                 for (int k = 0; k < number_of_containers; k++) {
@@ -130,6 +133,7 @@ public class App {
 
         // Create xls file of the Dataset
         File wf = new File("Simulator\\dataset.xls");
+        //FIle wf = new File("Simulator\\DatasetPoP1.xls");
         Workbook workbook;
         WritableWorkbook WRworkbook;
         WritableSheet sheet1;
@@ -163,7 +167,7 @@ public class App {
             out = new PrintWriter(file);
             System.out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
             out.println("SIMULATION " + n + ": lambda = " + lambda + ", Sim length = " + duration + "\n");
-            app.run(out, sheet1, sheet2);
+            app.run(out, sheet1, sheet2, fileName);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
             System.out.println("Requests not served: " + pop.getQueuePrint());
             System.out.println(number_of_servers-pop.getNumberOfServers() + " server have crushed\n");

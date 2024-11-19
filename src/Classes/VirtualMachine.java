@@ -21,11 +21,11 @@ public class VirtualMachine {
     private LinkVM link;
     
 
-    public VirtualMachine(String name){
+    public VirtualMachine(String name, String type){
         this.name = name;
         this.runningService = false;
 
-        this.type = "Medium";
+        this.type = type;
 
         linkset = new HashSet<LinkInstance>();
     }

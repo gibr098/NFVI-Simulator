@@ -33,19 +33,21 @@ public class Monitor implements Callable<Object> {
     double crash;
 
     PrintWriter out;
+    String fileName;
 
     WritableSheet sheet;
 
     HashMap<Integer, Double> cpuUsage;
     HashMap<Integer, Double> ramUsage;
 
-    public Monitor(NFVIPoP pop, double endTime, double crash, PrintWriter out, WritableSheet sheet) {
+    public Monitor(NFVIPoP pop, double endTime, double crash, PrintWriter out, WritableSheet sheet, String fileName) {
         this.pop = pop;
         this.endTime = endTime;
         this.clock = 0;
         this.crash = crash;
 
         this.out = out;
+        this.fileName = fileName;
 
         this.sheet = sheet;
 
@@ -114,7 +116,7 @@ public class Monitor implements Callable<Object> {
                 // printRamUsage(server);
             }
 
-            writeDataset(sheet, cell, pop, clock, id);
+            writeDataset(sheet, cell, pop, clock, id, fileName);
             cell++;
 
             /* 
@@ -146,9 +148,10 @@ public class Monitor implements Callable<Object> {
         System.out.println("\n");
     }
 
-    public static void writeDataset(WritableSheet sheet, int cell, NFVIPoP pop, double clock, String id) throws Exception {
+    public static void writeDataset(WritableSheet sheet, int cell, NFVIPoP pop, double clock, String id, String fileName) throws Exception {
         Properties prop = new Properties();
-        String fileName = "Simulator\\src\\NFVI.config";
+        //String fileName = "Simulator\\src\\NFVI.config";
+        //String fileName = "Simulator\\Config files\\POP-1.config";
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
@@ -180,12 +183,15 @@ public class Monitor implements Callable<Object> {
         // VirtualMachine vm = s.getLinkVM().iterator().next().getVirtualMachine();
         // int vmnum = (service.getLinkChainList().size()>4)? 2 : 1;
 
+        String vmtype =s.getLinkVM().iterator().next().getVirtualMachine().getType();
+
+
         String consumeOfram = "";
         String consumeOfcpu = "";
         String consumeOfstrorage = "";
 
         int vmnum = 0;
-        String vmtype = "";
+        //String vmtype = "";
         HashMap<String, Integer> vmused = new HashMap<>();
 
         double busyram = 0;
@@ -230,7 +236,7 @@ public class Monitor implements Callable<Object> {
                 String keyr = String.valueOf(server_ram - ram);
                 String valuer = String.valueOf(ramtime);
                 consumeOfram += keyr + " GB" + " for " + valuer + "h ";
-                
+
             }
             consumeOfram += " )\n";
             for (int stor : server.getStorageUsage().keySet()) {
@@ -258,6 +264,7 @@ public class Monitor implements Callable<Object> {
                     }
                 }
             }
+            /* 
             vmtype = "( ";
             for (String type : vmused.keySet()) {
                 //String k = o.toString();
@@ -265,6 +272,8 @@ public class Monitor implements Callable<Object> {
                 vmtype += type + ": " + v + " ";
             }
             vmtype += " )";
+            */
+
 
         }
         double serverUsageCost = ramUsagecost + cpuUsagecost;
@@ -284,8 +293,7 @@ public class Monitor implements Callable<Object> {
         }
         servicesrunning += " )";
 
-        
-        
+
         busyram = (int)100*(1-(busyram/total_ram));
         busycpu = (int)100*(1-(busycpu/total_cpu));
         busystorage = (int)100*(1-(busystorage/total_storage));

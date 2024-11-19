@@ -17,8 +17,8 @@ import jxl.write.WritableSheet;
 public class AppRS{
     double lambda;
     double duration;
-    double alfa;  
-    int maxSize; 
+    double alfa;
+    int maxSize;
     String ss_policy;
     String q_policy;
     String s_isolation;
@@ -39,11 +39,11 @@ public class AppRS{
 
     }
 
-    public void run(PrintWriter out, WritableSheet sheet1, WritableSheet sheet2) throws Exception {
+    public void run(PrintWriter out, WritableSheet sheet1, WritableSheet sheet2, String fileName) throws Exception {
 
         Requester r = new Requester(lambda, duration, alfa, maxSize, pop);
-        Dispatcher d = new Dispatcher(duration, ss_policy, q_policy, s_isolation, pop, out, sheet1);
-        Monitor m = new Monitor(pop, duration, crash, out, sheet2);
+        Dispatcher d = new Dispatcher(duration, ss_policy, q_policy, s_isolation, pop, out, sheet1, fileName);
+        Monitor m = new Monitor(pop, duration, crash, out, sheet2, fileName);
 
         /*
         policy = getPolicy();
