@@ -45,7 +45,7 @@ public class App {
 
         Properties prop = new Properties();
         //String fileName = "Simulator\\src\\NFVI.config";
-        String fileName = "Simulator\\Config files\\POP-1.config";
+        String fileName = "Simulator\\Config files\\POP-1.config";  // <===============
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
@@ -131,9 +131,10 @@ public class App {
         AppRS app = new AppRS(lambda, duration, alfa, maxSize, pop, ss_policy, q_policy, service_isolation, crash);
         // app.run();
 
+
         // Create xls file of the Dataset
-        File wf = new File("Simulator\\dataset.xls");
-        //FIle wf = new File("Simulator\\DatasetPoP1.xls");
+        //File wf = new File("Simulator\\dataset.xls");
+        File wf = new File("Simulator\\DatasetPoP-1.xls");  // <=======
         Workbook workbook;
         WritableWorkbook WRworkbook;
         WritableSheet sheet1;
@@ -158,7 +159,7 @@ public class App {
         if (logDir.listFiles().length == 0) {
             file = new File("Simulator\\logs\\sim1_log.txt");
         } else {
-            String nn = logDir.listFiles()[logDir.listFiles().length - 1].getName().replaceAll("\\D", "");
+            String nn = logDir.listFiles()[logDir.listFiles().length-1].getName().replaceAll("[^0-9]", "");
             n = Integer.parseInt(nn) + 1;
             file = new File("Simulator\\logs\\sim" + n + "_log.txt");
         }
