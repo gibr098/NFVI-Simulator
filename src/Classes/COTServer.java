@@ -20,7 +20,11 @@ public class COTServer {
     private int storage;
     private int network;
 
+    // State of the server to manage the crash 
     private boolean online;
+    private double initial_crash_time;
+
+    // Availability for allocating a service
     private boolean available;
 
     HashMap<Integer, Double> cpuUsage;
@@ -58,6 +62,7 @@ public class COTServer {
         this.storage = storage;
         this. network = network;
         this.online = true;
+        this.initial_crash_time = 0.0;
         this.available = true;
 
         this.cpuUsage = new HashMap<>();
@@ -79,6 +84,14 @@ public class COTServer {
 
     public void setOnlineState(boolean state){
         online = state;
+    }
+
+    public double getInitialCrashTime(){
+        return initial_crash_time;
+    }
+
+    public void setInitialCrashTime(double t){
+        this.initial_crash_time = t;
     }
 
     public boolean isAvailable(){

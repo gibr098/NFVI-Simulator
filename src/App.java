@@ -45,7 +45,7 @@ public class App {
 
         Properties prop = new Properties();
         //String fileName = "Simulator\\src\\NFVI.config";
-        String fileName = "Simulator\\Config files\\POP-1.config";  // <===============
+        String fileName = "Simulator\\Config files\\POP-2.config";  // <===============
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
@@ -134,7 +134,7 @@ public class App {
 
         // Create xls file of the Dataset
         //File wf = new File("Simulator\\dataset.xls");
-        File wf = new File("Simulator\\DatasetPoP-1.xls");  // <=======
+        File wf = new File("Simulator\\DatasetPoP-2.xls");  // <=======
         Workbook workbook;
         WritableWorkbook WRworkbook;
         WritableSheet sheet1;

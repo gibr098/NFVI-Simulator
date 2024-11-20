@@ -1,7 +1,8 @@
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.LinkedList;
 import java.util.Random;
-
+import Classes.*;
 //import org.apache.commons.math3.distribution.*;
 
 public class test {
@@ -21,7 +22,7 @@ public class test {
     public static void main(String[] args) {
 
         double x = 0;
-        int t = 100;
+        int t = 10;
         int n = 0;
         int n0 = 0;
         int n1 = 0;
@@ -32,6 +33,8 @@ public class test {
 
         double alfa = 2.0;
         int min = 4; //number of elements(in my case size of request)
+
+        LinkedList<Container> test = new LinkedList<>();
 
         
 
@@ -45,6 +48,7 @@ public class test {
 
             //n = (int) p.sample();
             n = getPoissonRandom(5.0);
+            test.add(new Container("null", n4, i, t, n, min));
 
             if(n==0){
                 n0++;
@@ -72,6 +76,7 @@ public class test {
         //System.out.println("2: "+n2+"/1000");
         //System.out.println("3: "+n3+"/1000");
         //System.out.println("4: "+n4+"/1000");
+        System.out.println(test);
     }
 
 }
