@@ -73,7 +73,7 @@ public class Monitor implements Callable<Object> {
         DataCenter dc = pop.getLinkOwn().getDataCenter();
         while (clock != endTime) {
             System.out.println("t" + clock + " Monitor");
-            TimeUnit.MILLISECONDS.sleep(250);
+            TimeUnit.MILLISECONDS.sleep(1000);
             clock += 1;
             double rand = Math.random();
             for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
@@ -83,25 +83,35 @@ public class Monitor implements Callable<Object> {
                     if(crash >= rand){
                         s.setOnlineState(false);
                         s.setInitialCrashTime(clock);
-                        s.removeLinkContain(s.getLinkContain());
                         crashedServers.add(s);
+                        dc.removeLinkContain(s.getLinkContain());
                         crashedServersPrint+=s.getName()+" ";
-                        System.out.println("\nXXXXX " + lc.getCOTServer().getName()+" has crashed XXXXX\n");
-                        out.println("X  " + lc.getCOTServer().getName()+" has crashed X");
+                        System.out.println("\nXXXXX " + lc.getCOTServer().getName()+" has crashed at t"+clock+" XXXXX\n");
+                        System.out.println("RUNNAVA UN SERVIZIO? -----> " + lc.getCOTServer().isRunningAService()+" XXXXX\n");
+                        out.println("t"+clock+" X  " + lc.getCOTServer().getName()+" has crashed X");
                         break;
                     }
                 }
             }
-            for(COTServer s : crashedServers){
-                if(s.getInitialCrashTime() + 50 == clock){
-                    s.setOnlineState(true);
-                    s.setInitialCrashTime(0.0);
-                    crashedServers.remove(s);
-                    LinkContain lci = new LinkContain(dc, s);
-                    dc.insertLinkContain(lci);
+            //System.out.println("-----------------------"+crashedServers);
+
+             if(!crashedServers.isEmpty()){
+                  for(int i = 0; i<crashedServers.size(); i++){
+                    COTServer serv = crashedServers.get(i);
+                    if(clock == serv.getInitialCrashTime() + 50){
+                        serv.setOnlineState(true);
+                        serv.setInitialCrashTime(0.0);
+                        crashedServers.remove(serv);
+                        LinkContain lci = new LinkContain(dc, serv);
+                        dc.insertLinkContain(lci);
+                        System.out.println("\nVVVVV " + serv.getName()+" has recovered at t"+clock+"\n");
+                        out.println("V t"+clock+" " + serv.getName()+" has recovered");
+                    }
                 }
             }
-            for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
+
+            //for (LinkContain lc : pop.getLinkOwn().getDataCenter().getLinkContain()) {
+            for (LinkContain lc : dc.getLinkContain()) {
                 COTServer server = lc.getCOTServer();
                 // Cpu usage
                 if (server.getCpuUsage().containsKey(server.getCpu())) {

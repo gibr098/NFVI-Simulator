@@ -103,7 +103,7 @@ public class COTServer {
     }
 
     public boolean isRunningAService(){
-        for(LinkVM lv: this.getLinkVM()){
+        for(LinkVM lv: linkset){
             VirtualMachine vm = lv.getVirtualMachine();
             if (vm.isRunningService()){
                 return true;

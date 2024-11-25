@@ -70,7 +70,7 @@ public class Dispatcher implements Callable<Object> {
         int cell = sheet.getRows();
         String id = (sheet.getRows() == 1)? "1" : String.valueOf(Integer.parseInt(sheet.getCell(0,sheet.getRows()-1).getContents())+1);
         while (clock != endTime) {
-            TimeUnit.MILLISECONDS.sleep(250);
+            TimeUnit.MILLISECONDS.sleep(1000);
             clock += 1;
             queue = pop.getQueue();
 

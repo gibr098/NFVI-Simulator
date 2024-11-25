@@ -171,7 +171,7 @@ public class App {
             app.run(out, sheet1, sheet2, fileName);
             out.println("REQUESTS NOT SERVED: " + pop.getQueuePrint());
             System.out.println("Requests not served: " + pop.getQueuePrint());
-            System.out.println(number_of_servers-pop.getNumberOfServers() + " server have crushed\n");
+            System.out.println(number_of_servers-pop.getNumberOfServers() + " server crashed\n");
             System.out.println("Simulation complete.");
             System.out.println("Log: logs/sim" + n + "_log.txt");
             out.close();
