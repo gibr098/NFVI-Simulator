@@ -87,7 +87,7 @@ public class Monitor implements Callable<Object> {
                         dc.removeLinkContain(s.getLinkContain());
                         crashedServersPrint+=s.getName()+" ";
                         System.out.println("\nXXXXX " + lc.getCOTServer().getName()+" has crashed at t"+clock+" XXXXX\n");
-                        System.out.println("RUNNAVA UN SERVIZIO? -----> " + lc.getCOTServer().isRunningAService()+" XXXXX\n");
+                        //System.out.println("RUNNAVA UN SERVIZIO? -----> " + lc.getCOTServer().isRunningAService()+" XXXXX\n");
                         out.println("t"+clock+" X  " + lc.getCOTServer().getName()+" has crashed X");
                         break;
                     }

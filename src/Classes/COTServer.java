@@ -264,7 +264,7 @@ public class COTServer {
 
     public int getAvailableContainersNumber(){
         int ret = 0;
-        for(LinkVM lvm: this.getLinkVM()){
+        for(LinkVM lvm: linkset){
             VirtualMachine vm = lvm.getVirtualMachine();
             for(LinkInstance lc : vm.getLinkInstance()){
                 Container c = lc.getContainer();

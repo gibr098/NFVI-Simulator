@@ -54,7 +54,7 @@ public class Allocation {
                 break;
 
                 case "MUS":
-                if( l.getCOTServer().getResourcesSum() < ss.getResourcesSum()){
+                if( l.getCOTServer().getResourcesSum() <= ss.getResourcesSum()){
                     ss = l.getCOTServer();
                 }
                 server = ss;
