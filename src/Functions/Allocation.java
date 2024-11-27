@@ -1,6 +1,7 @@
 package Functions;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Random;
 
 import Classes.*;
@@ -19,58 +20,49 @@ public class Allocation {
         COTServer server = new COTServer("init", 0, 0, 0, 0);
         // Server Selection
         DataCenter dc = pop.getLinkOwn().getDataCenter();
-        COTServer ss = dc.getLinkContain().iterator().next().getCOTServer();
-        if(policy.equals("RANDOM")){
-            boolean found = false;
-            LinkContain[] servers = dc.getLinkContain().toArray(new LinkContain[dc.getLinkContain().size()]);
-            while (!found) {
-                System.out.println("FINDING server... ");
-                Random r = new Random();
-                COTServer selectedServer = servers[r.nextInt(dc.getLinkContain().size())].getCOTServer();
-                if( selectedServer.getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
-                    (double)selectedServer.getAvailableVMNumber() >= (double)s.getVNFNumber()/selectedServer.getContainerperVMNumber() ){
-                    server = selectedServer;
-                    found = true;
-                }
-            }
-
-        }else{
+        //COTServer ss = dc.getLinkContain().iterator().next().getCOTServer();
+        LinkedList<COTServer> SelectableServers = new LinkedList<>();
         for (LinkContain l : dc.getLinkContain()) {
-            //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
             if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber() &&
-               (double)l.getCOTServer().getAvailableVMNumber() >= (double)s.getVNFNumber()/l.getCOTServer().getContainerperVMNumber()){
-            switch(policy){
-                case "FAS":
-                //if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber()){
-                    server = l.getCOTServer();
-                //}
-                break;
-
-                case "LUS":
-                if( l.getCOTServer().getResourcesSum() > ss.getResourcesSum()){
-                    ss = l.getCOTServer();
-                }
-                server = ss;
-                break;
-
-                case "MUS":
-                if( l.getCOTServer().getResourcesSum() <= ss.getResourcesSum()){
-                    ss = l.getCOTServer();
-                }
-                server = ss;
-                break;
-
-                case "RANDOM":
-                break;
-
-                default:
-                System.out.println("Policy " + policy + " not supported");
-                System.exit(0);
+            (double)l.getCOTServer().getAvailableVMNumber() >= (double)s.getVNFNumber()/l.getCOTServer().getContainerperVMNumber()){
+             SelectableServers.add(l.getCOTServer());
             }
-            }  
         }
-    }
 
+        switch(policy){
+            case "FAS":
+            server = SelectableServers.getFirst();
+            break;
+
+            case "LUS":
+            COTServer smin = SelectableServers.getFirst();
+            for(int i = 0; i < SelectableServers.size(); i++){
+                if( SelectableServers.get(i).getResourcesSum() > smin.getResourcesSum()){
+                    smin = SelectableServers.get(i);
+                }
+            }
+            server = smin;
+            break;
+
+            case "MUS":
+            COTServer smax = SelectableServers.getFirst();
+            for(int i = 0; i < SelectableServers.size(); i++){
+                if( SelectableServers.get(i).getResourcesSum() < smax.getResourcesSum()){
+                    smax = SelectableServers.get(i);
+                }
+            }
+            server = smax;
+            break;
+
+            case "RANDOM":
+            int r_index = Functions.ServiceGeneration.getRandomNumber(0, SelectableServers.size());
+            server = SelectableServers.get(r_index);
+            break;
+
+            default:
+            System.out.println("Policy " + policy + " not supported");
+            System.exit(0);
+        }
 
         //Allocation of VNFs
         System.out.println(">>>>>"+server.getName()+ " SELECTED FOR "+s.getName());
@@ -182,7 +174,7 @@ public class Allocation {
             //System.out.println("Containers available on " +server.getName()+" "+server.getAvailableContainersNumber()+", vnf to allocate = "+n);
             if(server.getAvailableContainersNumber() >= n && 
                (double)server.getAvailableVMNumber() >= (double)s.getVNFNumber()/server.getContainerperVMNumber()){ //&& !server.allVMBusy()){
-                //System.out.println("----SELECTED----->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + " FOR "+ s.getName()+" "+s.getVNFNumber() );
+                System.out.println("---->"+server.getName()+ " HAS "+server.getAvailableContainersNumber() + "cont. FOR "+ s.getName()+" WITH "+s.getVNFNumber()+" vnf" );
 
                 return true;
             }
@@ -194,6 +186,58 @@ public class Allocation {
 
 
 //------------------------------------------------
+/* 
+        if(policy.equals("RANDOM")){
+            boolean found = false;
+            LinkContain[] servers = dc.getLinkContain().toArray(new LinkContain[dc.getLinkContain().size()]);
+            while (!found) {
+                System.out.println("FINDING server... ");
+                Random r = new Random();
+                COTServer selectedServer = servers[r.nextInt(dc.getLinkContain().size())].getCOTServer();
+                if( selectedServer.getAvailableContainersNumber() >= s.getVNFNumber()*s.getDemand() &&
+                    (double)selectedServer.getAvailableVMNumber() >= (double)s.getVNFNumber()/selectedServer.getContainerperVMNumber() ){
+                    server = selectedServer;
+                    found = true;
+                }
+            }
+
+        }else{
+
+        for (LinkContain l : dc.getLinkContain()) {
+            //System.out.println(l.getCOTServer().getName()+" usage: "+l.getCOTServer().getResourcesSum()+" available cont: "+l.getCOTServer().getAvailableContainersNumber());
+            if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber() &&
+               (double)l.getCOTServer().getAvailableVMNumber() >= (double)s.getVNFNumber()/l.getCOTServer().getContainerperVMNumber()){
+                switch(policy){
+                case "FAS":
+                //if(l.getCOTServer().getAvailableContainersNumber() >= s.getVNFNumber()){
+                    server = l.getCOTServer();
+                //}
+                break;
+
+                case "LUS":
+                if( l.getCOTServer().getResourcesSum() > ss.getResourcesSum()){
+                    ss = l.getCOTServer();
+                }
+                server = ss;
+                break;
+
+                case "MUS":
+                if( l.getCOTServer().getResourcesSum() <= ss.getResourcesSum()){
+                    ss = l.getCOTServer();
+                }
+                server = ss;
+                break;
+
+                case "RANDOM":
+                break;
+
+                default:
+                System.out.println("Policy " + policy + " not supported");
+                System.exit(0);
+            }
+            }  
+        }*/
+    //}
 /* 
     public static boolean AllocateService(Service s, NFVIPoP pop, String policy) throws Exception {
         COTServer server = new COTServer("init", 0, 0, 0, 0);

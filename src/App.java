@@ -34,6 +34,8 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
+        String popIndex = "1";
+
         File logDir = new File("Simulator\\logs");
         if (!logDir.exists()) {
             logDir.mkdir();
@@ -45,7 +47,7 @@ public class App {
 
         Properties prop = new Properties();
         //String fileName = "Simulator\\src\\NFVI.config";
-        String fileName = "Simulator\\Config files\\POP-5.config";  // <===============
+        String fileName = "Simulator\\Config files\\POP-"+popIndex+".config"; 
         try (FileInputStream fis = new FileInputStream(fileName)) {
             prop.load(fis);
         } catch (FileNotFoundException ex) {
@@ -93,7 +95,7 @@ public class App {
                 container_network);
 
         NFVI nfvi = new NFVI("NFVI");
-        NFVIPoP pop = new NFVIPoP("PoP-1");
+        NFVIPoP pop = new NFVIPoP("PoP-"+popIndex);
         DataCenter dc = new DataCenter("DC-1");
 
         LinkCompose lc = new LinkCompose(nfvi, pop);
@@ -134,13 +136,13 @@ public class App {
 
         // Create xls file of the Dataset
         //File wf = new File("Simulator\\dataset.xls");
-        File wf = new File("Simulator\\DatasetPoP-5.xls");  // <===============
+        File wf = new File("Simulator\\DatasetPoP-"+popIndex+".xls");
         Workbook workbook;
         WritableWorkbook WRworkbook;
         WritableSheet sheet1;
         WritableSheet sheet2;
 
-        if (!wf.exists()) {
+        if (!wf.exists() || (wf.exists() && !wf.canRead())) {
             WRworkbook = Workbook.createWorkbook(wf);
             sheet1 = WRworkbook.createSheet("Services", 0);
             sheet2 = WRworkbook.createSheet("System", 0);
