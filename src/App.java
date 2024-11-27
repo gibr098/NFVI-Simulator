@@ -34,7 +34,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
 
-        String popIndex = "1";
+        String popIndex = "5";
 
         File logDir = new File("Simulator\\logs");
         if (!logDir.exists()) {
