@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="container">
+    <h1>DT Service Cost prediction</h1>
+    <!--<form action = "https://9000-gibr098-nfvisimulator-y8ngxfm5x6l.ws-eu116.gitpod.io/predict" method="POST">-->
+    <form action = "http://localhost:9000/predict" method="POST"></form>
+        <div class="form">
+            <label for="S-name">Service Name:</label>
+            <input type="text" id="S-name" name="S-name"><br>
+        </div>
+        <div class="form">
+            <label for="duration">Service Duration(hours):</label>
+            <input type="number" id="duration" name="duration"><br>
+        </div>
+        <div>
+            <label>Select VNFs:</label><br>
+            <input type="checkbox" id="Firewall" name="Firewall" value="true">
+            <label for="Firewall"> Firewall</label><br>
+            <input type="checkbox" id="Routing" name="Routing" value="Routing">
+            <label for="Routing"> Routing</label><br>
+            <input type="checkbox" id="Encryption" name="Encryption" value="Encryption">
+            <label for="Encryption"> Encryption</label><br>
+            <input type="checkbox" id="Decryption" name="Decryption" value="Decryption">
+            <label for="Decryption"> Decryption</label><br>
+            <input type="checkbox" id="NAT" name="NAT" value="NAT">
+            <label for="NAT"> NAT</label><br>
+            <input type="checkbox" id="DHCP" name="DHCP" value="DHCP">
+            <label for="DHCP"> DHCP</label><br>
+            <input type="checkbox" id="VPN" name="VPN" value="VPN">
+            <label for="VPN"> VPN</label><br>
+            <input type="checkbox" id="DPI" name="DPI" value="DPI">
+            <label for="DPI"> DPI</label><br>
+        </div>
+        <button type="submit" class="submitButton">Get cost</button><br>
+    </form>
+</div>
+
+</body>
+</html>
